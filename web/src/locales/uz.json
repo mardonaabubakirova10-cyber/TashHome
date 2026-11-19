@@ -1,5 +1,5 @@
 {
-  "nav": { "catalog": "Katalog", "estimate": "Uyni baholash", "mortgage": "Ipoteka", "favorites": "Sevimlilar", "assistant": "AI-yordamchi" },
+  "nav": { "home": "Bosh sahifa", "catalog": "Katalog", "estimate": "Uyni baholash", "mortgage": "Ipoteka", "favorites": "Sevimlilar", "assistant": "AI-yordamchi" },
   "home": {
     "title": "Toshkentda uy toping",
     "subtitle": "AI-yordamchi tavsifingiz bo‘yicha uy tanlaydi",

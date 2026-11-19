@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { useCurrency, type Currency } from '../lib/currency'
 
 const links = [
+  { to: '/', key: 'home' },
   { to: '/catalog', key: 'catalog' },
   { to: '/estimate', key: 'estimate' },
   { to: '/mortgage', key: 'mortgage' },
@@ -65,6 +66,7 @@ export default function Layout() {
               <NavLink
                 key={l.to}
                 to={l.to}
+                end={l.to === '/'}
                 className={({ isActive }) =>
                   `whitespace-nowrap rounded-md px-3 py-1.5 ${
                     isActive ? 'bg-brand-50 font-medium text-brand-700' : 'text-slate-600 hover:bg-slate-100'
