@@ -8,12 +8,13 @@ export default function PropertyMap({ lat, lng }: { lat: number; lng: number }) 
   useEffect(() => {
     if (!ref.current) return
     const map = L.map(ref.current, { scrollWheelZoom: false }).setView([lat, lng], 14)
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+      subdomains: 'abcd',
       maxZoom: 19,
-      attribution: '© OpenStreetMap',
+      attribution: '© OpenStreetMap © CARTO',
     }).addTo(map)
     // circleMarker не требует картинок маркера, которые ломаются при сборке
-    L.circleMarker([lat, lng], { radius: 10, color: '#1d4ed8', fillColor: '#2563eb', fillOpacity: 0.9 }).addTo(map)
+    L.circleMarker([lat, lng], { radius: 10, color: '#f0d3bf', fillColor: '#b8532c', fillOpacity: 0.9 }).addTo(map)
     return () => {
       map.remove()
     }

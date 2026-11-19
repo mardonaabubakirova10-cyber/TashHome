@@ -70,7 +70,7 @@ export default function HouseTicket({ item }: { item: Property }) {
             >
               {t('ticket.open')}
             </Link>
-            <button type="button" onClick={flip} className="rounded-lg px-4 py-2 text-sm text-slate-600 hover:bg-slate-100">
+            <button type="button" onClick={flip} className="rounded-lg px-4 py-2 text-sm text-slate-600 hover:bg-slate-200">
               {t('ticket.flipBack')}
             </button>
           </div>

@@ -30,7 +30,7 @@ export default function Catalog() {
     <div className="grid gap-6">
       <h1 className="text-2xl font-bold">{t('pages.catalog')}</h1>
 
-      <div className="grid gap-3 rounded-xl border border-slate-200 bg-white p-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-3 rounded-xl border border-slate-200 bg-slate-100 p-4 sm:grid-cols-2 lg:grid-cols-4">
         <Select label={t('deal.sale') + ' / ' + t('deal.rent')} value={filters.deal ?? ''} onChange={(e) => setParam('deal', e.target.value)}>
           <option value="">{t('deal.all')}</option>
           <option value="sale">{t('deal.sale')}</option>

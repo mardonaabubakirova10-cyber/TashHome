@@ -1,33 +1,38 @@
 @import "tailwindcss";
 
 /*
-  Тёплая «редакционная» тема: оливково-чёрный, крем, терракота.
-  Серая шкала slate и белый переопределены тёплыми оттенками, поэтому все
-  существующие компоненты (bg-white, text-slate-600 и т.д.) подхватывают палитру автоматически.
+  Тёмная тема: чёрный фон, кремовый текст, терракотовый акцент.
+  Шкала slate ИНВЕРТИРОВАНА: slate-50 — самый тёмный (фон страницы), slate-900 — самый светлый (основной текст).
+  Поэтому bg-slate-100 — поверхность карточек, text-slate-600 — вторичный текст, border-slate-200 — тонкая линия.
+  text-white — кремовый: для текста на тёмных блоках и на терракотовых кнопках.
 */
 @theme {
   --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-display: "Playfair Display", Georgia, "Times New Roman", serif;
 
-  --color-ink: #13150d;
+  --color-ink: #111110;
   --color-white: #fbf6ea;
 
-  --color-slate-50: #f3ecdc;
-  --color-slate-100: #ebe2cf;
-  --color-slate-200: #ddd1b8;
-  --color-slate-300: #c9bb9d;
-  --color-slate-400: #a39a82;
-  --color-slate-500: #766f5b;
-  --color-slate-600: #5a5746;
-  --color-slate-700: #433f31;
-  --color-slate-800: #2c2b20;
-  --color-slate-900: #13150d;
+  --color-slate-50: #000000;
+  --color-slate-100: #151513;
+  --color-slate-200: #2a2924;
+  --color-slate-300: #3d3b33;
+  --color-slate-400: #6f6b5d;
+  --color-slate-500: #948f7c;
+  --color-slate-600: #b3ad98;
+  --color-slate-700: #cdc7b0;
+  --color-slate-800: #e6dfca;
+  --color-slate-900: #f3ecdc;
 
   --color-brand-50: #f8e9df;
   --color-brand-100: #f0d3bf;
   --color-brand-500: #b8532c;
   --color-brand-600: #9c4423;
   --color-brand-700: #7d361b;
+}
+
+:root {
+  color-scheme: dark; /* тёмные списки, полосы прокрутки и поля ввода */
 }
 
 body {
@@ -39,6 +44,19 @@ h2 {
   font-family: var(--font-display);
   font-weight: 600;
   letter-spacing: -0.01em;
+}
+
+/* Карта (Leaflet) в тёмной теме */
+div.leaflet-container {
+  background: #0b0b0a;
+  font-family: inherit;
+}
+.leaflet-control-attribution {
+  background: rgba(0, 0, 0, 0.6) !important;
+  color: #948f7c !important;
+}
+.leaflet-control-attribution a {
+  color: #b3ad98 !important;
 }
 
 /* Parallax Ticket (Motion Studies): перспектива, две стороны, слои глубины, блик */
@@ -65,7 +83,7 @@ h2 {
 }
 .ticket-back {
   transform: rotateY(180deg);
-  background: var(--color-white);
+  background: var(--color-slate-100);
   box-shadow: inset 0 0 0 1px var(--color-slate-200);
 }
 .ticket-layer {

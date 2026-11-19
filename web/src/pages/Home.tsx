@@ -1,4 +1,4 @@
-import { useState, type FormEvent, type ReactNode } from 'react'
+import { lazy, Suspense, useState, type FormEvent, type ReactNode } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import HouseTicket from '../components/HouseTicket'
@@ -6,8 +6,10 @@ import Button from '../components/ui/Button'
 import { Input, Select } from '../components/ui/Field'
 import { DISTRICTS, PROPERTIES } from '../data/properties'
 
+// Карта тянет Leaflet, поэтому грузится отдельным файлом
+const HeroMap = lazy(() => import('../components/HeroMap'))
+
 const linkBtn = 'inline-flex items-center justify-center rounded-lg px-6 py-3 text-base font-medium transition-colors'
-const HERO_PHOTO = 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1800&q=80' // замените на своё фото
 
 function SectionHead({ title, action }: { title: string; action?: ReactNode }) {
   return (
@@ -47,22 +49,34 @@ export default function Home() {
 
   return (
     <div className="grid gap-20">
-      {/* Hero: огромные слова по углам поверх фото */}
+      {/* Hero: тёмная карта, поверх две наложенные надписи разных цветов */}
       <div>
-        <section className="relative isolate min-h-[32rem] overflow-hidden rounded-2xl bg-ink text-white sm:min-h-[42rem]">
-          <img src={HERO_PHOTO} alt="" className="absolute inset-0 -z-20 size-full object-cover sepia-[.2]" />
-          <div className="absolute inset-0 -z-10 bg-gradient-to-b from-black/35 via-black/5 to-black/50" />
+        <section className="relative isolate min-h-[34rem] overflow-hidden rounded-2xl bg-ink text-white [container-type:inline-size] sm:min-h-[40rem]">
+          <div className="absolute inset-0 isolate z-0">
+            <Suspense fallback={null}>
+              <HeroMap />
+            </Suspense>
+          </div>
+          <div className="pointer-events-none absolute inset-0 z-10 bg-gradient-to-b from-black/60 via-black/20 to-black/75" />
 
-          <h1 aria-label="TashHome" className="font-medium uppercase leading-[0.85] tracking-tight">
-            <span aria-hidden className="absolute left-5 top-5 text-[clamp(5rem,21vw,16rem)] sm:left-10 sm:top-8">
+          <h1
+            aria-label="TashHome"
+            className="pointer-events-none absolute inset-0 z-20 flex items-center justify-center font-medium uppercase leading-none tracking-tight"
+            style={{ fontSize: 'clamp(3.25rem, 14cqw, 14rem)' }}
+          >
+            <span aria-hidden className="text-white">
               Tash
             </span>
-            <span aria-hidden className="absolute bottom-5 right-5 text-[clamp(5rem,21vw,16rem)] sm:bottom-8 sm:right-10">
+            <span
+              aria-hidden
+              className="-ml-[0.45em] translate-y-[0.12em] bg-clip-text text-transparent [filter:drop-shadow(0_0_0.1em_rgba(0,0,0,0.6))]"
+              style={{ backgroundImage: 'linear-gradient(135deg, #ffd3b0 0%, #ec6f3d 50%, #8f2f10 100%)' }}
+            >
               Home
             </span>
           </h1>
 
-          <div className="absolute left-5 top-[40%] max-w-[15rem] sm:bottom-10 sm:left-10 sm:top-auto">
+          <div className="absolute bottom-6 left-5 z-30 max-w-[15rem] sm:bottom-10 sm:left-10">
             <p className="text-xs font-medium uppercase tracking-[0.25em] text-brand-100">{t('home.eyebrow')}</p>
             <p className="mt-2 text-sm text-white/90">{t('home.subtitle')}</p>
             <Link to="/catalog" className="mt-4 inline-flex rounded-md bg-white px-4 py-2 text-sm font-medium text-ink hover:bg-brand-50">
@@ -73,7 +87,7 @@ export default function Home() {
 
         <form
           onSubmit={onSearch}
-          className="relative z-10 mx-4 -mt-8 grid gap-3 rounded-xl bg-white p-4 text-slate-900 shadow-xl ring-1 ring-black/5 sm:mx-10 sm:grid-cols-[1fr_1fr_1fr_auto] sm:items-end"
+          className="relative z-10 mx-4 -mt-8 grid gap-3 rounded-xl bg-slate-100 p-4 text-slate-900 shadow-xl ring-1 ring-white/10 sm:mx-10 sm:grid-cols-[1fr_1fr_1fr_auto] sm:items-end"
         >
           <Select label={t('filters.district')} value={district} onChange={(e) => setDistrict(e.target.value)}>
             <option value="">{t('filters.anyDistrict')}</option>
@@ -119,7 +133,7 @@ export default function Home() {
         <SectionHead
           title={t('home.fresh')}
           action={
-            <Link to="/catalog" className="whitespace-nowrap text-sm font-medium text-brand-600 hover:underline">
+            <Link to="/catalog" className="whitespace-nowrap text-sm font-medium text-brand-100 hover:underline">
               {t('home.all')} →
             </Link>
           }
@@ -139,7 +153,7 @@ export default function Home() {
             <Link
               key={d.id}
               to={`/catalog?district=${d.id}`}
-              className="rounded-full border border-slate-400 px-5 py-2 text-sm transition-colors hover:border-ink hover:bg-ink hover:text-white"
+              className="rounded-full border border-slate-400 px-5 py-2 text-sm transition-colors hover:border-white hover:bg-white hover:text-ink"
             >
               {districtName(d)}
             </Link>
@@ -165,7 +179,7 @@ export default function Home() {
       <section className="grid gap-8 rounded-2xl bg-ink p-6 text-white sm:p-12 lg:grid-cols-2 lg:items-center">
         <div>
           <h2 className="text-3xl sm:text-4xl">{t('home.aiTitle')}</h2>
-          <p className="mt-3 max-w-md text-slate-300">{t('home.aiText')}</p>
+          <p className="mt-3 max-w-md text-white/70">{t('home.aiText')}</p>
           <Link to="/assistant" className={`${linkBtn} mt-6 bg-brand-500 text-white hover:bg-brand-600`}>
             {t('home.askAssistant')}
           </Link>
@@ -190,7 +204,7 @@ export default function Home() {
         <div className="grid gap-8 sm:grid-cols-3">
           {steps.map((n) => (
             <div key={n} className="flex gap-4">
-              <p className="font-display text-6xl leading-none text-slate-300">{n}</p>
+              <p className="font-display text-6xl leading-none text-slate-400">{n}</p>
               <div>
                 <h3 className="text-lg font-semibold">{t(`home.step${n}Title`)}</h3>
                 <p className="mt-1 text-sm text-slate-600">{t(`home.step${n}Text`)}</p>
@@ -203,7 +217,7 @@ export default function Home() {
       {/* Призыв */}
       <section className="rounded-2xl bg-brand-500 px-6 py-14 text-center text-white">
         <h2 className="text-3xl sm:text-5xl">{t('home.ctaTitle')}</h2>
-        <p className="mx-auto mt-3 max-w-md text-brand-100">{t('home.ctaText')}</p>
+        <p className="mx-auto mt-3 max-w-md text-white">{t('home.ctaText')}</p>
         <Link to="/assistant" className={`${linkBtn} mt-7 bg-ink text-white hover:bg-slate-800`}>
           {t('home.askAssistant')}
         </Link>

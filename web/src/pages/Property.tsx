@@ -23,7 +23,7 @@ export default function Property() {
     return (
       <div className="py-16 text-center">
         <h1 className="text-2xl font-bold">{t('property.notFound')}</h1>
-        <Link to="/catalog" className="mt-4 inline-block text-brand-600 hover:underline">
+        <Link to="/catalog" className="mt-4 inline-block text-brand-100 hover:underline">
           {t('property.back')}
         </Link>
       </div>
@@ -45,7 +45,7 @@ export default function Property() {
 
   return (
     <div className="grid gap-6">
-      <Link to="/catalog" className="text-sm text-brand-600 hover:underline">
+      <Link to="/catalog" className="text-sm text-brand-100 hover:underline">
         {t('property.back')}
       </Link>
 
@@ -56,7 +56,7 @@ export default function Property() {
           <section>
             <h2 className="mb-3 text-xl font-bold">{t('property.specs')}</h2>
             <Card>
-              <dl className="divide-y divide-slate-100">
+              <dl className="divide-y divide-slate-200">
                 {specs.map(([k, v]) => (
                   <div key={k} className="flex justify-between gap-4 px-5 py-3 text-sm">
                     <dt className="text-slate-500">{k}</dt>

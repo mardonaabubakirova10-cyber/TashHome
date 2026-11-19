@@ -18,7 +18,7 @@ export default function Modal({ open, onClose, title, children }: Props) {
       onClose={onClose}
       onClick={(e) => e.target === ref.current && onClose()}
       aria-label={title}
-      className="m-auto w-[min(92vw,32rem)] rounded-xl p-0 shadow-xl backdrop:bg-slate-900/50"
+      className="m-auto w-[min(92vw,32rem)] rounded-xl bg-slate-100 p-0 text-slate-900 shadow-xl backdrop:bg-black/70"
     >
       <div className="flex items-center justify-between border-b border-slate-200 px-5 py-3">
         <h2 className="text-lg font-semibold">{title}</h2>
@@ -26,7 +26,7 @@ export default function Modal({ open, onClose, title, children }: Props) {
           type="button"
           onClick={onClose}
           aria-label="Close"
-          className="rounded-md px-2 py-1 text-slate-500 hover:bg-slate-100"
+          className="rounded-md px-2 py-1 text-slate-500 hover:bg-slate-200"
         >
           ✕
         </button>

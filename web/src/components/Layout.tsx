@@ -31,7 +31,7 @@ function Segmented<T extends string>({
           aria-pressed={value === o}
           onClick={() => onChange(o)}
           className={`rounded-md px-2.5 py-1 transition-colors ${
-            value === o ? 'bg-brand-500 text-white' : 'text-slate-300 hover:bg-white/10'
+            value === o ? 'bg-brand-500 text-white' : 'text-white/70 hover:bg-white/10'
           }`}
         >
           {o.toUpperCase()}
@@ -69,7 +69,7 @@ export default function Layout() {
                 end={l.to === '/'}
                 className={({ isActive }) =>
                   `whitespace-nowrap rounded-md px-3 py-1.5 ${
-                    isActive ? 'bg-white/10 font-medium text-white' : 'text-slate-300 hover:bg-white/5 hover:text-white'
+                    isActive ? 'bg-white/10 font-medium text-white' : 'text-white/70 hover:bg-white/5 hover:text-white'
                   }`
                 }
               >
@@ -96,7 +96,7 @@ export default function Layout() {
       <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-8">
         <Outlet />
       </main>
-      <footer className="bg-ink py-8 text-center text-sm text-slate-400">
+      <footer className="bg-ink py-8 text-center text-sm text-white/60">
         <p className="font-display text-xl text-white">TashHome</p>
         <p className="mt-1">{t('footer')}</p>
       </footer>

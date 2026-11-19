@@ -2,7 +2,7 @@ import { useId, type InputHTMLAttributes, type ReactNode, type SelectHTMLAttribu
 import { cn } from '../../lib/cn'
 
 const control =
-  'w-full rounded-lg border bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 ' +
+  'w-full rounded-lg border bg-slate-100 px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 ' +
   'focus-visible:outline-2 focus-visible:outline-offset-0 focus-visible:outline-brand-500 disabled:bg-slate-100'
 
 function Wrapper({ id, label, error, children }: { id: string; label?: string; error?: string; children: ReactNode }) {
