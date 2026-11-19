@@ -1,7 +1,7 @@
 import { useState, type FormEvent, type ReactNode } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import PropertyCard from '../components/PropertyCard'
+import HouseTicket from '../components/HouseTicket'
 import Button from '../components/ui/Button'
 import { Input, Select } from '../components/ui/Field'
 import { DISTRICTS, PROPERTIES } from '../data/properties'
@@ -126,7 +126,7 @@ export default function Home() {
         />
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {PROPERTIES.slice(0, 6).map((item) => (
-            <PropertyCard key={item.id} item={item} />
+            <HouseTicket key={item.id} item={item} />
           ))}
         </div>
       </section>
