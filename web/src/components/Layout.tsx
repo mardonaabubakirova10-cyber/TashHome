@@ -59,7 +59,7 @@ export default function Layout() {
       <header className="sticky top-0 z-10 border-b border-slate-200 bg-white/90 backdrop-blur">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-6 gap-y-2 px-4 py-3">
           <NavLink to="/" className="text-lg font-bold text-brand-600">
-            Uy AI
+            TashHome
           </NavLink>
           <nav className="order-3 flex w-full gap-1 overflow-x-auto text-sm sm:order-none sm:w-auto sm:flex-1">
             {links.map((l) => (
