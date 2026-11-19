@@ -67,7 +67,7 @@ nedvijka/
 | Таблица | Основные поля |
 |---|---|
 | `districts` | id, name_ru, name_uz, lat, lng (12 районов Ташкента) |
-| `properties` | id, deal_type (`sale`/`rent`), title_ru, title_uz, description_ru, description_uz, district_id, address, lat, lng, price_usd, area_m2, rooms, floor, floors_total, building_type (`panel`/`brick`/`monolith`), renovation (`none`/`basic`/`euro`/`designer`), year_built, status (`active`/`sold`/`hidden`), predicted_price_usd, price_label (`below`/`fair`/`above`), search_embedding vector(768), created_at |
+| `properties` | id, deal_type (`sale`/`rent`), title_ru, title_uz, description_ru, description_uz, district_id, address, lat, lng, price_usd, area_m2 (дом), land_sotka (участок), rooms, floors (этажность), building_type (`brick`/`block`/`monolith`), renovation (`none`/`basic`/`euro`/`designer`), year_built, status (`active`/`sold`/`hidden`), predicted_price_usd, price_label (`below`/`fair`/`above`), search_embedding vector(768), created_at |
 | `property_photos` | id, property_id, url, position |
 | `profiles` | id (= auth.users.id), role (`client`/`manager`/`admin`), full_name, phone, telegram_id, lang |
 | `favorites` | user_id, property_id |
@@ -113,7 +113,7 @@ nedvijka/
 Инструменты:
 | Tool | Что делает |
 |---|---|
-| `search_properties(filters, query_text)` | Структурные фильтры (район, цена, комнаты, этаж…) + семантический поиск по `search_embedding` для «мягких» пожеланий |
+| `search_properties(filters, query_text)` | Структурные фильтры (район, цена, комнаты, площадь дома, участок, этажность…) + семантический поиск по `search_embedding` для «мягких» пожеланий |
 | `get_property(id)` | Детали объекта |
 | `search_knowledge(question)` | RAG по `kb_chunks`, возвращает фрагменты с источником |
 | `calc_mortgage(price, down_payment, term, program_id?)` | Расчёт ипотеки |
@@ -131,8 +131,8 @@ nedvijka/
 Аудио (webm/ogg из браузера или голосовое сообщение Telegram) передаётся в Gemini как аудиовход: сначала транскрипция, затем обычный цикл ассистента. Ограничение — 60 секунд.
 
 ### 6.4. Оценка стоимости (ml-service)
-- **Данные:** открытый датасет квартир Ташкента (Kaggle и аналоги). Если подходящего нет — синтетическая генерация по реалистичным правилам цены за м² по районам. Источник указывается в дипломе.
-- **Признаки:** район, площадь, комнаты, этаж, этажность, тип дома, ремонт, год постройки; производные — цена за м² района, `floor == 1`, `floor == last`.
+- **Данные:** открытый датасет домов Ташкента (Kaggle и аналоги). Если подходящего нет — синтетическая генерация по реалистичным правилам цены за м² по районам. Источник указывается в дипломе.
+- **Признаки:** район, площадь дома, площадь участка (сотки), комнаты, этажность, материал стен, ремонт, год постройки; производные — цена за м² района, цена сотки в районе, доля участка в площади.
 - **Модель:** baseline (линейная регрессия) → CatBoost. Сравнение по MAE, MAPE и R² на hold-out выборке и кросс-валидации. Результаты сохраняются в `model/metrics.json` и показываются в админке.
 - **Выход:** `predicted_price`, интервал (квантильная регрессия или ±MAPE), топ влияющих факторов.
 - **Метка объекта:** отклонение цены от прогноза < −10 % → `below`, > +10 % → `above`, иначе `fair`. Пересчитывается при сохранении объекта.

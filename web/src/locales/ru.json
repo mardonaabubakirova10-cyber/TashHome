@@ -1,7 +1,45 @@
 {
-  "nav": { "catalog": "Каталог", "estimate": "Оценка квартиры", "mortgage": "Ипотека", "favorites": "Избранное", "assistant": "ИИ-ассистент" },
-  "home": { "title": "Найдите квартиру в Ташкенте", "subtitle": "ИИ-ассистент подберёт варианты по вашему описанию" },
-  "pages": { "catalog": "Каталог объектов", "estimate": "Оценка стоимости", "mortgage": "Ипотечный калькулятор", "favorites": "Избранное", "assistant": "ИИ-ассистент", "notFound": "Страница не найдена" },
+  "nav": { "catalog": "Каталог", "estimate": "Оценка дома", "mortgage": "Ипотека", "favorites": "Избранное", "assistant": "ИИ-ассистент" },
+  "home": {
+    "title": "Найдите дом в Ташкенте",
+    "subtitle": "ИИ-ассистент подберёт дом по вашему описанию",
+    "toCatalog": "Смотреть каталог",
+    "askAssistant": "Спросить ассистента",
+    "districts": "Популярные районы",
+    "fresh": "Свежие объекты",
+    "all": "Все объекты"
+  },
+  "pages": { "catalog": "Каталог домов", "estimate": "Оценка стоимости дома", "mortgage": "Ипотечный калькулятор", "favorites": "Избранное", "assistant": "ИИ-ассистент", "notFound": "Страница не найдена" },
+  "deal": { "sale": "Продажа", "rent": "Аренда", "all": "Любая сделка", "perMonth": "/мес" },
+  "renovation": { "none": "Без ремонта", "basic": "Косметический", "euro": "Евроремонт", "designer": "Дизайнерский" },
+  "building": { "brick": "Кирпичный", "block": "Блочный", "monolith": "Монолитный" },
+  "card": {
+    "rooms_one": "{{count}}-комн.",
+    "rooms_few": "{{count}}-комн.",
+    "rooms_many": "{{count}}-комн.",
+    "rooms_other": "{{count}}-комн.",
+    "land_one": "{{count}} сотка",
+    "land_few": "{{count}} сотки",
+    "land_many": "{{count}} соток",
+    "land_other": "{{count}} сотки",
+    "floors": "{{count}} эт."
+  },
+  "filters": {
+    "district": "Район",
+    "anyDistrict": "Все районы",
+    "rooms": "Комнаты",
+    "anyRooms": "Любое число",
+    "priceFrom": "Цена от, $",
+    "priceTo": "Цена до, $",
+    "areaFrom": "Площадь дома от, м²",
+    "landFrom": "Участок от, соток",
+    "sort": "Сортировка",
+    "sortNew": "По умолчанию",
+    "sortPriceAsc": "Сначала дешёвые",
+    "sortPriceDesc": "Сначала дорогие",
+    "reset": "Сбросить"
+  },
+  "catalog": { "found": "Найдено: {{count}}", "empty": "По вашим фильтрам ничего не найдено", "emptyHint": "Попробуйте изменить или сбросить фильтры.", "prev": "Назад", "next": "Вперёд", "page": "Страница {{page}} из {{pages}}" },
   "soon": "Раздел в разработке",
   "footer": "Uy AI — дипломный проект"
 }
