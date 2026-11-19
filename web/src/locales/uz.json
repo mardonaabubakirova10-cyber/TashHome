@@ -98,6 +98,12 @@
       "disclaimer": "Hisob-kitob taxminiy. Shartlarni bankdan aniqlang."
     }
   },
+  "ticket": {
+    "flip": "Aylantirish uchun bosing",
+    "flipBack": "Qaytarish",
+    "open": "Uy sahifasini ochish",
+    "hint": "Xususiyatlarni ko‘rish uchun kartani bosing"
+  },
   "soon": "Bo‘lim ishlab chiqilmoqda",
   "footer": "TashHome — diplom loyihasi"
 }

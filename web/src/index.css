@@ -40,3 +40,50 @@ h2 {
   font-weight: 600;
   letter-spacing: -0.01em;
 }
+
+/* Parallax Ticket (Motion Studies): перспектива, две стороны, слои глубины, блик */
+.ticket-stage {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  perspective: 900px;
+}
+.ticket {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+.ticket-side {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  background: var(--color-ink);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.ticket-back {
+  transform: rotateY(180deg);
+  background: var(--color-white);
+  box-shadow: inset 0 0 0 1px var(--color-slate-200);
+}
+.ticket-layer {
+  position: absolute;
+  will-change: transform;
+  pointer-events: none;
+}
+.ticket-shade {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(180deg, transparent 40%, rgba(0, 0, 0, 0.6));
+}
+.ticket-glare {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: var(--g, 0);
+  background: radial-gradient(240px circle at var(--gx, 50%) var(--gy, 30%), rgba(255, 255, 255, 0.22), transparent 60%);
+  mix-blend-mode: screen;
+}

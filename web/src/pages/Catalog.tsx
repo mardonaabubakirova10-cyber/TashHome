@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import PropertyCard from '../components/PropertyCard'
+import HouseTicket from '../components/HouseTicket'
 import Button from '../components/ui/Button'
 import { Input, Select } from '../components/ui/Field'
 import { DISTRICTS } from '../data/properties'
@@ -67,7 +67,10 @@ export default function Catalog() {
         </div>
       </div>
 
-      <p className="text-sm text-slate-500">{t('catalog.found', { count: results.length })}</p>
+      <div className="flex flex-wrap items-center justify-between gap-2 text-sm text-slate-500">
+        <p>{t('catalog.found', { count: results.length })}</p>
+        <p>{t('ticket.hint')}</p>
+      </div>
 
       {visible.length === 0 ? (
         <div className="rounded-xl border border-dashed border-slate-300 py-16 text-center">
@@ -77,7 +80,7 @@ export default function Catalog() {
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {visible.map((item) => (
-            <PropertyCard key={item.id} item={item} />
+            <HouseTicket key={item.id} item={item} />
           ))}
         </div>
       )}
