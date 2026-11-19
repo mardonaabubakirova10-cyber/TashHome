@@ -104,6 +104,26 @@
     "open": "Uy sahifasini ochish",
     "hint": "Xususiyatlarni ko‘rish uchun kartani bosing"
   },
+  "mortgage": {
+    "presets": "Shartlar namunalari",
+    "preset_standard": "Standart",
+    "preset_benefit": "Imtiyozli",
+    "preset_short": "Qisqa",
+    "price": "Uy narxi, $",
+    "downPayment": "Boshlang‘ich badal",
+    "loan": "Kredit summasi",
+    "total": "Jami to‘lov",
+    "overpay": "Ortiqcha to‘lov",
+    "schedule": "To‘lov jadvali",
+    "month": "Oy",
+    "payment": "To‘lov",
+    "interest": "Foiz",
+    "principal": "Asosiy qarz",
+    "balance": "Qoldiq",
+    "showAll": "Barcha {{count}} oyni ko‘rsatish",
+    "collapse": "Yig‘ish",
+    "disclaimer": "Namunadagi shartlar taxminiy va bank taklifi emas. Aniq foiz va talablarni bankdan aniqlang."
+  },
   "soon": "Bo‘lim ishlab chiqilmoqda",
   "footer": "TashHome — diplom loyihasi"
 }

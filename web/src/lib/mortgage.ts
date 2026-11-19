@@ -6,3 +6,21 @@ export function monthlyPayment(principal: number, annualRatePercent: number, yea
   if (r === 0) return principal / n
   return (principal * r) / (1 - Math.pow(1 + r, -n))
 }
+
+export type ScheduleRow = { month: number; payment: number; interest: number; principal: number; balance: number }
+
+/** График платежей: сколько в каждом месяце уходит на проценты, сколько на долг и какой остаток. */
+export function schedule(principal: number, annualRatePercent: number, years: number): ScheduleRow[] {
+  const n = Math.round(years * 12)
+  const payment = monthlyPayment(principal, annualRatePercent, years)
+  const r = annualRatePercent / 100 / 12
+  const rows: ScheduleRow[] = []
+  let balance = principal
+  for (let month = 1; month <= n; month++) {
+    const interest = balance * r
+    const part = month === n ? balance : payment - interest // в последнем месяце гасим остаток без хвоста округления
+    balance = Math.max(0, balance - part)
+    rows.push({ month, payment: part + interest, interest, principal: part, balance })
+  }
+  return rows
+}

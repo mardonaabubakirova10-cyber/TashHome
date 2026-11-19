@@ -5,6 +5,7 @@ import { CurrencyProvider } from './lib/currency'
 import Layout from './components/Layout'
 import Catalog from './pages/Catalog'
 import Home from './pages/Home'
+import Mortgage from './pages/Mortgage'
 import Placeholder from './pages/Placeholder'
 import UiDemo from './pages/UiDemo'
 import { ToastProvider } from './components/ui/Toast'
@@ -14,7 +15,7 @@ const Property = lazy(() => import('./pages/Property'))
 
 const queryClient = new QueryClient()
 
-const sections = ['estimate', 'mortgage', 'favorites', 'assistant'] as const
+const sections = ['estimate', 'favorites', 'assistant'] as const
 
 export default function App() {
   return (
@@ -25,6 +26,7 @@ export default function App() {
           <Routes>
             <Route element={<Layout />}>
               <Route index element={<Home />} />
+              <Route path="mortgage" element={<Mortgage />} />
               <Route path="catalog" element={<Catalog />} />
               <Route path="catalog/:id" element={<Suspense fallback={null}><Property /></Suspense>} />
               <Route path="ui" element={<UiDemo />} />
