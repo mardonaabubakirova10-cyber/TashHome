@@ -7,7 +7,7 @@ import { Input, Select } from '../components/ui/Field'
 import { DISTRICTS, PROPERTIES } from '../data/properties'
 
 const linkBtn = 'inline-flex items-center justify-center rounded-lg px-6 py-3 text-base font-medium transition-colors'
-const photoTone = 'size-full object-cover sepia-[.25]'
+const HERO_PHOTO = 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1800&q=80' // замените на своё фото
 
 function SectionHead({ title, action }: { title: string; action?: ReactNode }) {
   return (
@@ -47,58 +47,62 @@ export default function Home() {
 
   return (
     <div className="grid gap-20">
-      {/* Hero */}
-      <section className="overflow-hidden rounded-2xl bg-ink text-white">
-        <div className="grid gap-10 p-6 sm:p-12 lg:grid-cols-[1.15fr_1fr] lg:items-center">
-          <div>
-            <p className="text-xs font-medium uppercase tracking-[0.3em] text-brand-100">{t('home.eyebrow')}</p>
-            <h1 className="mt-5 text-5xl leading-[1.05] sm:text-7xl">{t('home.title')}</h1>
-            <p className="mt-5 max-w-md text-slate-300">{t('home.subtitle')}</p>
+      {/* Hero: огромные слова по углам поверх фото */}
+      <div>
+        <section className="relative isolate min-h-[32rem] overflow-hidden rounded-2xl bg-ink text-white sm:min-h-[42rem]">
+          <img src={HERO_PHOTO} alt="" className="absolute inset-0 -z-20 size-full object-cover sepia-[.2]" />
+          <div className="absolute inset-0 -z-10 bg-gradient-to-b from-black/35 via-black/5 to-black/50" />
 
-            <form
-              onSubmit={onSearch}
-              className="mt-8 grid gap-3 rounded-xl bg-white p-4 text-slate-900 sm:grid-cols-3 sm:items-end"
-            >
-              <Select label={t('filters.district')} value={district} onChange={(e) => setDistrict(e.target.value)}>
-                <option value="">{t('filters.anyDistrict')}</option>
-                {DISTRICTS.map((d) => (
-                  <option key={d.id} value={d.id}>
-                    {districtName(d)}
-                  </option>
-                ))}
-              </Select>
-              <Select label={t('filters.rooms')} value={rooms} onChange={(e) => setRooms(e.target.value)}>
-                <option value="">{t('filters.anyRooms')}</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-                <option value="6">6+</option>
-              </Select>
-              <Input
-                label={t('filters.priceTo')}
-                type="number"
-                min={0}
-                inputMode="numeric"
-                value={price}
-                onChange={(e) => setPrice(e.target.value)}
-              />
-              <Button type="submit" size="lg" className="sm:col-span-3">
-                {t('home.searchBtn')}
-              </Button>
-            </form>
-          </div>
+          <h1 aria-label="TashHome" className="font-medium uppercase leading-[0.85] tracking-tight">
+            <span aria-hidden className="absolute left-5 top-5 text-[clamp(5rem,21vw,16rem)] sm:left-10 sm:top-8">
+              Tash
+            </span>
+            <span aria-hidden className="absolute bottom-5 right-5 text-[clamp(5rem,21vw,16rem)] sm:bottom-8 sm:right-10">
+              Home
+            </span>
+          </h1>
 
-          {/* Коллаж фото: на телефоне — две рядом, на компьютере — с наложением */}
-          <div className="grid grid-cols-2 gap-3 lg:relative lg:block lg:min-h-[34rem]">
-            <div className="aspect-[3/4] overflow-hidden rounded-lg lg:absolute lg:right-0 lg:top-0 lg:w-[72%]">
-              <img src={PROPERTIES[1].photos[0]} alt="" className={photoTone} />
-            </div>
-            <div className="aspect-[3/4] overflow-hidden rounded-lg lg:absolute lg:bottom-0 lg:left-0 lg:aspect-[4/3] lg:w-[58%] lg:border-[10px] lg:border-ink">
-              <img src={PROPERTIES[2].photos[0]} alt="" className={photoTone} />
-            </div>
+          <div className="absolute left-5 top-[40%] max-w-[15rem] sm:bottom-10 sm:left-10 sm:top-auto">
+            <p className="text-xs font-medium uppercase tracking-[0.25em] text-brand-100">{t('home.eyebrow')}</p>
+            <p className="mt-2 text-sm text-white/90">{t('home.subtitle')}</p>
+            <Link to="/catalog" className="mt-4 inline-flex rounded-md bg-white px-4 py-2 text-sm font-medium text-ink hover:bg-brand-50">
+              {t('home.toCatalog')}
+            </Link>
           </div>
-        </div>
-      </section>
+        </section>
+
+        <form
+          onSubmit={onSearch}
+          className="relative z-10 mx-4 -mt-8 grid gap-3 rounded-xl bg-white p-4 text-slate-900 shadow-xl ring-1 ring-black/5 sm:mx-10 sm:grid-cols-[1fr_1fr_1fr_auto] sm:items-end"
+        >
+          <Select label={t('filters.district')} value={district} onChange={(e) => setDistrict(e.target.value)}>
+            <option value="">{t('filters.anyDistrict')}</option>
+            {DISTRICTS.map((d) => (
+              <option key={d.id} value={d.id}>
+                {districtName(d)}
+              </option>
+            ))}
+          </Select>
+          <Select label={t('filters.rooms')} value={rooms} onChange={(e) => setRooms(e.target.value)}>
+            <option value="">{t('filters.anyRooms')}</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6+</option>
+          </Select>
+          <Input
+            label={t('filters.priceTo')}
+            type="number"
+            min={0}
+            inputMode="numeric"
+            value={price}
+            onChange={(e) => setPrice(e.target.value)}
+          />
+          <Button type="submit" size="lg">
+            {t('home.searchBtn')}
+          </Button>
+        </form>
+      </div>
 
       {/* Цифры */}
       <section className="grid gap-6 sm:grid-cols-3">
