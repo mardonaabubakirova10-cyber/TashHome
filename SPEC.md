@@ -28,7 +28,7 @@
 | Frontend | React 19, TypeScript, Vite, Tailwind CSS, React Router, TanStack Query, i18next (ru/uz), Leaflet (карта), Recharts (дашборд) |
 | Backend | Node.js 22, TypeScript, Express, Zod (валидация), grammY (бот) |
 | ИИ | Google Gemini API (SDK `@google/genai`): Flash-модель для чата и function calling, модель эмбеддингов для RAG, аудиовход для голоса. Конкретные версии моделей фиксируем в `.env` на старте |
-| ML | Python 3.12, pandas, scikit-learn, CatBoost, FastAPI |
+| ML | Python 3.15, pandas, scikit-learn, LightGBM, FastAPI |
 | БД | Supabase: PostgreSQL + `pgvector`, Auth, Storage, RLS |
 | Деплой | Vercel (web), Render (server, ml-service), Supabase Cloud |
 | Качество | ESLint, Prettier, Vitest (unit), pytest (ML) |
@@ -133,7 +133,7 @@ nedvijka/
 ### 6.4. Оценка стоимости (ml-service)
 - **Данные:** открытый датасет домов Ташкента (Kaggle и аналоги). Если подходящего нет — синтетическая генерация по реалистичным правилам цены за м² по районам. Источник указывается в дипломе.
 - **Признаки:** район, площадь дома, площадь участка (сотки), комнаты, этажность, материал стен, ремонт, год постройки; производные — цена за м² района, цена сотки в районе, доля участка в площади.
-- **Модель:** baseline (линейная регрессия) → CatBoost. Сравнение по MAE, MAPE и R² на hold-out выборке и кросс-валидации. Результаты сохраняются в `model/metrics.json` и показываются в админке.
+- **Модель:** baseline (линейная регрессия) → LightGBM (градиентный бустинг; CatBoost пока не имеет сборки под Python 3.15). Диапазон цены — квантильная регрессия LightGBM. Сравнение по MAE, MAPE и R² на hold-out выборке и кросс-валидации. Результаты сохраняются в `model/metrics.json` и показываются в админке.
 - **Выход:** `predicted_price`, интервал (квантильная регрессия или ±MAPE), топ влияющих факторов.
 - **Метка объекта:** отклонение цены от прогноза < −10 % → `below`, > +10 % → `above`, иначе `fair`. Пересчитывается при сохранении объекта.
 
