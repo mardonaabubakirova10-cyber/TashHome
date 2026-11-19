@@ -1,0 +1,53 @@
+{
+  "data": {
+    "rows": 3000,
+    "train": 2400,
+    "test": 600,
+    "source": "synthetic (ml/data/README.md)"
+  },
+  "cross_validation_train": {
+    "linear_regression": {
+      "MAE_usd": 13020,
+      "MAPE_pct": 10.92,
+      "R2": 0.8424
+    },
+    "lightgbm": {
+      "MAE_usd": 11943,
+      "MAPE_pct": 10.09,
+      "R2": 0.872
+    }
+  },
+  "test": {
+    "linear_regression": {
+      "MAE_usd": 12887,
+      "MAPE_pct": 10.89,
+      "MedAPE_pct": 8.52,
+      "R2": 0.8281,
+      "within_10pct": 58.2,
+      "within_20pct": 87.0
+    },
+    "lightgbm": {
+      "MAE_usd": 12001,
+      "MAPE_pct": 10.18,
+      "MedAPE_pct": 7.83,
+      "R2": 0.8543,
+      "within_10pct": 58.8,
+      "within_20pct": 89.2
+    },
+    "interval_80pct_coverage": 78.3,
+    "interval_median_width_pct": 33.4
+  },
+  "interval_widen_log": 0.0422,
+  "feature_importance_pct": {
+    "area_m2": 37.5,
+    "district": 24.6,
+    "land_sotka": 14.6,
+    "renovation_level": 8.0,
+    "rooms": 6.2,
+    "age": 5.7,
+    "area_per_room": 2.1,
+    "building_type": 1.2,
+    "floors": 0.2
+  },
+  "best_iteration": 586
+}
