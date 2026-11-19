@@ -1,0 +1,7 @@
+{
+  "nav": { "catalog": "Katalog", "estimate": "Kvartirani baholash", "mortgage": "Ipoteka", "favorites": "Sevimlilar", "assistant": "AI-yordamchi" },
+  "home": { "title": "Toshkentda kvartira toping", "subtitle": "AI-yordamchi tavsifingiz bo‘yicha variantlar tanlaydi" },
+  "pages": { "catalog": "Obyektlar katalogi", "estimate": "Narxni baholash", "mortgage": "Ipoteka kalkulyatori", "favorites": "Sevimlilar", "assistant": "AI-yordamchi", "notFound": "Sahifa topilmadi" },
+  "soon": "Bo‘lim ishlab chiqilmoqda",
+  "footer": "Uy AI — diplom loyihasi"
+}

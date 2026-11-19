@@ -36,7 +36,7 @@
   ✔ Unit-тест сверяет платёж с ручным расчётом.
 
 ## Этап 3. Frontend — сайт
-- [ ] **3.1** Каркас `web`: Vite + React + TS + Tailwind, роутинг, layout (шапка, футер), i18n ru/uz, переключатель USD/UZS.
+- [x] **3.1** Каркас `web`: Vite + React + TS + Tailwind, роутинг, layout (шапка, футер), i18n ru/uz, переключатель USD/UZS.
   ✔ Переключение языка и валюты работает на всех страницах.
 - [ ] **3.2** UI-kit: Button, Input, Select, Card, Modal, Skeleton, Toast, Badge.
   ✔ Компоненты корректно выглядят на 360 px и на десктопе.
