@@ -51,6 +51,10 @@ div.leaflet-container {
   background: #0b0b0a;
   font-family: inherit;
 }
+/* Светлые плитки OpenStreetMap превращаем в тёмные */
+.leaflet-tile-pane {
+  filter: invert(1) hue-rotate(180deg) brightness(0.8) contrast(0.9) saturate(0.4);
+}
 .leaflet-control-attribution {
   background: rgba(0, 0, 0, 0.6) !important;
   color: #948f7c !important;

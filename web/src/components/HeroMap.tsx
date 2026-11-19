@@ -21,10 +21,9 @@ export default function HeroMap() {
       touchZoom: false,
     }).setView([41.31, 69.26], 11)
 
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-      subdomains: 'abcd',
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
-      attribution: '© OpenStreetMap © CARTO',
+      attribution: '© OpenStreetMap',
     }).addTo(map)
 
     PROPERTIES.forEach((p) => {
