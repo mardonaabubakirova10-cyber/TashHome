@@ -23,7 +23,7 @@ function Segmented<T extends string>({
   label: string
 }) {
   return (
-    <div role="group" aria-label={label} className="flex rounded-lg border border-slate-200 bg-white p-0.5 text-xs font-medium">
+    <div role="group" aria-label={label} className="flex rounded-lg border border-white/20 p-0.5 text-xs font-medium">
       {options.map((o) => (
         <button
           key={o}
@@ -31,7 +31,7 @@ function Segmented<T extends string>({
           aria-pressed={value === o}
           onClick={() => onChange(o)}
           className={`rounded-md px-2.5 py-1 transition-colors ${
-            value === o ? 'bg-brand-500 text-white' : 'text-slate-600 hover:bg-slate-100'
+            value === o ? 'bg-brand-500 text-white' : 'text-slate-300 hover:bg-white/10'
           }`}
         >
           {o.toUpperCase()}
@@ -56,9 +56,9 @@ export default function Layout() {
 
   return (
     <div className="flex min-h-screen flex-col">
-      <header className="sticky top-0 z-10 border-b border-slate-200 bg-white/90 backdrop-blur">
+      <header className="sticky top-0 z-10 border-b border-white/10 bg-ink/95 text-white backdrop-blur">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-6 gap-y-2 px-4 py-3">
-          <NavLink to="/" className="text-lg font-bold text-brand-600">
+          <NavLink to="/" className="font-display text-2xl font-semibold tracking-tight">
             TashHome
           </NavLink>
           <nav className="order-3 flex w-full gap-1 overflow-x-auto text-sm sm:order-none sm:w-auto sm:flex-1">
@@ -69,7 +69,7 @@ export default function Layout() {
                 end={l.to === '/'}
                 className={({ isActive }) =>
                   `whitespace-nowrap rounded-md px-3 py-1.5 ${
-                    isActive ? 'bg-brand-50 font-medium text-brand-700' : 'text-slate-600 hover:bg-slate-100'
+                    isActive ? 'bg-white/10 font-medium text-white' : 'text-slate-300 hover:bg-white/5 hover:text-white'
                   }`
                 }
               >
@@ -96,7 +96,10 @@ export default function Layout() {
       <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-8">
         <Outlet />
       </main>
-      <footer className="border-t border-slate-200 py-4 text-center text-sm text-slate-500">{t('footer')}</footer>
+      <footer className="bg-ink py-8 text-center text-sm text-slate-400">
+        <p className="font-display text-xl text-white">TashHome</p>
+        <p className="mt-1">{t('footer')}</p>
+      </footer>
     </div>
   )
 }

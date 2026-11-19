@@ -12,16 +12,16 @@ export default function PropertyCard({ item }: { item: Property }) {
   const districtName = district ? (i18n.language === 'uz' ? district.uz : district.ru) : ''
 
   return (
-    <Link to={`/catalog/${item.id}`} className="block rounded-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500">
-    <Card className="overflow-hidden transition-shadow hover:shadow-md">
-      <div className="relative aspect-[4/3] bg-slate-200">
-        <img src={item.photo} alt="" loading="lazy" className="size-full object-cover" />
+    <Link to={`/catalog/${item.id}`} className="group block rounded-lg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500">
+    <Card className="overflow-hidden transition-colors group-hover:border-brand-500">
+      <div className="relative aspect-[4/3] overflow-hidden bg-slate-200">
+        <img src={item.photo} alt="" loading="lazy" className="size-full object-cover sepia-[.25] transition-transform duration-500 group-hover:scale-105" />
         <div className="absolute left-3 top-3">
           <Badge tone={item.dealType === 'sale' ? 'brand' : 'warning'}>{t(`deal.${item.dealType}`)}</Badge>
         </div>
       </div>
       <div className="grid gap-1 p-4">
-        <p className="text-xl font-bold">
+        <p className="font-display text-2xl font-semibold">
           {format(item.priceUsd)}
           {item.dealType === 'rent' && <span className="text-sm font-normal text-slate-500"> {t('deal.perMonth')}</span>}
         </p>

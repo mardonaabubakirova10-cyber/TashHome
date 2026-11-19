@@ -80,7 +80,7 @@ export default function Property() {
           <Card className="grid gap-3 p-5">
             <Badge tone={item.dealType === 'sale' ? 'brand' : 'warning'}>{t(`deal.${item.dealType}`)}</Badge>
             <h1 className="text-xl font-bold">{t('property.title', { rooms: item.rooms, district: districtName })}</h1>
-            <p className="text-3xl font-bold">
+            <p className="font-display text-4xl font-semibold">
               {format(item.priceUsd)}
               {item.dealType === 'rent' && <span className="text-base font-normal text-slate-500"> {t('deal.perMonth')}</span>}
             </p>

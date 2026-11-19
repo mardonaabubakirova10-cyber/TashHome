@@ -1,14 +1,42 @@
 @import "tailwindcss";
 
+/*
+  Тёплая «редакционная» тема: оливково-чёрный, крем, терракота.
+  Серая шкала slate и белый переопределены тёплыми оттенками, поэтому все
+  существующие компоненты (bg-white, text-slate-600 и т.д.) подхватывают палитру автоматически.
+*/
 @theme {
-  --color-brand-50: #eef6ff;
-  --color-brand-100: #d9ebff;
-  --color-brand-500: #2563eb;
-  --color-brand-600: #1d4ed8;
-  --color-brand-700: #1e40af;
   --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: "Playfair Display", Georgia, "Times New Roman", serif;
+
+  --color-ink: #13150d;
+  --color-white: #fbf6ea;
+
+  --color-slate-50: #f3ecdc;
+  --color-slate-100: #ebe2cf;
+  --color-slate-200: #ddd1b8;
+  --color-slate-300: #c9bb9d;
+  --color-slate-400: #a39a82;
+  --color-slate-500: #766f5b;
+  --color-slate-600: #5a5746;
+  --color-slate-700: #433f31;
+  --color-slate-800: #2c2b20;
+  --color-slate-900: #13150d;
+
+  --color-brand-50: #f8e9df;
+  --color-brand-100: #f0d3bf;
+  --color-brand-500: #b8532c;
+  --color-brand-600: #9c4423;
+  --color-brand-700: #7d361b;
 }
 
 body {
   @apply bg-slate-50 text-slate-900 antialiased;
+}
+
+h1,
+h2 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.01em;
 }
