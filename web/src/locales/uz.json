@@ -1,5 +1,5 @@
 {
-  "nav": { "home": "Bosh sahifa", "catalog": "Katalog", "estimate": "Uyni baholash", "mortgage": "Ipoteka", "favorites": "Sevimlilar", "assistant": "AI-yordamchi" },
+  "nav": { "compare": "Taqqoslash", "home": "Bosh sahifa", "catalog": "Katalog", "estimate": "Uyni baholash", "mortgage": "Ipoteka", "favorites": "Sevimlilar", "assistant": "AI-yordamchi" },
   "home": {
     "title": "Toshkentda uy toping",
     "subtitle": "AI-yordamchi tavsifingiz bo‘yicha uy tanlaydi",
@@ -37,7 +37,7 @@
     "ctaTitle": "Mos uy topolmadingizmi?",
     "ctaText": "Yordamchiga nima kerakligini ayting, u tanlashga yordam beradi."
   },
-  "pages": { "catalog": "Uylar katalogi", "estimate": "Uy narxini baholash", "mortgage": "Ipoteka kalkulyatori", "favorites": "Sevimlilar", "assistant": "AI-yordamchi", "notFound": "Sahifa topilmadi" },
+  "pages": { "compare": "Uylarni taqqoslash", "catalog": "Uylar katalogi", "estimate": "Uy narxini baholash", "mortgage": "Ipoteka kalkulyatori", "favorites": "Sevimlilar", "assistant": "AI-yordamchi", "notFound": "Sahifa topilmadi" },
   "deal": { "sale": "Sotuv", "rent": "Ijara", "all": "Har qanday bitim", "perMonth": "/oy" },
   "renovation": { "none": "Ta’mirsiz", "basic": "Kosmetik", "euro": "Yevroremont", "designer": "Dizayner" },
   "building": { "brick": "G‘ishtli", "block": "Blokli", "monolith": "Monolit" },
@@ -123,6 +123,27 @@
     "showAll": "Barcha {{count}} oyni ko‘rsatish",
     "collapse": "Yig‘ish",
     "disclaimer": "Namunadagi shartlar taxminiy va bank taklifi emas. Aniq foiz va talablarni bankdan aniqlang."
+  },
+  "actions": {
+    "favoriteAdd": "Sevimlilarga",
+    "favoriteRemove": "Sevimlilardan olib tashlash",
+    "compareAdd": "Taqqoslashga qo‘shish",
+    "compareRemove": "Taqqoslashdan olib tashlash",
+    "compareFull": "{{count}} tadan ortiq uyni taqqoslab bo‘lmaydi"
+  },
+  "favorites": {
+    "empty": "Hozircha hech narsa yo‘q",
+    "emptyHint": "Uyni shu yerda saqlash uchun yurakcha belgisini bosing.",
+    "toCatalog": "Katalogga o‘tish"
+  },
+  "compare": {
+    "price": "Narx",
+    "pricePerM2": "1 m² narxi",
+    "clear": "Tozalash",
+    "remove": "Olib tashlash",
+    "empty": "Taqqoslash uchun hech narsa yo‘q",
+    "emptyHint": "Uydagi o‘qlar belgisini bosing. {{max}} tagacha uyni taqqoslash mumkin.",
+    "addMore": "Taqqoslash uchun yana kamida bitta uy qo‘shing."
   },
   "soon": "Bo‘lim ishlab chiqilmoqda",
   "footer": "TashHome — diplom loyihasi"

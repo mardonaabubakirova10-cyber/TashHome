@@ -1,5 +1,6 @@
 import { NavLink, Outlet } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import { useCollections } from '../lib/collections'
 import { useCurrency, type Currency } from '../lib/currency'
 
 const links = [
@@ -8,6 +9,7 @@ const links = [
   { to: '/estimate', key: 'estimate' },
   { to: '/mortgage', key: 'mortgage' },
   { to: '/favorites', key: 'favorites' },
+  { to: '/compare', key: 'compare' },
   { to: '/assistant', key: 'assistant' },
 ] as const
 
@@ -44,6 +46,8 @@ function Segmented<T extends string>({
 export default function Layout() {
   const { t, i18n } = useTranslation()
   const { currency, setCurrency } = useCurrency()
+  const { favorites, compare } = useCollections()
+  const counts: Record<string, number> = { favorites: favorites.length, compare: compare.length }
 
   const setLang = (l: 'ru' | 'uz') => {
     i18n.changeLanguage(l)
@@ -74,6 +78,9 @@ export default function Layout() {
                 }
               >
                 {t(`nav.${l.key}`)}
+                {counts[l.key] > 0 && (
+                  <span className="ml-1.5 rounded-full bg-brand-500 px-1.5 py-0.5 text-[11px] leading-none text-white">{counts[l.key]}</span>
+                )}
               </NavLink>
             ))}
           </nav>

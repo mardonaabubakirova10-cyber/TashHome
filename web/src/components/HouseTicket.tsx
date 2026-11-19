@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { DISTRICTS, type Property } from '../data/properties'
 import { useCurrency } from '../lib/currency'
+import ItemActions from './ItemActions'
 import ParallaxTicket from './ParallaxTicket'
 import Badge from './ui/Badge'
 
@@ -32,6 +33,7 @@ export default function HouseTicket({ item }: { item: Property }) {
   return (
     <ParallaxTicket
       image={item.photo}
+      actions={<ItemActions id={item.id} />}
       label={`${title}. ${t('ticket.flip')}`}
       front={
         <>

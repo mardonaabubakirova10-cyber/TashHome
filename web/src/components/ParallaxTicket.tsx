@@ -10,13 +10,15 @@ type Props = {
   front: ReactNode
   /** Оборотная сторона; получает функцию переворота обратно */
   back: (flip: () => void) => ReactNode
+  /** Кнопки поверх карточки (избранное и т.п.): не наклоняются и не переворачиваются вместе с ней */
+  actions?: ReactNode
 }
 
 /**
  * Карточка с параллаксом: наклоняется к курсору, слои сдвигаются на разную глубину,
  * блик следует за курсором, по клику переворачивается на пружине. Без курсора слегка «плавает».
  */
-export default function ParallaxTicket({ image, label, front, back }: Props) {
+export default function ParallaxTicket({ image, label, front, back, actions }: Props) {
   const stageRef = useRef<HTMLDivElement>(null)
   const ticketRef = useRef<HTMLDivElement>(null)
   const glareRef = useRef<HTMLDivElement>(null)
@@ -179,6 +181,7 @@ export default function ParallaxTicket({ image, label, front, back }: Props) {
           {back(flip)}
         </div>
       </div>
+      {actions && <div className="absolute right-3 top-3 z-10">{actions}</div>}
     </div>
   )
 }

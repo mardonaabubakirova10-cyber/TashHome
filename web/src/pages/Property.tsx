@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import ItemActions from '../components/ItemActions'
 import LeadForm from '../components/LeadForm'
 import MortgageMini from '../components/MortgageMini'
 import PhotoGallery from '../components/PhotoGallery'
@@ -78,7 +79,10 @@ export default function Property() {
 
         <aside className="grid content-start gap-4 lg:sticky lg:top-24">
           <Card className="grid gap-3 p-5">
-            <Badge tone={item.dealType === 'sale' ? 'brand' : 'warning'}>{t(`deal.${item.dealType}`)}</Badge>
+            <div className="flex items-center justify-between">
+              <Badge tone={item.dealType === 'sale' ? 'brand' : 'warning'}>{t(`deal.${item.dealType}`)}</Badge>
+              <ItemActions id={item.id} />
+            </div>
             <h1 className="text-xl font-bold">{t('property.title', { rooms: item.rooms, district: districtName })}</h1>
             <p className="font-display text-4xl font-semibold">
               {format(item.priceUsd)}

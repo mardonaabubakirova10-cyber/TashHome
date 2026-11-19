@@ -1,9 +1,12 @@
 import { lazy, Suspense } from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { CollectionsProvider } from './lib/collections'
 import { CurrencyProvider } from './lib/currency'
 import Layout from './components/Layout'
 import Catalog from './pages/Catalog'
+import Compare from './pages/Compare'
+import Favorites from './pages/Favorites'
 import Home from './pages/Home'
 import Mortgage from './pages/Mortgage'
 import Placeholder from './pages/Placeholder'
@@ -15,18 +18,21 @@ const Property = lazy(() => import('./pages/Property'))
 
 const queryClient = new QueryClient()
 
-const sections = ['estimate', 'favorites', 'assistant'] as const
+const sections = ['estimate', 'assistant'] as const
 
 export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <CurrencyProvider>
        <ToastProvider>
+        <CollectionsProvider>
         <BrowserRouter>
           <Routes>
             <Route element={<Layout />}>
               <Route index element={<Home />} />
               <Route path="mortgage" element={<Mortgage />} />
+              <Route path="favorites" element={<Favorites />} />
+              <Route path="compare" element={<Compare />} />
               <Route path="catalog" element={<Catalog />} />
               <Route path="catalog/:id" element={<Suspense fallback={null}><Property /></Suspense>} />
               <Route path="ui" element={<UiDemo />} />
@@ -37,6 +43,7 @@ export default function App() {
             </Route>
           </Routes>
         </BrowserRouter>
+        </CollectionsProvider>
        </ToastProvider>
       </CurrencyProvider>
     </QueryClientProvider>
