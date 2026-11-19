@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { DISTRICTS, type Property } from '../data/properties'
 import { useCurrency } from '../lib/currency'
@@ -11,6 +12,7 @@ export default function PropertyCard({ item }: { item: Property }) {
   const districtName = district ? (i18n.language === 'uz' ? district.uz : district.ru) : ''
 
   return (
+    <Link to={`/catalog/${item.id}`} className="block rounded-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500">
     <Card className="overflow-hidden transition-shadow hover:shadow-md">
       <div className="relative aspect-[4/3] bg-slate-200">
         <img src={item.photo} alt="" loading="lazy" className="size-full object-cover" />
@@ -34,5 +36,6 @@ export default function PropertyCard({ item }: { item: Property }) {
         </p>
       </div>
     </Card>
+    </Link>
   )
 }

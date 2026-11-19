@@ -24,7 +24,26 @@ export type Property = {
   buildingType: BuildingType
   renovation: Renovation
   yearBuilt: number
+  lat: number
+  lng: number
   photo: string
+  photos: string[]
+}
+
+// Центры районов Ташкента (приблизительно), для карты
+const COORDS: Record<string, [number, number]> = {
+  yunusabad: [41.365, 69.285],
+  'mirzo-ulugbek': [41.34, 69.335],
+  chilanzar: [41.275, 69.205],
+  shaykhantakhur: [41.33, 69.23],
+  yakkasaray: [41.295, 69.265],
+  mirabad: [41.3, 69.29],
+  sergeli: [41.225, 69.22],
+  yashnabad: [41.295, 69.34],
+  almazar: [41.35, 69.24],
+  uchtepa: [41.3, 69.17],
+  bektemir: [41.215, 69.335],
+  yangihayot: [41.34, 69.13],
 }
 
 export const DISTRICTS: District[] = [
@@ -86,7 +105,10 @@ function build(): Property[] {
       buildingType: pick(BUILDINGS),
       renovation,
       yearBuilt: 1990 + Math.floor(rnd() * 35),
+      lat: COORDS[district.id][0] + (rnd() - 0.5) * 0.02,
+      lng: COORDS[district.id][1] + (rnd() - 0.5) * 0.02,
       photo: `https://picsum.photos/seed/uyai${i}/800/600`,
+      photos: [0, 1, 2, 3].map((k) => `https://picsum.photos/seed/uyai${i}-${k}/800/600`),
     })
   }
   return items
