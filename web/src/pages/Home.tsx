@@ -1,6 +1,7 @@
 import { useState, type FormEvent, type ReactNode } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import ctaPhoto from '../assets/showcase/cta.webp'
 import sketch from '../assets/showcase/sketch.webp'
 import assistantPhoto from '../assets/showcase/assistant.png'
 import BlueprintHouse from '../components/BlueprintHouse'
@@ -255,9 +256,9 @@ export default function Home() {
       </section>
 
       {/* Призыв */}
-      <section className="relative isolate overflow-hidden rounded-2xl bg-brand-500 px-6 py-14 text-center text-white">
-        <img src={PROPERTIES[19].photo} alt="" className="pointer-events-none absolute inset-0 -z-10 size-full object-cover opacity-70" />
-        <div className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-t from-black/70 via-black/30 to-black/60" />
+      <section className="relative isolate flex min-h-[22rem] flex-col items-center justify-center overflow-hidden rounded-2xl bg-brand-500 px-6 py-14 text-center text-white">
+        <img src={ctaPhoto} alt="" className="pointer-events-none absolute inset-0 -z-10 size-full object-cover object-[50%_40%]" />
+        <div className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-t from-black/60 via-black/50 to-black/60" />
         <h2 className="text-3xl sm:text-5xl">{t('home.ctaTitle')}</h2>
         <p className="mx-auto mt-3 max-w-md text-white">{t('home.ctaText')}</p>
         <Link to="/assistant" className={`${linkBtn} mt-7 bg-ink text-white hover:bg-slate-800`}>
