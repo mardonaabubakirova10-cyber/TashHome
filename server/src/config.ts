@@ -1,4 +1,9 @@
-import 'dotenv/config'
+import { config as loadEnv } from 'dotenv'
+import { fileURLToPath } from 'node:url'
+
+// Единый файл настроек лежит в корне проекта (.env). Файл server/.env, если он есть, имеет приоритет.
+loadEnv()
+loadEnv({ path: fileURLToPath(new URL('../../.env', import.meta.url)) })
 
 export const config = {
   port: Number(process.env.PORT ?? 3000),

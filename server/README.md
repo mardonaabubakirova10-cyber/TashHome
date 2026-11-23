@@ -1,7 +1,7 @@
 # server
 
 API на Express + TypeScript. Запуск (из папки `server`): `npm run dev` (порт 3000), тесты: `npm test`.
-Настройки берутся из `.env` в корне или из переменных окружения (см. `.env.example`).
+Настройки берутся из общего файла `.env` в корне проекта (шаблон `.env.example`, пошаговая инструкция в `KEYS.md`).
 
 Сейчас работают: `GET /api/health`, `GET /api/currency` (курс ЦБ с кешем на 6 часов), `GET /api/mortgage/programs`,
 `POST /api/mortgage/calc`, `POST /api/estimate` (проверка данных и передача в ml-сервис).

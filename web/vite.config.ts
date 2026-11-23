@@ -4,4 +4,6 @@ import { defineConfig } from 'vite'
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
+  // переменные VITE_* берутся из общего .env в корне проекта
+  envDir: '..',
 })
