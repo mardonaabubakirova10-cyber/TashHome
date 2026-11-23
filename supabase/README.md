@@ -4,6 +4,8 @@
 
 В проекте Supabase откройте **SQL Editor** и выполните по очереди (каждый файл целиком):
 
+> Быстрый путь: весь набор одним файлом `setup.sql` (вставить в SQL Editor и нажать Run).
+
 1. `migrations/0001_schema.sql` — таблицы, индексы, расширение `vector`.
 2. `migrations/0002_security.sql` — профили при регистрации, роли, политики доступа (RLS).
 3. `migrations/0003_search_functions.sql` — `match_kb_chunks` и `match_properties`.
