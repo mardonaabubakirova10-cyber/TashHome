@@ -1,13 +1,36 @@
 {
   "reviews": {
-    "title": "Mijozlar fikrlari", "leave": "Fikr qoldirish", "formTitle": "Sizning fikringiz",
-    "rating": "Baho", "name": "Ism (majburiy emas)", "text": "Nima yoqdi, nima yoqmadi", "send": "Fikrni yuborish", "sending": "Yuborilmoqda…",
-    "sent": "Rahmat! Fikringiz yuborildi.", "error": "Fikrni yuborib bo‘lmadi. Keyinroq urinib ko‘ring.", "tooMany": "Juda ko‘p fikr ketma-ket. Bir daqiqa kuting.",
-    "ratingError": "Baho qo‘ying", "textError": "Kamida bir-ikki so‘z yozing",
-    "loading": "Fikrlar yuklanmoqda…", "loadError": "Fikrlarni yuklab bo‘lmadi.", "empty": "Hozircha fikrlar yo‘q. Birinchi bo‘ling!", "anonymous": "Mijoz"
+    "title": "Mijozlar fikrlari",
+    "leave": "Fikr qoldirish",
+    "formTitle": "Sizning fikringiz",
+    "rating": "Baho",
+    "name": "Ism (majburiy emas)",
+    "text": "Nima yoqdi, nima yoqmadi",
+    "send": "Fikrni yuborish",
+    "sending": "Yuborilmoqda…",
+    "sent": "Rahmat! Fikringiz yuborildi.",
+    "error": "Fikrni yuborib bo‘lmadi. Keyinroq urinib ko‘ring.",
+    "tooMany": "Juda ko‘p fikr ketma-ket. Bir daqiqa kuting.",
+    "ratingError": "Baho qo‘ying",
+    "textError": "Kamida bir-ikki so‘z yozing",
+    "loading": "Fikrlar yuklanmoqda…",
+    "loadError": "Fikrlarni yuklab bo‘lmadi.",
+    "empty": "Hozircha fikrlar yo‘q. Birinchi bo‘ling!",
+    "anonymous": "Mijoz"
   },
-  "carousel": { "prev": "Orqaga", "next": "Oldinga" },
-  "nav": { "compare": "Taqqoslash", "home": "Bosh sahifa", "catalog": "Katalog", "estimate": "Uyni baholash", "mortgage": "Ipoteka", "favorites": "Sevimlilar", "assistant": "AI-yordamchi" },
+  "carousel": {
+    "prev": "Orqaga",
+    "next": "Oldinga"
+  },
+  "nav": {
+    "compare": "Taqqoslash",
+    "home": "Bosh sahifa",
+    "catalog": "Katalog",
+    "estimate": "Uyni baholash",
+    "mortgage": "Ipoteka",
+    "favorites": "Sevimlilar",
+    "assistant": "AI-yordamchi"
+  },
   "home": {
     "title": "Toshkentda uy toping",
     "subtitle": "AI-yordamchi tavsifingiz bo‘yicha uy tanlaydi",
@@ -47,23 +70,64 @@
     "ctaTitle": "Mos uy topolmadingizmi?",
     "ctaText": "Yordamchiga nima kerakligini ayting, u tanlashga yordam beradi."
   },
-  "pages": { "compare": "Uylarni taqqoslash", "catalog": "Uylar katalogi", "estimate": "Uy narxini baholash", "mortgage": "Ipoteka kalkulyatori", "favorites": "Sevimlilar", "assistant": "AI-yordamchi", "notFound": "Sahifa topilmadi" },
-  "deal": { "sale": "Sotuv", "rent": "Ijara", "all": "Har qanday bitim", "perMonth": "/oy" },
-  "priceLabel": { "below": "Bozordan past", "fair": "Bozor narxida", "above": "Bozordan yuqori", "model": "Model bahosi", "hint": "Narx model bahosi bilan solishtiriladi: 10 % dan ortiq farq «past» yoki «yuqori» belgisini beradi." },
+  "pages": {
+    "compare": "Uylarni taqqoslash",
+    "catalog": "Uylar katalogi",
+    "estimate": "Uy narxini baholash",
+    "mortgage": "Ipoteka kalkulyatori",
+    "favorites": "Sevimlilar",
+    "assistant": "AI-yordamchi",
+    "notFound": "Sahifa topilmadi"
+  },
+  "deal": {
+    "sale": "Sotuv",
+    "rent": "Ijara",
+    "all": "Har qanday bitim",
+    "perMonth": "/oy"
+  },
+  "priceLabel": {
+    "below": "Bozordan past",
+    "fair": "Bozor narxida",
+    "above": "Bozordan yuqori",
+    "model": "Model bahosi",
+    "hint": "Narx model bahosi bilan solishtiriladi: 10 % dan ortiq farq «past» yoki «yuqori» belgisini beradi."
+  },
   "estimate": {
     "intro": "Uy parametrlarini kiriting: model bozor narxini baholaydi, oraliqni va narxga eng ko‘p ta’sir qiluvchi omillarni ko‘rsatadi.",
-    "district": "Tuman", "submit": "Baholash", "loading": "Hisoblanmoqda…",
+    "district": "Tuman",
+    "submit": "Baholash",
+    "loading": "Hisoblanmoqda…",
     "empty": "Parametrlarni to‘ldirib, «Baholash» tugmasini bosing. Natija shu yerda chiqadi.",
-    "result": "Bozor bahosi", "range": "Ehtimoliy oraliq: {{low}} – {{high}}", "perM2": "Uyning 1 m² uchun taxminan {{price}}",
-    "factors": "Narxga nima ta’sir qiladi", "factorsHint": "Har bir parametr narxni bozor o‘rtachasiga nisbatan qanchaga o‘zgartiradi.",
-    "f_district": "Tuman", "f_material": "Devor materiali", "f_area": "Uy maydoni", "f_land": "Uchastka maydoni", "f_rooms": "Xonalar",
-    "f_floors": "Qavatlar", "f_age": "Uy yoshi", "f_areaPerRoom": "Xonaga maydon", "f_renovation": "Ta’mir",
-    "errorTitle": "Bahoni olib bo‘lmadi", "errorText": "Baholash xizmati hozir mavjud emas. Keyinroq urinib ko‘ring.",
+    "result": "Bozor bahosi",
+    "range": "Ehtimoliy oraliq: {{low}} – {{high}}",
+    "perM2": "Uyning 1 m² uchun taxminan {{price}}",
+    "factors": "Narxga nima ta’sir qiladi",
+    "factorsHint": "Har bir parametr narxni bozor o‘rtachasiga nisbatan qanchaga o‘zgartiradi.",
+    "f_district": "Tuman",
+    "f_material": "Devor materiali",
+    "f_area": "Uy maydoni",
+    "f_land": "Uchastka maydoni",
+    "f_rooms": "Xonalar",
+    "f_floors": "Qavatlar",
+    "f_age": "Uy yoshi",
+    "f_areaPerRoom": "Xonaga maydon",
+    "f_renovation": "Ta’mir",
+    "errorTitle": "Bahoni olib bo‘lmadi",
+    "errorText": "Baholash xizmati hozir mavjud emas. Keyinroq urinib ko‘ring.",
     "disclaimer": "Baho taxminiy va namunaviy ma’lumotlarga asoslangan. Mutaxassis bahosini o‘rnini bosmaydi.",
     "toCatalog": "Katalogdagi uylarni ko‘rish →"
   },
-  "renovation": { "none": "Ta’mirsiz", "basic": "Kosmetik", "euro": "Yevroremont", "designer": "Dizayner" },
-  "building": { "brick": "G‘ishtli", "block": "Blokli", "monolith": "Monolit" },
+  "renovation": {
+    "none": "Ta’mirsiz",
+    "basic": "Kosmetik",
+    "euro": "Yevroremont",
+    "designer": "Dizayner"
+  },
+  "building": {
+    "brick": "G‘ishtli",
+    "block": "Blokli",
+    "monolith": "Monolit"
+  },
   "card": {
     "rooms_one": "{{count}} xonali",
     "rooms_other": "{{count}} xonali",
@@ -86,7 +150,16 @@
     "sortPriceDesc": "Avval qimmatlari",
     "reset": "Tozalash"
   },
-  "catalog": { "loading": "Uylar yuklanmoqda…", "loadError": "Katalogni yuklab bo‘lmadi. Server ishlayotganini tekshiring.", "found": "Topildi: {{count}}", "empty": "Filtrlar bo‘yicha hech narsa topilmadi", "emptyHint": "Filtrlarni o‘zgartiring yoki tozalang.", "prev": "Orqaga", "next": "Oldinga", "page": "{{page}} / {{pages}} sahifa" },
+  "catalog": {
+    "loading": "Uylar yuklanmoqda…",
+    "loadError": "Katalogni yuklab bo‘lmadi. Server ishlayotganini tekshiring.",
+    "found": "Topildi: {{count}}",
+    "empty": "Filtrlar bo‘yicha hech narsa topilmadi",
+    "emptyHint": "Filtrlarni o‘zgartiring yoki tozalang.",
+    "prev": "Orqaga",
+    "next": "Oldinga",
+    "page": "{{page}} / {{pages}} sahifa"
+  },
   "property": {
     "title": "{{rooms}} xonali uy, {{district}}",
     "back": "← Katalogga",
@@ -169,5 +242,34 @@
     "emptyHint": "Uydagi o‘qlar belgisini bosing. {{max}} tagacha uyni taqqoslash mumkin.",
     "addMore": "Taqqoslash uchun yana kamida bitta uy qo‘shing."
   },
-  "soon": "Bo‘lim ishlab chiqilmoqda"
+  "soon": "Bo‘lim ishlab chiqilmoqda",
+  "chat": {
+    "title": "AI-yordamchi",
+    "subtitle": "Uy tanlayman, bitim va ipoteka bo‘yicha javob beraman",
+    "open": "Yordamchidan so‘rash",
+    "close": "Chatni yopish",
+    "placeholder": "Savol yozing…",
+    "send": "Yuborish",
+    "new": "Yangi suhbat",
+    "disclaimer": "AI xato qilishi mumkin, muhim narsalarni menejerdan aniqlashtiring",
+    "welcome": "Assalomu alaykum! Toshkentda xususiy uy tanlashga yordam beraman, xarid tartibini tushuntiraman, ipotekani hisoblayman va ko‘rishga yozib qo‘yaman. Nimadan boshlaymiz?",
+    "suggestions": [
+      "Yunusobodda 250 ming gacha uy",
+      "Bitim uchun qanday hujjatlar kerak?",
+      "100 000 $ lik uy uchun ipotekani hisobla",
+      "Ko‘rishga yozilmoqchiman"
+    ],
+    "found": "Topilgan uylar",
+    "leadCreated": "Ariza menejerga yuborildi",
+    "error": "Javob olib bo‘lmadi. Qayta urinib ko‘ring yoki uy sahifasida ariza qoldiring.",
+    "status": {
+      "thinking": "O‘ylayapman…",
+      "search_properties": "Uylarni qidiryapman…",
+      "get_property": "Uy tafsilotlarini ko‘ryapman…",
+      "search_knowledge": "Bilimlar bazasidan qidiryapman…",
+      "calc_mortgage": "Ipotekani hisoblayapman…",
+      "estimate_price": "Narxni baholayapman…",
+      "create_lead": "Ariza rasmiylashtiryapman…"
+    }
+  }
 }

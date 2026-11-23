@@ -1,9 +1,11 @@
 import { lazy, Suspense } from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { ChatProvider } from './lib/chat'
 import { CollectionsProvider } from './lib/collections'
 import { CurrencyProvider } from './lib/currency'
 import Layout from './components/Layout'
+import Assistant from './pages/Assistant'
 import Catalog from './pages/Catalog'
 import Estimate from './pages/Estimate'
 import Compare from './pages/Compare'
@@ -19,14 +21,13 @@ const Property = lazy(() => import('./pages/Property'))
 
 const queryClient = new QueryClient()
 
-const sections = ['assistant'] as const
-
 export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <CurrencyProvider>
        <ToastProvider>
         <CollectionsProvider>
+        <ChatProvider>
         <BrowserRouter>
           <Routes>
             <Route element={<Layout />}>
@@ -38,13 +39,12 @@ export default function App() {
               <Route path="catalog" element={<Catalog />} />
               <Route path="catalog/:id" element={<Suspense fallback={null}><Property /></Suspense>} />
               <Route path="ui" element={<UiDemo />} />
-              {sections.map((s) => (
-                <Route key={s} path={s} element={<Placeholder titleKey={`pages.${s}`} />} />
-              ))}
+              <Route path="assistant" element={<Assistant />} />
               <Route path="*" element={<Placeholder titleKey="pages.notFound" />} />
             </Route>
           </Routes>
         </BrowserRouter>
+        </ChatProvider>
         </CollectionsProvider>
        </ToastProvider>
       </CurrencyProvider>
