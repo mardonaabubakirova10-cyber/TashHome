@@ -279,7 +279,7 @@ export default function Home() {
 
       {/* Призыв */}
       <section className="relative isolate flex min-h-[22rem] flex-col items-center justify-center overflow-hidden rounded-2xl bg-brand-500 px-6 py-14 text-center text-white">
-        <img src={ctaPhoto} alt="" className="pointer-events-none absolute inset-0 -z-10 size-full scale-110 object-cover object-[50%_40%] blur-[4px]" />
+        <img src={ctaPhoto} alt="" className="pointer-events-none absolute inset-0 -z-10 size-full scale-110 object-cover object-[50%_40%] blur-[1.5px]" />
         <div className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-t from-black/45 via-black/35 to-black/55" />
         <h2 className="text-3xl sm:text-5xl">{t('home.ctaTitle')}</h2>
         <p className="mx-auto mt-3 max-w-md text-white">{t('home.ctaText')}</p>
