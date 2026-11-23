@@ -20,11 +20,11 @@ const HouseBlueprint3D = lazy(() => import('../components/HouseBlueprint3D'))
 const HouseBuild3D = lazy(() => import('../components/HouseBuild3D'))
 
 // Плавный переход мозаики в чёрный фон: сверху к горизонту, по краям — в стороны (ступени подобраны, чтобы не было видно границы)
-const FADE_Y = 'linear-gradient(to bottom, transparent 0%, transparent 10%, rgba(0,0,0,0.08) 22%, rgba(0,0,0,0.25) 34%, rgba(0,0,0,0.55) 48%, rgba(0,0,0,0.85) 62%, black 76%)'
+const FADE_Y = 'linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.18) 6%, rgba(0,0,0,0.55) 15%, rgba(0,0,0,0.88) 26%, black 38%)'
 const FADE_X = 'linear-gradient(to right, rgba(0,0,0,0.35) 0%, black 10%, black 90%, rgba(0,0,0,0.35) 100%)'
 
 const COLS = 34
-const ROWS = 14
+const ROWS = 18
 const floor = Array.from({ length: COLS * ROWS }, (_, i) => {
   const row = Math.floor(i / COLS)
   // для мозаики берём маленькие копии (public/houses/thumb): плитка на экране около 60 px, полный кадр не нужен
@@ -93,13 +93,13 @@ export default function Home() {
       <div>
         <section className="relative isolate min-h-[36rem] overflow-hidden rounded-2xl bg-ink text-white sm:min-h-[44rem]">
           {/* Затухание делаем на внешних слоях: маска на элементе с perspective в 3D не срабатывает */}
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 z-0 h-[64%]" style={{ maskImage: FADE_Y, WebkitMaskImage: FADE_Y }} aria-hidden>
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 z-0 h-[70%]" style={{ maskImage: FADE_Y, WebkitMaskImage: FADE_Y }} aria-hidden>
            <div className="h-full w-full" style={{ maskImage: FADE_X, WebkitMaskImage: FADE_X }}>
             <div className="h-full w-full overflow-hidden [perspective:700px]">
             {/* Пол наклонён назад, а плитки у краёв приподняты: получается чаша, как горизонт, уходящий вверх */}
             <div
               className="absolute bottom-[-30%] left-1/2 grid w-[250%] origin-bottom gap-[3px]"
-              style={{ gridTemplateColumns: `repeat(${COLS}, 1fr)`, transform: 'translateX(-50%) rotateX(64deg)', transformStyle: 'preserve-3d' }}
+              style={{ gridTemplateColumns: `repeat(${COLS}, 1fr)`, transform: 'translateX(-50%) rotateX(68deg)', transformStyle: 'preserve-3d' }}
             >
               {floor.map((tile, i) => {
                 const dx = tile.col - (COLS - 1) / 2
