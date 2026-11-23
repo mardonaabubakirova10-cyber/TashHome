@@ -1,9 +1,8 @@
-import { useState, type FormEvent, type ReactNode } from 'react'
+import { lazy, Suspense, useState, type FormEvent, type ReactNode } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import ctaPhoto from '../assets/showcase/cta.webp'
 import sketch from '../assets/showcase/sketch.webp'
-import assistantPhoto from '../assets/showcase/assistant.webp'
 import BlueprintStreet from '../components/BlueprintStreet'
 import BlueprintHouse from '../components/BlueprintHouse'
 import HouseCarousel from '../components/HouseCarousel'
@@ -12,6 +11,9 @@ import { Input, Select } from '../components/ui/Field'
 import { DISTRICTS, PROPERTIES } from '../data/properties'
 
 // «Пол» главного экрана: мелкие квадратные миниатюры домов. Уникальных адресов всего 36, остальное берётся из кеша браузера.
+// 3D-сцена тянет Three.js, поэтому грузится отдельным файлом
+const GlassCubes = lazy(() => import('../components/GlassCubes'))
+
 const COLS = 34
 const ROWS = 14
 const floor = Array.from({ length: COLS * ROWS }, (_, i) => {
@@ -221,13 +223,15 @@ export default function Home() {
 
       {/* Ассистент */}
       <section className="relative isolate grid gap-8 overflow-hidden rounded-2xl bg-ink p-6 text-white sm:p-12 lg:min-h-[26rem] lg:grid-cols-2 lg:items-center">
-        {/* фон: реальное фото дома, которое растворяется в чёрном слева */}
-        <img
-          src={assistantPhoto}
-          alt=""
-          className="pointer-events-none absolute inset-y-0 right-0 -z-10 h-full w-full object-cover object-[50%_35%] opacity-100 lg:w-[46%]"
-          style={{ maskImage: 'linear-gradient(to left, black 50%, transparent 98%)', WebkitMaskImage: 'linear-gradient(to left, black 50%, transparent 98%)' }}
-        />
+        {/* фон: 3D-облако стеклянных кубов с фото домов, грузится отдельным файлом */}
+        <div
+          className="pointer-events-none absolute inset-y-0 right-0 -z-10 w-full lg:w-[58%]"
+          style={{ backgroundImage: 'radial-gradient(60% 70% at 55% 50%, rgba(90,110,255,0.22), transparent 70%)' }}
+        >
+          <Suspense fallback={null}>
+            <GlassCubes className="size-full" />
+          </Suspense>
+        </div>
         <div>
           <h2 className="text-3xl sm:text-4xl">{t('home.aiTitle')}</h2>
           <p className="mt-3 max-w-md text-white/70">{t('home.aiText')}</p>
