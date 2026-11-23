@@ -299,7 +299,7 @@ export default function Home() {
               const active = stage === n - 1
               return (
                 <li key={n} className={`flex gap-4 transition-opacity duration-500 ${active ? 'opacity-100' : 'opacity-45'}`}>
-                  <p className={`font-display text-6xl leading-none transition-colors duration-500 ${active ? 'text-white' : 'text-slate-400'}`}>{n}</p>
+                  <p className={`w-14 shrink-0 font-display text-6xl leading-none transition-colors duration-500 ${active ? 'text-white' : 'text-slate-400'}`}>{n}</p>
                   <div>
                     <h3 className="text-lg font-semibold">{t(`home.step${n}Title`)}</h3>
                     <p className="mt-1 text-sm text-slate-600">{t(`home.step${n}Text`)}</p>
