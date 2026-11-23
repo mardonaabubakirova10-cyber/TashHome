@@ -1,8 +1,9 @@
-import { createContext, useContext, useState, type ReactNode } from 'react'
+import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
+import { API_URL } from './estimateApi'
 
 export type Currency = 'USD' | 'UZS'
 
-// Временный курс; на шаге 2.3 заменим на курс ЦБ с сервера.
+// Запасной курс на случай, если сервер недоступен; актуальный берём у сервера (курс ЦБ).
 const DEFAULT_USD_UZS = 12700
 
 type Ctx = {
@@ -22,7 +23,13 @@ export function CurrencyProvider({ children }: { children: ReactNode }) {
       return 'USD'
     }
   })
-  const rate = DEFAULT_USD_UZS
+  const [rate, setRate] = useState(DEFAULT_USD_UZS)
+  useEffect(() => {
+    fetch(`${API_URL}/currency`)
+      .then((r) => (r.ok ? r.json() : Promise.reject()))
+      .then((d: { usd_uzs: number }) => d.usd_uzs > 0 && setRate(d.usd_uzs))
+      .catch(() => {})
+  }, [])
 
   const setCurrency = (c: Currency) => {
     setCurrencyState(c)

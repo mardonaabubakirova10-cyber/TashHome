@@ -17,11 +17,10 @@ export type EstimateResult = {
   factors: Array<{ feature: string; label: string; effect_pct: number }>
 }
 
-// Пока нет backend, обращаемся к ml-сервису напрямую. На шаге 4.5 заменим на /api/estimate.
-const ML_URL = import.meta.env.VITE_ML_URL ?? 'http://localhost:8001'
+export const API_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:3000/api'
 
 export async function estimate(input: EstimateInput, signal?: AbortSignal): Promise<EstimateResult> {
-  const res = await fetch(`${ML_URL}/predict`, {
+  const res = await fetch(`${API_URL}/estimate`, {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify(input),
