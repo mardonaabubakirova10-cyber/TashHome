@@ -1,4 +1,4 @@
-import { lazy, Suspense, useState, type FormEvent, type ReactNode } from 'react'
+import { useState, type FormEvent, type ReactNode } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import HouseTicket from '../components/HouseTicket'
@@ -6,8 +6,8 @@ import Button from '../components/ui/Button'
 import { Input, Select } from '../components/ui/Field'
 import { DISTRICTS, PROPERTIES } from '../data/properties'
 
-// Карта тянет Leaflet, поэтому грузится отдельным файлом
-const HeroMap = lazy(() => import('../components/HeroMap'))
+// Миниатюры домов для «пола» на главном экране: 36 фото повторяются по кругу
+const floor = Array.from({ length: 70 }, (_, i) => PROPERTIES[i % PROPERTIES.length].photo.replace('/800/600', '/240/180'))
 
 const linkBtn = 'inline-flex items-center justify-center rounded-lg px-6 py-3 text-base font-medium transition-colors'
 
@@ -49,39 +49,43 @@ export default function Home() {
 
   return (
     <div className="grid gap-20">
-      {/* Hero: тёмная карта, поверх две наложенные надписи разных цветов */}
+      {/* Hero: заголовок и «пол» из наклонённых фотографий домов */}
       <div>
-        <section className="relative isolate min-h-[34rem] overflow-hidden rounded-2xl bg-ink text-white [container-type:inline-size] sm:min-h-[40rem]">
-          <div className="absolute inset-0 isolate z-0">
-            <Suspense fallback={null}>
-              <HeroMap />
-            </Suspense>
-          </div>
-          <div className="pointer-events-none absolute inset-0 z-10 bg-gradient-to-b from-black/60 via-black/20 to-black/75" />
-
-          <h1
-            aria-label="TashHome"
-            className="pointer-events-none absolute inset-0 z-20 flex items-center justify-center font-medium uppercase leading-none tracking-tight"
-            style={{ fontSize: 'clamp(3.25rem, 14cqw, 14rem)' }}
+        <section className="relative isolate min-h-[36rem] overflow-hidden rounded-2xl bg-ink text-white sm:min-h-[44rem]">
+          <div
+            className="pointer-events-none absolute inset-x-0 bottom-0 z-0 h-[62%] overflow-hidden [perspective:620px]"
+            style={{ maskImage: 'linear-gradient(to bottom, transparent 0%, black 45%)', WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, black 45%)' }}
+            aria-hidden
           >
-            <span aria-hidden className="text-white">
-              Tash
-            </span>
-            <span
-              aria-hidden
-              className="-ml-[0.45em] translate-y-[0.12em] bg-clip-text text-transparent [filter:drop-shadow(0_0_0.1em_rgba(0,0,0,0.6))]"
-              style={{ backgroundImage: 'linear-gradient(135deg, #f9a8d4 0%, #d946ef 50%, #6b21a8 100%)' }}
+            <div
+              className="absolute bottom-[-18%] left-1/2 grid w-[230%] origin-bottom grid-cols-14 gap-2"
+              style={{ transform: 'translateX(-50%) rotateX(58deg)' }}
             >
-              Home
-            </span>
-          </h1>
+              {floor.map((src, i) => (
+                <img key={i} src={src} alt="" loading="lazy" decoding="async" className="aspect-[4/3] w-full rounded-md object-cover opacity-90" />
+              ))}
+            </div>
+          </div>
+          <div className="pointer-events-none absolute inset-0 z-10 bg-gradient-to-b from-black/40 via-transparent to-black/50" />
 
-          <div className="absolute bottom-6 left-5 z-30 max-w-[15rem] sm:bottom-10 sm:left-10">
-            <p className="text-xs font-medium uppercase tracking-[0.25em] text-brand-100">{t('home.eyebrow')}</p>
-            <p className="mt-2 text-sm text-white/90">{t('home.subtitle')}</p>
-            <Link to="/catalog" className="mt-4 inline-flex rounded-md bg-white px-4 py-2 text-sm font-medium text-ink hover:bg-brand-50">
-              {t('home.toCatalog')}
-            </Link>
+          <div className="relative z-20 flex flex-col items-center px-5 pt-16 text-center sm:pt-24">
+            <p className="text-[0.7rem] font-medium uppercase tracking-[0.3em] text-white/60">{t('home.eyebrow')}</p>
+            <h1
+              className="mt-6 leading-[0.95]"
+              // стили заданы прямо здесь: общее правило для h1 в index.css иначе перебило бы шрифт и толщину
+              style={{ fontFamily: 'var(--font-serif)', fontWeight: 300, letterSpacing: '-0.02em', fontSize: 'clamp(3rem, 9vw, 7.5rem)' }}
+            >
+              <span className="block">{t('home.heroLine1')}</span>
+              <span className="block italic text-white/55">{t('home.heroLine2')}</span>
+            </h1>
+            <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+              <Link to="/catalog" className="inline-flex items-center rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-ink transition-colors hover:bg-brand-50">
+                {t('home.toCatalog')} →
+              </Link>
+              <Link to="/assistant" className="inline-flex items-center rounded-full border border-white/25 bg-black/30 px-5 py-2.5 text-sm text-white backdrop-blur transition-colors hover:border-white/60">
+                {t('home.askAssistant')}
+              </Link>
+            </div>
           </div>
         </section>
 

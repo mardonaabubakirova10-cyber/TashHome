@@ -8,6 +8,7 @@
 */
 @theme {
   --font-sans: "Manrope", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-serif: "Cormorant Garamond", Georgia, "Times New Roman", serif;
   --font-display: "Manrope", system-ui, -apple-system, "Segoe UI", sans-serif;
 
   --color-ink: #111110;
