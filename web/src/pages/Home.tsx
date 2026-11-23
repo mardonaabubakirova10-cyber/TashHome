@@ -20,8 +20,8 @@ const HouseBlueprint3D = lazy(() => import('../components/HouseBlueprint3D'))
 const HouseBuild3D = lazy(() => import('../components/HouseBuild3D'))
 
 // Плавный переход мозаики в чёрный фон: сверху к горизонту, по краям — в стороны (ступени подобраны, чтобы не было видно границы)
-const FADE_Y = 'linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.18) 6%, rgba(0,0,0,0.55) 15%, rgba(0,0,0,0.88) 26%, black 38%)'
-const FADE_X = 'linear-gradient(to right, rgba(0,0,0,0.35) 0%, black 10%, black 90%, rgba(0,0,0,0.35) 100%)'
+const FADE_Y = 'linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.06) 8%, rgba(0,0,0,0.22) 18%, rgba(0,0,0,0.55) 30%, rgba(0,0,0,0.85) 42%, black 54%)'
+const FADE_X = 'linear-gradient(to right, transparent 0%, rgba(0,0,0,0.3) 5%, rgba(0,0,0,0.7) 12%, black 24%, black 76%, rgba(0,0,0,0.7) 88%, rgba(0,0,0,0.3) 95%, transparent 100%)'
 
 const COLS = 34
 const ROWS = 18
@@ -109,7 +109,7 @@ export default function Home() {
                     src={tile.src}
                     alt=""
                     decoding="async"
-                    className="aspect-square w-full rounded-[2px] object-cover"
+                    className="aspect-square w-full rounded-[3px] object-cover shadow-[0_3px_8px_rgba(0,0,0,0.75)]"
                     style={{ transform: `translateZ(${Math.round(dx * dx * 0.55)}px)` }}
                   />
                 )
@@ -119,6 +119,8 @@ export default function Home() {
            </div>
           </div>
           <div className="pointer-events-none absolute inset-0 z-10 bg-gradient-to-b from-black/30 via-transparent to-black/20" />
+          {/* тень: ковёр темнеет к горизонту и к краям, как в референсе */}
+          <div className="pointer-events-none absolute inset-0 z-10" style={{ backgroundImage: 'radial-gradient(ellipse 75% 60% at 50% 100%, transparent 35%, rgba(0,0,0,0.55) 100%), linear-gradient(to bottom, rgba(17,17,17,0.9) 0%, rgba(17,17,17,0) 42%)' }} />
 
           <div className="relative z-20 flex flex-col items-center px-5 pt-16 text-center sm:pt-24">
             <p className="text-[0.7rem] font-medium uppercase tracking-[0.3em] text-white/60">{t('home.eyebrow')}</p>
