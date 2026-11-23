@@ -28,7 +28,9 @@ const ROWS = 18
 const floor = Array.from({ length: COLS * ROWS }, (_, i) => {
   const row = Math.floor(i / COLS)
   // для мозаики берём маленькие копии (public/houses/thumb): плитка на экране около 60 px, полный кадр не нужен
-  return { src: HOUSE_PHOTOS[(i * 7 + row * 13) % HOUSE_PHOTOS.length].replace('/houses/', '/houses/thumb/'), col: i % COLS }
+  // дальние ряды проявляются постепенно: край ковра уходит в темноту по глубине, в том числе у приподнятых боковин
+  const fade = Math.pow(Math.min(1, row / (ROWS * 0.5)), 1.4)
+  return { src: HOUSE_PHOTOS[(i * 7 + row * 13) % HOUSE_PHOTOS.length].replace('/houses/', '/houses/thumb/'), col: i % COLS, fade }
 })
 
 const linkBtn = 'inline-flex items-center justify-center rounded-lg px-6 py-3 text-base font-medium transition-colors'
@@ -110,7 +112,7 @@ export default function Home() {
                     alt=""
                     decoding="async"
                     className="aspect-square w-full rounded-[3px] object-cover shadow-[0_3px_8px_rgba(0,0,0,0.75)]"
-                    style={{ transform: `translateZ(${Math.round(dx * dx * 0.55)}px)` }}
+                    style={{ transform: `translateZ(${Math.round(dx * dx * 0.55)}px)`, opacity: tile.fade }}
                   />
                 )
               })}
