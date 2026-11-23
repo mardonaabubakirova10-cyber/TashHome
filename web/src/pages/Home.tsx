@@ -1,6 +1,7 @@
 import { useState, type FormEvent, type ReactNode } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import assistantPhoto from '../assets/showcase/assistant.png'
 import BlueprintHouse from '../components/BlueprintHouse'
 import HouseCarousel from '../components/HouseCarousel'
 import Button from '../components/ui/Button'
@@ -196,13 +197,13 @@ export default function Home() {
       </section>
 
       {/* Ассистент */}
-      <section className="relative isolate grid gap-8 overflow-hidden rounded-2xl bg-ink p-6 text-white sm:p-12 lg:grid-cols-2 lg:items-center">
+      <section className="relative isolate grid gap-8 overflow-hidden rounded-2xl bg-ink p-6 text-white sm:p-12 lg:min-h-[26rem] lg:grid-cols-2 lg:items-center">
         {/* фон: реальное фото дома, которое растворяется в чёрном слева */}
         <img
-          src={PROPERTIES[17].photo}
+          src={assistantPhoto}
           alt=""
-          className="pointer-events-none absolute inset-y-0 right-0 -z-10 h-full w-full object-cover opacity-95 saturate-110 lg:w-[68%]"
-          style={{ maskImage: 'linear-gradient(to left, black 55%, transparent 98%)', WebkitMaskImage: 'linear-gradient(to left, black 55%, transparent 98%)' }}
+          className="pointer-events-none absolute inset-y-0 right-0 -z-10 h-full w-full object-cover object-[50%_35%] opacity-100 lg:w-[46%]"
+          style={{ maskImage: 'linear-gradient(to left, black 50%, transparent 98%)', WebkitMaskImage: 'linear-gradient(to left, black 50%, transparent 98%)' }}
         />
         <div>
           <h2 className="text-3xl sm:text-4xl">{t('home.aiTitle')}</h2>
