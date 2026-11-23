@@ -59,7 +59,7 @@ export default function Layout() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex min-h-screen flex-col overflow-x-clip">
       <header className="sticky top-0 z-10 border-b border-white/10 bg-ink/95 text-white backdrop-blur">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-6 gap-y-2 px-4 py-3">
           <NavLink to="/" className="font-display text-2xl font-semibold tracking-tight">

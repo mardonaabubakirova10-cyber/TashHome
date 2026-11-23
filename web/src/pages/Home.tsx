@@ -93,7 +93,7 @@ export default function Home() {
     <div className="grid grid-cols-[minmax(0,1fr)] gap-20">
       {/* Hero: заголовок и «пол» из наклонённых фотографий домов */}
       <div>
-        <section className="relative isolate min-h-[36rem] overflow-hidden rounded-2xl bg-ink text-white sm:min-h-[44rem]">
+        <section className="relative isolate -mt-8 min-h-[36rem] w-screen max-w-none overflow-hidden bg-ink text-white sm:min-h-[44rem] lg:min-h-[calc(100svh-3.6rem)] [margin-inline:calc(50%-50vw)]">
           {/* Затухание делаем на внешних слоях: маска на элементе с perspective в 3D не срабатывает */}
           <div className="pointer-events-none absolute inset-x-0 bottom-0 z-0 h-[70%]" style={{ maskImage: FADE_Y, WebkitMaskImage: FADE_Y }} aria-hidden>
            <div className="h-full w-full" style={{ maskImage: FADE_X, WebkitMaskImage: FADE_X }}>
