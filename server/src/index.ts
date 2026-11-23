@@ -1,4 +1,11 @@
 import { createApp } from './app.js'
 import { config } from './config.js'
+import { createMemoryStore } from './lib/store.js'
+import { createSupabaseStore } from './lib/supabaseStore.js'
 
-createApp().listen(config.port, () => console.log(`API: http://localhost:${config.port}/api/health`))
+const useDb = Boolean(config.supabaseUrl && config.supabaseKey)
+const store = useDb ? createSupabaseStore(config.supabaseUrl, config.supabaseKey) : createMemoryStore()
+
+createApp(store).listen(config.port, () => {
+  console.log(`API: http://localhost:${config.port}/api/health (хранилище: ${useDb ? 'Supabase' : 'память'})`)
+})
