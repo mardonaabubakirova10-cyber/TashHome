@@ -1,13 +1,10 @@
 import { useEffect, useRef } from 'react'
-import { useNavigate } from 'react-router-dom'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
-import { PROPERTIES } from '../data/properties'
 
-/** Тёмная карта Ташкента на главной (блок районов): точки — дома из каталога, по клику открывается страница дома. */
+/** Тёмная карта Ташкента — фон главного экрана, без точек. */
 export default function HeroMap() {
   const ref = useRef<HTMLDivElement>(null)
-  const navigate = useNavigate()
 
   useEffect(() => {
     if (!ref.current) return
@@ -26,16 +23,10 @@ export default function HeroMap() {
       attribution: '© OpenStreetMap',
     }).addTo(map)
 
-    PROPERTIES.forEach((p) => {
-      L.circleMarker([p.lat, p.lng], { radius: 7, color: '#ffffff', weight: 1.5, fillColor: '#c026d3', fillOpacity: 0.95 })
-        .addTo(map)
-        .on('click', () => navigate(`/catalog/${p.id}`))
-    })
-
     return () => {
       map.remove()
     }
-  }, [navigate])
+  }, [])
 
   return <div ref={ref} className="size-full" aria-hidden />
 }
