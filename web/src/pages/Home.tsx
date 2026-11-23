@@ -1,6 +1,7 @@
 import { lazy, Suspense, useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import Reviews from '../components/Reviews'
 import BlueprintStreet from '../components/BlueprintStreet'
 import BlueprintHouse from '../components/BlueprintHouse'
 import { scrollProgress, stageOf } from '../lib/scrollProgress'
@@ -331,6 +332,8 @@ export default function Home() {
           </Suspense>
         </div>
       </section>
+
+      <Reviews />
 
       {/* Призыв */}
       <section className="relative isolate flex min-h-[22rem] flex-col items-center justify-center overflow-hidden rounded-2xl bg-ink px-6 py-14 text-center text-white ring-1 ring-white/10">

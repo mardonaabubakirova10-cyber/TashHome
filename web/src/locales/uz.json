@@ -1,4 +1,11 @@
 {
+  "reviews": {
+    "title": "Mijozlar fikrlari", "leave": "Fikr qoldirish", "formTitle": "Sizning fikringiz",
+    "rating": "Baho", "name": "Ism (majburiy emas)", "text": "Nima yoqdi, nima yoqmadi", "send": "Fikrni yuborish", "sending": "Yuborilmoqda…",
+    "sent": "Rahmat! Fikringiz yuborildi.", "error": "Fikrni yuborib bo‘lmadi. Keyinroq urinib ko‘ring.", "tooMany": "Juda ko‘p fikr ketma-ket. Bir daqiqa kuting.",
+    "ratingError": "Baho qo‘ying", "textError": "Kamida bir-ikki so‘z yozing",
+    "loading": "Fikrlar yuklanmoqda…", "loadError": "Fikrlarni yuklab bo‘lmadi.", "empty": "Hozircha fikrlar yo‘q. Birinchi bo‘ling!", "anonymous": "Mijoz"
+  },
   "carousel": { "prev": "Orqaga", "next": "Oldinga" },
   "nav": { "compare": "Taqqoslash", "home": "Bosh sahifa", "catalog": "Katalog", "estimate": "Uyni baholash", "mortgage": "Ipoteka", "favorites": "Sevimlilar", "assistant": "AI-yordamchi" },
   "home": {
@@ -103,7 +110,8 @@
       "send": "Ariza yuborish",
       "nameError": "Ismni kiriting",
       "phoneError": "Telefon +998901234567 formatida",
-      "sent": "Ariza yuborildi. Menejer siz bilan bog‘lanadi."
+      "sent": "Ariza yuborildi. Menejer siz bilan bog‘lanadi.",
+      "error": "Arizani yuborib bo‘lmadi. Keyinroq urinib ko‘ring."
     },
     "mortgage": {
       "title": "Ipoteka",

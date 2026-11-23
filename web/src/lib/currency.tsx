@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
-import { API_URL } from './estimateApi'
+import { API_URL } from './api'
 
 export type Currency = 'USD' | 'UZS'
 

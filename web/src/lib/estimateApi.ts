@@ -17,7 +17,7 @@ export type EstimateResult = {
   factors: Array<{ feature: string; label: string; effect_pct: number }>
 }
 
-export const API_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:3000/api'
+import { API_URL } from './api'
 
 export async function estimate(input: EstimateInput, signal?: AbortSignal): Promise<EstimateResult> {
   const res = await fetch(`${API_URL}/estimate`, {
