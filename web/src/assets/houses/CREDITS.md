@@ -6,8 +6,6 @@
 |---|---|---|---|---|
 | house-01.jpg | Дома в ташкенте - panoramio.jpg | Yellow man | CC BY 3.0 | https://commons.wikimedia.org/wiki/File:%D0%94%D0%BE%D0%BC%D0%B0_%D0%B2_%D1%82%D0%B0%D1%88%D0%BA%D0%B5%D0%BD%D1%82%D0%B5_-_panoramio.jpg |
 | house-02.jpg | VillaMutter1.jpg | böhringer friedrich | CC BY-SA 2.5 | https://commons.wikimedia.org/wiki/File:VillaMutter1.jpg |
-| house-03.jpg | VillaMutter2.jpg | böhringer friedrich | CC BY-SA 2.5 | https://commons.wikimedia.org/wiki/File:VillaMutter2.jpg |
-| house-04.jpg | VillaMutter3.jpg | böhringer friedrich | CC BY-SA 2.5 | https://commons.wikimedia.org/wiki/File:VillaMutter3.jpg |
 | house-05.jpg | Stadionvej.jpg | Leif Jørgensen | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:Stadionvej.jpg |
 | house-06.jpg | Mustiquevilla.jpg | — | CC BY-SA 3.0 | https://commons.wikimedia.org/wiki/File:Mustiquevilla.jpg |
 | house-07.jpg | Schweinfurt, Villa Gademann 20170513 001.jpg | Tilman2007 | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:Schweinfurt,_Villa_Gademann_20170513_001.jpg |
@@ -20,7 +18,6 @@
 | house-14.jpg | Vila danas.jpg | Smeichsner | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:Vila_danas.jpg |
 | house-15.jpg | Vila Na Loužku.jpg | Henryk Josef Tietjen | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:Vila_Na_Lou%C5%BEku.jpg |
 | house-16.jpg | Exterior-Design-Classic-Blue-Palace dieb studio.jpg | IYAD AJAMI | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:Exterior-Design-Classic-Blue-Palace_dieb_studio.jpg |
-| house-17.jpg | FrontExterior-Design-Classic-Blue-Palace dieb studio.jpg | IYAD AJAMI | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:FrontExterior-Design-Classic-Blue-Palace_dieb_studio.jpg |
 | house-18.jpg | 7talal modern-style-for-LuxuryVilla-dieb-stydio.jpg | IYAD AJAMI | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:7talal_modern-style-for-LuxuryVilla-dieb-stydio.jpg |
 | house-19.jpg | قصر النخيل.jpg | IYAD AJAMI | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:%D9%82%D8%B5%D8%B1_%D8%A7%D9%84%D9%86%D8%AE%D9%8A%D9%84.jpg |
 | house-20.jpg | Architectural Design by Mario Kleff in 2007 Villa 01.jpg | Designer Mario Kleff | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:Architectural_Design_by_Mario_Kleff_in_2007_Villa_01.jpg |
