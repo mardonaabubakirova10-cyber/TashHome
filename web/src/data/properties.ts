@@ -61,6 +61,11 @@ export const DISTRICTS: District[] = [
   { id: 'yangihayot', ru: 'Янгихаёт', uz: 'Yangihayot', ppm2: 400, landPrice: 3200 },
 ]
 
+// Настоящие фото домов лежат в src/assets/houses. Пока папка пуста, подставляются случайные картинки-заглушки.
+const LOCAL_PHOTOS = Object.values(
+  import.meta.glob('../assets/houses/*.{jpg,jpeg,png,webp}', { eager: true, query: '?url', import: 'default' }),
+) as string[]
+
 const STREETS = ['ул. Навруз', 'ул. Сарыкуль', 'ул. Кичик Халка Йули', 'ул. Фергана Йули', 'ул. Беруни', 'ул. Кукча', 'ул. Минор', 'ул. Янги Узбекистан']
 const RENOVATION_FACTOR: Record<Renovation, number> = { none: 0.8, basic: 0.93, euro: 1.08, designer: 1.25 }
 const RENOVATIONS: Renovation[] = ['none', 'basic', 'euro', 'euro', 'designer']
@@ -107,8 +112,10 @@ function build(): Property[] {
       yearBuilt: 1990 + Math.floor(rnd() * 35),
       lat: COORDS[district.id][0] + (rnd() - 0.5) * 0.02,
       lng: COORDS[district.id][1] + (rnd() - 0.5) * 0.02,
-      photo: `https://picsum.photos/seed/uyai${i}/800/600`,
-      photos: [0, 1, 2, 3].map((k) => `https://picsum.photos/seed/uyai${i}-${k}/800/600`),
+      photo: LOCAL_PHOTOS.length ? LOCAL_PHOTOS[(i - 1) % LOCAL_PHOTOS.length] : `https://picsum.photos/seed/uyai${i}/800/600`,
+      photos: [0, 1, 2, 3].map((k) =>
+        LOCAL_PHOTOS.length ? LOCAL_PHOTOS[(i - 1 + k * 7) % LOCAL_PHOTOS.length] : `https://picsum.photos/seed/uyai${i}-${k}/800/600`,
+      ),
     })
   }
   return items
