@@ -1,7 +1,7 @@
 import { useState, type FormEvent, type ReactNode } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import HouseTicket from '../components/HouseTicket'
+import HouseCarousel from '../components/HouseCarousel'
 import Button from '../components/ui/Button'
 import { Input, Select } from '../components/ui/Field'
 import { DISTRICTS, PROPERTIES } from '../data/properties'
@@ -159,11 +159,7 @@ export default function Home() {
             </Link>
           }
         />
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {PROPERTIES.slice(0, 6).map((item) => (
-            <HouseTicket key={item.id} item={item} />
-          ))}
-        </div>
+        <HouseCarousel items={PROPERTIES.filter((p) => p.dealType === 'sale').slice(0, 9)} />
       </section>
 
       {/* Районы */}

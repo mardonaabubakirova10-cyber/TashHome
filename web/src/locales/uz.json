@@ -1,4 +1,5 @@
 {
+  "carousel": { "prev": "Orqaga", "next": "Oldinga" },
   "nav": { "compare": "Taqqoslash", "home": "Bosh sahifa", "catalog": "Katalog", "estimate": "Uyni baholash", "mortgage": "Ipoteka", "favorites": "Sevimlilar", "assistant": "AI-yordamchi" },
   "home": {
     "title": "Toshkentda uy toping",

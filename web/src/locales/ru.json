@@ -1,4 +1,5 @@
 {
+  "carousel": { "prev": "Назад", "next": "Вперёд" },
   "nav": { "compare": "Сравнение", "home": "Главная", "catalog": "Каталог", "estimate": "Оценка дома", "mortgage": "Ипотека", "favorites": "Избранное", "assistant": "ИИ-ассистент" },
   "home": {
     "title": "Найдите дом в Ташкенте",
