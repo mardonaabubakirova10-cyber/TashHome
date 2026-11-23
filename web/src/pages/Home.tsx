@@ -70,7 +70,7 @@ export default function Home() {
             <span
               aria-hidden
               className="-ml-[0.45em] translate-y-[0.12em] bg-clip-text text-transparent [filter:drop-shadow(0_0_0.1em_rgba(0,0,0,0.6))]"
-              style={{ backgroundImage: 'linear-gradient(135deg, #ffd3b0 0%, #ec6f3d 50%, #8f2f10 100%)' }}
+              style={{ backgroundImage: 'linear-gradient(135deg, #f9a8d4 0%, #d946ef 50%, #6b21a8 100%)' }}
             >
               Home
             </span>

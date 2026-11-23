@@ -4,6 +4,7 @@
 Документация API: http://localhost:8001/docs
 """
 
+import os
 from contextlib import asynccontextmanager
 from pathlib import Path
 from typing import Literal
@@ -12,6 +13,7 @@ import joblib
 import numpy as np
 import pandas as pd
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
 from features import BUILDINGS, DISTRICTS, FEATURES, RENOVATIONS, make_features
@@ -72,6 +74,13 @@ async def lifespan(_: FastAPI):
 
 
 app = FastAPI(title="TashHome ml-service", version="1.0", lifespan=lifespan)
+# Пока нет backend, сайт обращается к сервису напрямую. Разрешённые адреса — в переменной окружения.
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=os.environ.get("ALLOWED_ORIGINS", "http://localhost:5173").split(","),
+    allow_methods=["POST", "GET"],
+    allow_headers=["content-type"],
+)
 
 
 def _round(v: float) -> int:

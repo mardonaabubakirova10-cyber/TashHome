@@ -13,7 +13,7 @@ export default function PropertyMap({ lat, lng }: { lat: number; lng: number }) 
       attribution: '© OpenStreetMap',
     }).addTo(map)
     // circleMarker не требует картинок маркера, которые ломаются при сборке
-    L.circleMarker([lat, lng], { radius: 10, color: '#f0d3bf', fillColor: '#b8532c', fillOpacity: 0.9 }).addTo(map)
+    L.circleMarker([lat, lng], { radius: 10, color: '#f3b6e3', fillColor: '#c026d3', fillOpacity: 0.9 }).addTo(map)
     return () => {
       map.remove()
     }

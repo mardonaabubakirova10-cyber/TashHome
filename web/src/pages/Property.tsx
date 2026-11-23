@@ -12,6 +12,8 @@ import Card from '../components/ui/Card'
 import Modal from '../components/ui/Modal'
 import { DISTRICTS, PROPERTIES } from '../data/properties'
 import { useCurrency } from '../lib/currency'
+import { LabelBadge } from '../components/PriceLabelBadge'
+import { propertyEstimate } from '../lib/priceLabel'
 
 export default function Property() {
   const { id } = useParams()
@@ -31,6 +33,7 @@ export default function Property() {
     )
   }
 
+  const est = propertyEstimate(item)
   const district = DISTRICTS.find((d) => d.id === item.districtId)
   const districtName = district ? (i18n.language === 'uz' ? district.uz : district.ru) : ''
 
@@ -88,6 +91,15 @@ export default function Property() {
               {format(item.priceUsd)}
               {item.dealType === 'rent' && <span className="text-base font-normal text-slate-500"> {t('deal.perMonth')}</span>}
             </p>
+            {est && (
+              <div className="rounded-lg bg-slate-100 p-3 text-sm">
+                <div className="flex items-center justify-between gap-2">
+                  <LabelBadge label={est.label} />
+                  <span className="text-slate-600">{t('priceLabel.model')}: <b>{format(est.predicted)}</b></span>
+                </div>
+                <p className="mt-2 text-xs text-slate-500">{t('priceLabel.hint')}</p>
+              </div>
+            )}
             <Button size="lg" onClick={() => setOpen(true)}>
               {t('property.book')}
             </Button>

@@ -39,6 +39,19 @@
   },
   "pages": { "compare": "Uylarni taqqoslash", "catalog": "Uylar katalogi", "estimate": "Uy narxini baholash", "mortgage": "Ipoteka kalkulyatori", "favorites": "Sevimlilar", "assistant": "AI-yordamchi", "notFound": "Sahifa topilmadi" },
   "deal": { "sale": "Sotuv", "rent": "Ijara", "all": "Har qanday bitim", "perMonth": "/oy" },
+  "priceLabel": { "below": "Bozordan past", "fair": "Bozor narxida", "above": "Bozordan yuqori", "model": "Model bahosi", "hint": "Narx model bahosi bilan solishtiriladi: 10 % dan ortiq farq «past» yoki «yuqori» belgisini beradi." },
+  "estimate": {
+    "intro": "Uy parametrlarini kiriting: model bozor narxini baholaydi, oraliqni va narxga eng ko‘p ta’sir qiluvchi omillarni ko‘rsatadi.",
+    "district": "Tuman", "submit": "Baholash", "loading": "Hisoblanmoqda…",
+    "empty": "Parametrlarni to‘ldirib, «Baholash» tugmasini bosing. Natija shu yerda chiqadi.",
+    "result": "Bozor bahosi", "range": "Ehtimoliy oraliq: {{low}} – {{high}}", "perM2": "Uyning 1 m² uchun taxminan {{price}}",
+    "factors": "Narxga nima ta’sir qiladi", "factorsHint": "Har bir parametr narxni bozor o‘rtachasiga nisbatan qanchaga o‘zgartiradi.",
+    "f_district": "Tuman", "f_material": "Devor materiali", "f_area": "Uy maydoni", "f_land": "Uchastka maydoni", "f_rooms": "Xonalar",
+    "f_floors": "Qavatlar", "f_age": "Uy yoshi", "f_areaPerRoom": "Xonaga maydon", "f_renovation": "Ta’mir",
+    "errorTitle": "Bahoni olib bo‘lmadi", "errorText": "Baholash xizmati hozir mavjud emas. Keyinroq urinib ko‘ring.",
+    "disclaimer": "Baho taxminiy va namunaviy ma’lumotlarga asoslangan. Mutaxassis bahosini o‘rnini bosmaydi.",
+    "toCatalog": "Katalogdagi uylarni ko‘rish →"
+  },
   "renovation": { "none": "Ta’mirsiz", "basic": "Kosmetik", "euro": "Yevroremont", "designer": "Dizayner" },
   "building": { "brick": "G‘ishtli", "block": "Blokli", "monolith": "Monolit" },
   "card": {
@@ -145,6 +158,5 @@
     "emptyHint": "Uydagi o‘qlar belgisini bosing. {{max}} tagacha uyni taqqoslash mumkin.",
     "addMore": "Taqqoslash uchun yana kamida bitta uy qo‘shing."
   },
-  "soon": "Bo‘lim ishlab chiqilmoqda",
-  "footer": "TashHome — diplom loyihasi"
+  "soon": "Bo‘lim ishlab chiqilmoqda"
 }

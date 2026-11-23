@@ -105,7 +105,6 @@ export default function Layout() {
       </main>
       <footer className="bg-ink py-8 text-center text-sm text-white/60">
         <p className="font-display text-xl text-white">TashHome</p>
-        <p className="mt-1">{t('footer')}</p>
       </footer>
     </div>
   )

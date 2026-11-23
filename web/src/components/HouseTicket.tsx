@@ -5,6 +5,7 @@ import { useCurrency } from '../lib/currency'
 import ItemActions from './ItemActions'
 import ParallaxTicket from './ParallaxTicket'
 import Badge from './ui/Badge'
+import PriceLabelBadge from './PriceLabelBadge'
 
 /** Карточка дома для каталога: спереди фото и цена, на обороте характеристики и переход на страницу дома. */
 export default function HouseTicket({ item }: { item: Property }) {
@@ -39,6 +40,9 @@ export default function HouseTicket({ item }: { item: Property }) {
         <>
           <div className="absolute left-5 top-5">
             <Badge tone={item.dealType === 'sale' ? 'brand' : 'warning'}>{t(`deal.${item.dealType}`)}</Badge>
+          </div>
+          <div className="absolute right-5 top-5">
+            <PriceLabelBadge item={item} />
           </div>
           <div className="absolute inset-x-5 bottom-5 text-white">
             <p className="font-display text-4xl font-semibold leading-none">{price}</p>
