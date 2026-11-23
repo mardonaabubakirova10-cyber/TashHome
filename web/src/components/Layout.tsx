@@ -33,7 +33,7 @@ function Segmented<T extends string>({
           aria-pressed={value === o}
           onClick={() => onChange(o)}
           className={`rounded-md px-2.5 py-1 transition-colors ${
-            value === o ? 'bg-brand-500 text-white' : 'text-white/70 hover:bg-white/10'
+            value === o ? 'bg-white/10 font-medium text-white' : 'text-white/70 hover:bg-white/10'
           }`}
         >
           {o.toUpperCase()}
