@@ -52,3 +52,20 @@ python -m venv .venv
 | `features.py` | признаки (общие для обучения и сервиса) |
 | `eda.py` | графики и сводка по данным |
 | `train.py` | обучение, метрики, сохранение модели |
+
+## Сервис оценки (FastAPI)
+
+```bash
+.venv\Scripts\python -m uvicorn service:app --port 8001
+```
+
+- `POST /predict` — по параметрам дома возвращает цену, диапазон 80 %, цену за м² и главные факторы (вклад каждого признака в процентах).
+- `GET /health` — проверка. Документация: http://localhost:8001/docs
+
+Пример запроса:
+
+```json
+{"district":"yunusabad","area_m2":180,"land_sotka":6,"rooms":5,"floors":2,"building_type":"brick","renovation":"euro","year_built":2015}
+```
+
+Тесты: `.venv\Scripts\python -m pytest` (проверяют форму ответа, логику цены, отказ на неверных данных и время ответа < 200 мс).
