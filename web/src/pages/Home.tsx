@@ -1,6 +1,7 @@
 import { useState, type FormEvent, type ReactNode } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import sketch from '../assets/showcase/sketch.webp'
 import assistantPhoto from '../assets/showcase/assistant.png'
 import BlueprintHouse from '../components/BlueprintHouse'
 import HouseCarousel from '../components/HouseCarousel'
@@ -227,8 +228,18 @@ export default function Home() {
       </section>
 
       {/* Как это работает: чертёж другого дома */}
-      <section className="relative isolate">
-        <BlueprintHouse variant={2} className="absolute -bottom-10 right-0 -z-10 hidden w-[30rem] text-white opacity-[0.32] md:block" />
+      <section className="relative isolate lg:min-h-[22rem]">
+        {/* карандашный эскиз дома: инвертирован в светлые линии на чёрном и растворяется по краям */}
+        <img
+          src={sketch}
+          alt=""
+          className="pointer-events-none absolute inset-y-0 right-0 -z-10 hidden h-full w-[50%] object-cover object-[50%_45%] opacity-75 mix-blend-screen md:block"
+          style={{
+            filter: 'invert(1) grayscale(1) contrast(1.15) brightness(0.8)',
+            maskImage: 'radial-gradient(ellipse closest-side at 55% 50%, black 35%, transparent 100%)',
+            WebkitMaskImage: 'radial-gradient(ellipse closest-side at 55% 50%, black 35%, transparent 100%)',
+          }}
+        />
         <SectionHead title={t('home.stepsTitle')} />
         <div className="grid gap-8 sm:grid-cols-3">
           {steps.map((n) => (
