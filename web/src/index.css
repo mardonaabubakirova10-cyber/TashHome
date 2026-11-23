@@ -132,3 +132,18 @@ div.leaflet-container {
     animation: none;
   }
 }
+
+/* Чертёж улицы медленно едет влево: три листа подряд, сдвиг на один лист даёт бесшовную петлю */
+@keyframes blueprint-pan {
+  to {
+    transform: translateX(-33.3333%);
+  }
+}
+.blueprint-pan {
+  animation: blueprint-pan 90s linear infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .blueprint-pan {
+    animation: none;
+  }
+}

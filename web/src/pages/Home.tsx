@@ -168,13 +168,18 @@ export default function Home() {
       <section className="relative isolate grid content-center gap-6 py-8 sm:grid-cols-3 sm:min-h-[19rem]">
         {/* чертёж улицы на всю ширину блока: края растворяются в чёрном */}
         <div
-          className="pointer-events-none absolute inset-0 -z-10"
+          className="pointer-events-none absolute inset-0 -z-10 overflow-hidden"
           style={{
             maskImage: 'linear-gradient(to right, transparent, black 12%, black 88%, transparent)',
             WebkitMaskImage: 'linear-gradient(to right, transparent, black 12%, black 88%, transparent)',
           }}
         >
-          <BlueprintStreet className="size-full text-white opacity-[0.36]" />
+          {/* три одинаковых листа подряд едут влево: сдвиг на один лист даёт бесшовную петлю */}
+          <div className="blueprint-pan flex h-full w-max text-white opacity-[0.36]">
+            {[0, 1, 2].map((i) => (
+              <BlueprintStreet key={i} className="aspect-[1200/320] h-full shrink-0" />
+            ))}
+          </div>
         </div>
         {stats.map((s) => (
           <div key={s.label} className="border-t border-slate-900 pt-4">
