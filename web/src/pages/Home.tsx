@@ -111,7 +111,7 @@ export default function Home() {
                     alt=""
                     decoding="async"
                     className="aspect-square w-full rounded-[2px] object-cover"
-                    style={{ transform: `translateZ(${Math.round(dx * dx * 0.55)}px)`, opacity: 0.04 + tile.fade * 0.96 }}
+                    style={{ transform: `translateZ(${Math.round(dx * dx * 1.35)}px)`, opacity: 0.04 + tile.fade * 0.96 }}
                   />
                 )
               })}
