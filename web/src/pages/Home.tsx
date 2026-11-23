@@ -1,10 +1,10 @@
 import { useState, type FormEvent, type ReactNode } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import sketchWide from '../assets/showcase/sketch-wide.webp'
 import ctaPhoto from '../assets/showcase/cta.webp'
 import sketch from '../assets/showcase/sketch.webp'
 import assistantPhoto from '../assets/showcase/assistant.webp'
+import BlueprintStreet from '../components/BlueprintStreet'
 import BlueprintHouse from '../components/BlueprintHouse'
 import HouseCarousel from '../components/HouseCarousel'
 import Button from '../components/ui/Button'
@@ -146,17 +146,16 @@ export default function Home() {
 
       {/* Цифры */}
       <section className="relative isolate grid content-center gap-6 py-8 sm:grid-cols-3 sm:min-h-[19rem]">
-        {/* эскиз на всю ширину блока: светлые линии на чёрном, края растворяются */}
-        <img
-          src={sketchWide}
-          alt=""
-          className="pointer-events-none absolute inset-0 -z-10 size-full max-w-none object-cover object-[50%_55%] opacity-45 mix-blend-screen"
+        {/* чертёж улицы на всю ширину блока: края растворяются в чёрном */}
+        <div
+          className="pointer-events-none absolute inset-0 -z-10"
           style={{
-            filter: 'invert(1) grayscale(1) contrast(1.2) brightness(0.9)',
-            maskImage: 'radial-gradient(ellipse 62% 70% at 50% 50%, black 40%, transparent 100%)',
-            WebkitMaskImage: 'radial-gradient(ellipse 62% 70% at 50% 50%, black 40%, transparent 100%)',
+            maskImage: 'linear-gradient(to right, transparent, black 12%, black 88%, transparent)',
+            WebkitMaskImage: 'linear-gradient(to right, transparent, black 12%, black 88%, transparent)',
           }}
-        />
+        >
+          <BlueprintStreet className="size-full text-white opacity-[0.36]" />
+        </div>
         {stats.map((s) => (
           <div key={s.label} className="border-t border-slate-900 pt-4">
             <p className="font-display text-6xl font-semibold">{s.value}</p>
