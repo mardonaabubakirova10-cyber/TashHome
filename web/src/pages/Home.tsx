@@ -1,6 +1,7 @@
 import { useState, type FormEvent, type ReactNode } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import sketchWide from '../assets/showcase/sketch-wide.png'
 import ctaPhoto from '../assets/showcase/cta.webp'
 import sketch from '../assets/showcase/sketch.webp'
 import assistantPhoto from '../assets/showcase/assistant.png'
@@ -144,8 +145,18 @@ export default function Home() {
       </div>
 
       {/* Цифры */}
-      <section className="relative isolate grid gap-6 sm:grid-cols-3">
-        <BlueprintHouse className="absolute -top-24 left-[38%] -z-10 hidden w-[28rem] text-white opacity-[0.28] md:block" />
+      <section className="relative isolate grid content-center gap-6 py-8 sm:grid-cols-3 sm:min-h-[19rem]">
+        {/* эскиз на всю ширину блока: светлые линии на чёрном, края растворяются */}
+        <img
+          src={sketchWide}
+          alt=""
+          className="pointer-events-none absolute inset-0 -z-10 size-full max-w-none object-cover object-[50%_55%] opacity-45 mix-blend-screen"
+          style={{
+            filter: 'invert(1) grayscale(1) contrast(1.2) brightness(0.9)',
+            maskImage: 'radial-gradient(ellipse 62% 70% at 50% 50%, black 40%, transparent 100%)',
+            WebkitMaskImage: 'radial-gradient(ellipse 62% 70% at 50% 50%, black 40%, transparent 100%)',
+          }}
+        />
         {stats.map((s) => (
           <div key={s.label} className="border-t border-slate-900 pt-4">
             <p className="font-display text-6xl font-semibold">{s.value}</p>
