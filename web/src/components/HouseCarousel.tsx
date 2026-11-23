@@ -34,9 +34,12 @@ export default function HouseCarousel({ items }: { items: Property[] }) {
     return () => ro.disconnect()
   }, [])
 
-  const cardW = clamp(width * 0.36, 230, 400)
-  const cardH = cardW * 1.2
-  const step = cardW * 0.98 // расстояние между центрами соседних карточек
+  // Карточки широкие и стыкуются в одну дугу: каждая стоит на окружности радиуса R и смотрит на центр
+  const cardW = clamp(width * 0.46, 250, 600)
+  const cardH = cardW * 0.64
+  const ANGLE = 30 // на сколько градусов карточка отстоит от соседней
+  const R = cardW / (2 * Math.sin((ANGLE / 2) * (Math.PI / 180))) // при таком радиусе соседние края сходятся
+  const step = cardW * 0.8 // сколько пикселей перетаскивания равно одной карточке
 
   const go = (i: number) => setPos(clamp(Math.round(i), 0, last))
   const current = clamp(Math.round(pos), 0, last)
@@ -94,7 +97,7 @@ export default function HouseCarousel({ items }: { items: Property[] }) {
         onPointerUp={onPointerUp}
         onPointerCancel={onPointerUp}
         className="relative cursor-grab touch-pan-y select-none overflow-hidden rounded-2xl bg-ink outline-none ring-1 ring-white/10 focus-visible:ring-2 focus-visible:ring-white/50 active:cursor-grabbing"
-        style={{ height: cardH + 80, perspective: `${Math.max(900, width * 1.1)}px` }}
+        style={{ height: cardH + 150, perspective: `${Math.round(R * 1.05)}px`, perspectiveOrigin: '50% 45%' }}
       >
         {/* «пол» с лёгкой сеткой, как в референсе */}
         <div
@@ -110,7 +113,7 @@ export default function HouseCarousel({ items }: { items: Property[] }) {
           }}
           aria-hidden
         />
-        <div className="absolute inset-0" style={{ transformStyle: 'preserve-3d' }}>
+        <div className="absolute inset-0" style={{ transformStyle: 'preserve-3d', transform: `translateZ(${Math.round(R)}px)` }}>
           {items.map((p, i) => {
             const d = i - pos
             const abs = Math.abs(d)
@@ -125,10 +128,10 @@ export default function HouseCarousel({ items }: { items: Property[] }) {
                   height: cardH,
                   marginLeft: -cardW / 2,
                   marginTop: -cardH / 2,
-                  // боковые карточки сдвинуты, повёрнуты к центру и чуть выдвинуты вперёд: получается вогнутая дуга
-                  transform: `translateX(${d * step}px) translateZ(${abs * abs * 30}px) rotateY(${-d * 30}deg)`,
-                  opacity: abs > 3.2 ? 0 : 1 - abs * 0.12,
-                  filter: `brightness(${clamp(1 - abs * 0.28, 0.35, 1)})`,
+                  // поворот вокруг центра дуги и вынос на радиус R: получается вогнутая стена
+                  transform: `rotateY(${-d * ANGLE}deg) translateZ(${-Math.round(R)}px)`,
+                  opacity: abs > 3.2 ? 0 : 1 - abs * 0.1,
+                  filter: `brightness(${clamp(1 - abs * 0.3, 0.3, 1)})`,
                   zIndex: 100 - Math.round(abs * 10),
                   pointerEvents: abs > 3.2 ? 'none' : 'auto',
                   transition: dragging ? 'none' : 'transform 0.6s cubic-bezier(0.22, 0.8, 0.3, 1), opacity 0.6s, filter 0.6s',
@@ -143,7 +146,7 @@ export default function HouseCarousel({ items }: { items: Property[] }) {
                     if (isCenter) navigate(`/catalog/${p.id}`)
                     else go(i)
                   }}
-                  className="group relative block size-full overflow-hidden rounded-xl bg-slate-100 text-left shadow-2xl ring-1 ring-white/10"
+                  className="group relative block size-full overflow-hidden rounded-md bg-slate-100 text-left ring-1 ring-white/10"
                 >
                   <img src={p.photo} alt="" draggable={false} className="size-full object-cover transition-transform duration-500 group-hover:scale-105" />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-black/20" />
