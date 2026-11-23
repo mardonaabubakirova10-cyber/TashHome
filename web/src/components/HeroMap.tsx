@@ -27,7 +27,7 @@ export default function HeroMap() {
     }).addTo(map)
 
     PROPERTIES.forEach((p) => {
-      L.circleMarker([p.lat, p.lng], { radius: 7, color: '#e9d5ff', weight: 1.5, fillColor: '#c026d3', fillOpacity: 0.95 })
+      L.circleMarker([p.lat, p.lng], { radius: 7, color: '#ffffff', weight: 1.5, fillColor: '#c026d3', fillOpacity: 0.95 })
         .addTo(map)
         .on('click', () => navigate(`/catalog/${p.id}`))
     })
