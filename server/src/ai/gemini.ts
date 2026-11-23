@@ -13,7 +13,7 @@ export class AiUnavailableError extends Error {
   }
 }
 
-export type Part = { text?: string; functionCall?: { name: string; args: Record<string, unknown> }; functionResponse?: { name: string; response: unknown }; inlineData?: { mimeType: string; data: string } }
+export type Part = { text?: string; thoughtSignature?: string; functionCall?: { name: string; args: Record<string, unknown> }; functionResponse?: { name: string; response: unknown }; inlineData?: { mimeType: string; data: string } }
 export type Content = { role: 'user' | 'model'; parts: Part[] }
 export type ToolDeclaration = { name: string; description: string; parameters: Record<string, unknown> }
 
@@ -80,6 +80,81 @@ export async function generate(req: GenerateRequest, o: Options = {}): Promise<G
     functionCalls: parts.filter((p) => p.functionCall).map((p) => p.functionCall!),
     content,
   }
+}
+
+/**
+ * Потоковая генерация (SSE): текст отдаётся по мере появления через onText, вызовы инструментов собираются целиком.
+ * Повторы возможны только до начала потока; обрыв посреди ответа считается сбоем ИИ.
+ */
+export async function generateStream(req: GenerateRequest, onText: (chunk: string) => void, o: Options = {}): Promise<GenerateResult> {
+  const key = o.apiKey ?? config.geminiKey
+  if (!key) throw new AiUnavailableError('Не задан GEMINI_API_KEY')
+  const doFetch = o.fetchImpl ?? fetch
+  const body: Record<string, unknown> = {
+    contents: req.contents,
+    generationConfig: { temperature: req.temperature ?? 0.3, ...(req.maxOutputTokens ? { maxOutputTokens: req.maxOutputTokens } : {}) },
+  }
+  if (req.system) body.systemInstruction = { parts: [{ text: req.system }] }
+  if (req.tools?.length) body.tools = [{ functionDeclarations: req.tools }]
+
+  const retries = o.retries ?? 2
+  let res: Response | null = null
+  let lastStatus = 0
+  for (let attempt = 0; attempt <= retries; attempt++) {
+    try {
+      const r = await doFetch(`${API}/models/${config.geminiChatModel}:streamGenerateContent?alt=sse`, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json', 'x-goog-api-key': key },
+        body: JSON.stringify(body),
+        signal: AbortSignal.timeout(o.timeoutMs ?? 60_000),
+      })
+      if (r.ok && r.body) {
+        res = r
+        break
+      }
+      lastStatus = r.status
+      if (!RETRY_STATUSES.has(r.status)) break
+    } catch {
+      lastStatus = 0
+    }
+    if (attempt < retries) await new Promise((r) => setTimeout(r, (o.baseDelayMs ?? 600) * 2 ** attempt))
+  }
+  if (!res?.body) throw new AiUnavailableError(`Gemini: не удалось получить ответ (статус ${lastStatus || 'сеть'})`)
+
+  const parts: Part[] = []
+  let text = ''
+  const handle = (json: string) => {
+    let data: any
+    try {
+      data = JSON.parse(json)
+    } catch {
+      return
+    }
+    for (const p of (data?.candidates?.[0]?.content?.parts ?? []) as Part[]) {
+      parts.push(p)
+      if (p.text) {
+        text += p.text
+        onText(p.text)
+      }
+    }
+  }
+  try {
+    const decoder = new TextDecoder()
+    let buf = ''
+    for await (const chunk of res.body as unknown as AsyncIterable<Uint8Array>) {
+      buf += decoder.decode(chunk, { stream: true })
+      let nl: number
+      while ((nl = buf.indexOf(String.fromCharCode(10))) >= 0) {
+        const line = buf.slice(0, nl).trimEnd()
+        buf = buf.slice(nl + 1)
+        if (line.startsWith('data:')) handle(line.slice(5).trim())
+      }
+    }
+    if (buf.startsWith('data:')) handle(buf.slice(5).trim())
+  } catch {
+    throw new AiUnavailableError('Gemini: поток оборвался')
+  }
+  return { text, functionCalls: parts.filter((p) => p.functionCall).map((p) => p.functionCall!), content: parts.length ? { role: 'model', parts } : null }
 }
 
 /** Простой вопрос-ответ без инструментов. */

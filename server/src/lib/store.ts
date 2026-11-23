@@ -28,6 +28,12 @@ export type Review = {
   created_at: string
 }
 
+export type ChatRole = 'user' | 'assistant' | 'tool'
+export type ChatMessage = { id: number; session_id: string; role: ChatRole; content: string | null; tool_calls: unknown | null; rating: number; latency_ms: number | null; created_at: string }
+export type KbHit = { title: string; content: string; similarity: number }
+/** Фильтры поиска домов ассистентом (структурные; смысловая часть идёт отдельно эмбеддингом). */
+export type SearchFilters = { deal_type?: 'sale' | 'rent'; district_id?: string; min_price?: number; max_price?: number; min_rooms?: number; min_area?: number; min_land?: number }
+
 export interface Store {
   addLead(input: Omit<Lead, 'id' | 'status' | 'created_at'>): Promise<Lead>
   listLeads(): Promise<Lead[]>
@@ -36,6 +42,13 @@ export interface Store {
   listProperties(filters: PropertyFilters): Promise<Page<Property>>
   getProperty(id: number): Promise<Property | null>
   listDistricts(): Promise<District[]>
+  /** Поиск для ассистента: с вектором — по смыслу, без вектора — только по фильтрам. */
+  matchProperties(embedding: number[] | null, filters: SearchFilters, k: number): Promise<Property[]>
+  matchKnowledge(embedding: number[], k: number): Promise<KbHit[]>
+  createChatSession(channel: 'site' | 'miniapp' | 'bot'): Promise<string>
+  chatSessionExists(id: string): Promise<boolean>
+  addChatMessage(m: { session_id: string; role: ChatRole; content: string | null; tool_calls?: unknown; latency_ms?: number }): Promise<void>
+  getChatHistory(session_id: string, limit: number): Promise<ChatMessage[]>
 }
 
 export function createMemoryStore(): Store {
@@ -43,6 +56,8 @@ export function createMemoryStore(): Store {
   const reviews: Review[] = []
   let leadId = 0
   let reviewId = 0
+  const sessions = new Set<string>()
+  const messages: ChatMessage[] = []
   const properties = buildDemoProperties()
 
   // Демонстрационные отзывы, чтобы блок на сайте не был пустым
@@ -85,6 +100,31 @@ export function createMemoryStore(): Store {
     },
     async getProperty(id) {
       return properties.find((p) => p.id === id) ?? null
+    },
+    async matchProperties(_embedding, f, k) {
+      // без базы векторов смысловой поиск недоступен: отбираем по фильтрам
+      const page = applyFilters(properties, {
+        deal: f.deal_type, district: f.district_id, rooms: undefined, priceFrom: f.min_price, priceTo: f.max_price,
+        areaFrom: f.min_area, landFrom: f.min_land, sort: 'default', page: 1, pageSize: 50,
+      })
+      return page.items.filter((p) => f.min_rooms === undefined || p.rooms >= f.min_rooms).slice(0, k)
+    },
+    async matchKnowledge() {
+      return []
+    },
+    async createChatSession() {
+      const id = crypto.randomUUID()
+      sessions.add(id)
+      return id
+    },
+    async chatSessionExists(id) {
+      return sessions.has(id)
+    },
+    async addChatMessage(m) {
+      messages.push({ id: messages.length + 1, session_id: m.session_id, role: m.role, content: m.content, tool_calls: m.tool_calls ?? null, rating: 0, latency_ms: m.latency_ms ?? null, created_at: new Date().toISOString() })
+    },
+    async getChatHistory(session_id, limit) {
+      return messages.filter((x) => x.session_id === session_id).slice(-limit)
     },
     async listDistricts() {
       return DEMO_DISTRICTS.map((d) => ({ id: d.id, name_ru: d.ru, name_uz: d.uz, lat: d.lat, lng: d.lng }))

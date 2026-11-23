@@ -1,6 +1,7 @@
 import type { Property } from './demoProperties.js'
 import { toPostgrestParams } from './propertyFilters.js'
-import type { District, Lead, Review, Store } from './store.js'
+import { vectorLiteral } from './supabaseRest.js'
+import type { ChatMessage, District, KbHit, Lead, Review, Store } from './store.js'
 
 type Row = Record<string, any> // строка таблицы properties вместе с фото
 const SELECT = 'select=*,property_photos(url,position)'
@@ -70,6 +71,47 @@ export function createSupabaseStore(url: string, serviceKey: string): Store {
     async getProperty(id) {
       const rows = await call<Row[]>(`/properties?${SELECT}&id=eq.${id}&status=eq.active&limit=1`)
       return rows[0] ? toProperty(rows[0]) : null
+    },
+    async matchProperties(embedding, filters, k) {
+      if (!embedding) {
+        const page = await this.listProperties({
+          deal: filters.deal_type, district: filters.district_id, rooms: undefined, priceFrom: filters.min_price, priceTo: filters.max_price,
+          areaFrom: filters.min_area, landFrom: filters.min_land, sort: 'default', page: 1, pageSize: 50,
+        })
+        return page.items.filter((p) => filters.min_rooms === undefined || p.rooms >= filters.min_rooms).slice(0, k)
+      }
+      const hits = await call<Array<{ id: number }>>('/rpc/match_properties', {
+        method: 'POST',
+        body: JSON.stringify({ query_embedding: vectorLiteral(embedding), filters, k }),
+      })
+      if (!hits.length) return []
+      const rows = await call<Row[]>(`/properties?${SELECT}&id=in.(${hits.map((h) => h.id).join(',')})`)
+      const byId = new Map(rows.map((r) => [r.id, toProperty(r)]))
+      return hits.map((h) => byId.get(h.id)).filter((p): p is Property => Boolean(p)) // порядок как в выдаче поиска (по близости)
+    },
+    async matchKnowledge(embedding, k) {
+      const hits = await call<Array<{ document_id: number; content: string; similarity: number }>>('/rpc/match_kb_chunks', {
+        method: 'POST',
+        body: JSON.stringify({ query_embedding: vectorLiteral(embedding), k }),
+      })
+      if (!hits.length) return []
+      const docs = await call<Array<{ id: number; title: string }>>(`/kb_documents?select=id,title&id=in.(${[...new Set(hits.map((h) => h.document_id))].join(',')})`)
+      const title = new Map(docs.map((d) => [d.id, d.title]))
+      return hits.map((h): KbHit => ({ title: title.get(h.document_id) ?? 'База знаний', content: h.content, similarity: h.similarity }))
+    },
+    async createChatSession(channel) {
+      return (await insert<{ id: string }>('chat_sessions', { channel })).id
+    },
+    async chatSessionExists(id) {
+      if (!/^[0-9a-f-]{36}$/i.test(id)) return false
+      return (await call<unknown[]>(`/chat_sessions?select=id&id=eq.${id}&limit=1`)).length > 0
+    },
+    async addChatMessage(m) {
+      await insert('chat_messages', { session_id: m.session_id, role: m.role, content: m.content, tool_calls: m.tool_calls ?? null, latency_ms: m.latency_ms ?? null })
+    },
+    async getChatHistory(session_id, limit) {
+      const rows = await call<ChatMessage[]>(`/chat_messages?select=*&session_id=eq.${session_id}&order=id.desc&limit=${limit}`)
+      return rows.reverse()
     },
     listDistricts: () => call<District[]>('/districts?select=id,name_ru,name_uz,lat,lng&order=name_ru.asc'),
     listReviews: (limit) => call<Review[]>(`/reviews?select=id,author,rating,text,sentiment,topic,created_at&order=created_at.desc&limit=${limit}`),
