@@ -7,7 +7,10 @@
     "dev": "tsx watch src/index.ts",
     "start": "tsx src/index.ts",
     "build": "tsc --noEmit",
-    "test": "vitest run"
+    "test": "vitest run",
+    "kb:index": "tsx scripts/index-kb.ts",
+    "props:embed": "tsx scripts/embed-properties.ts",
+    "props:score": "tsx scripts/score-properties.ts"
   },
   "dependencies": {
     "cors": "^2.8.6",
