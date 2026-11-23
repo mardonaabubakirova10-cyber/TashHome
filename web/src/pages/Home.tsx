@@ -1,6 +1,7 @@
 import { useState, type FormEvent, type ReactNode } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import BlueprintHouse from '../components/BlueprintHouse'
 import HouseCarousel from '../components/HouseCarousel'
 import Button from '../components/ui/Button'
 import { Input, Select } from '../components/ui/Field'
@@ -178,8 +179,9 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Преимущества */}
-      <section>
+      {/* Преимущества: на фоне — архитектурный чертёж */}
+      <section className="relative isolate">
+        <BlueprintHouse className="absolute -right-8 -top-6 -z-10 hidden w-[36rem] text-white opacity-[0.17] md:block" />
         <SectionHead title={t('home.whyTitle')} />
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
           {why.map((n) => (
@@ -193,7 +195,14 @@ export default function Home() {
       </section>
 
       {/* Ассистент */}
-      <section className="grid gap-8 rounded-2xl bg-ink p-6 text-white sm:p-12 lg:grid-cols-2 lg:items-center">
+      <section className="relative isolate grid gap-8 overflow-hidden rounded-2xl bg-ink p-6 text-white sm:p-12 lg:grid-cols-2 lg:items-center">
+        {/* фон: реальное фото дома, которое растворяется в чёрном слева */}
+        <img
+          src={PROPERTIES[17].photo}
+          alt=""
+          className="pointer-events-none absolute inset-y-0 right-0 -z-10 h-full w-full object-cover opacity-45 lg:w-3/5"
+          style={{ maskImage: 'linear-gradient(to left, black 35%, transparent)', WebkitMaskImage: 'linear-gradient(to left, black 35%, transparent)' }}
+        />
         <div>
           <h2 className="text-3xl sm:text-4xl">{t('home.aiTitle')}</h2>
           <p className="mt-3 max-w-md text-white/70">{t('home.aiText')}</p>
@@ -215,8 +224,9 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Как это работает */}
-      <section>
+      {/* Как это работает: чертёж другого дома */}
+      <section className="relative isolate">
+        <BlueprintHouse variant={2} className="absolute -bottom-10 right-0 -z-10 hidden w-[30rem] text-white opacity-[0.14] md:block" />
         <SectionHead title={t('home.stepsTitle')} />
         <div className="grid gap-8 sm:grid-cols-3">
           {steps.map((n) => (
@@ -232,7 +242,9 @@ export default function Home() {
       </section>
 
       {/* Призыв */}
-      <section className="rounded-2xl bg-brand-500 px-6 py-14 text-center text-white">
+      <section className="relative isolate overflow-hidden rounded-2xl bg-brand-500 px-6 py-14 text-center text-white">
+        <img src={PROPERTIES[26].photo} alt="" className="pointer-events-none absolute inset-0 -z-10 size-full object-cover opacity-30" />
+        <div className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-t from-black/70 via-black/30 to-black/60" />
         <h2 className="text-3xl sm:text-5xl">{t('home.ctaTitle')}</h2>
         <p className="mx-auto mt-3 max-w-md text-white">{t('home.ctaText')}</p>
         <Link to="/assistant" className={`${linkBtn} mt-7 bg-ink text-white hover:bg-slate-800`}>
