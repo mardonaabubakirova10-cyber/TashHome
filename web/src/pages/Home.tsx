@@ -1,7 +1,6 @@
 import { lazy, Suspense, useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import ctaPhoto from '../assets/showcase/cta.webp'
 import BlueprintStreet from '../components/BlueprintStreet'
 import BlueprintHouse from '../components/BlueprintHouse'
 import { scrollProgress, stageOf } from '../lib/scrollProgress'
@@ -14,6 +13,7 @@ import { DISTRICTS, PROPERTIES } from '../data/properties'
 // 3D-сцена тянет Three.js, поэтому грузится отдельным файлом
 const GlassCubes = lazy(() => import('../components/GlassCubes'))
 
+const HouseBlueprint3D = lazy(() => import('../components/HouseBlueprint3D'))
 const HouseBuild3D = lazy(() => import('../components/HouseBuild3D'))
 
 const COLS = 34
@@ -328,12 +328,27 @@ export default function Home() {
       </section>
 
       {/* Призыв */}
-      <section className="relative isolate flex min-h-[22rem] flex-col items-center justify-center overflow-hidden rounded-2xl bg-brand-500 px-6 py-14 text-center text-white">
-        <img src={ctaPhoto} alt="" className="pointer-events-none absolute inset-0 -z-10 size-full scale-110 object-cover object-[50%_40%] blur-[1.5px]" />
-        <div className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-t from-black/45 via-black/35 to-black/55" />
+      <section className="relative isolate flex min-h-[22rem] flex-col items-center justify-center overflow-hidden rounded-2xl bg-ink px-6 py-14 text-center text-white ring-1 ring-white/10">
+        {/* неподвижный 3D-чертёж двух домов на сетке; края растворяются в чёрном */}
+        <div
+          className="pointer-events-none absolute inset-0 -z-10"
+          style={{
+            maskImage: 'radial-gradient(ellipse 85% 90% at 50% 55%, black 45%, transparent 100%)',
+            WebkitMaskImage: 'radial-gradient(ellipse 85% 90% at 50% 55%, black 45%, transparent 100%)',
+          }}
+        >
+          <div
+            className="absolute inset-0"
+            style={{ backgroundImage: 'radial-gradient(55% 60% at 50% 60%, rgba(110,130,255,0.16), transparent 70%)' }}
+          />
+          <Suspense fallback={null}>
+            <HouseBlueprint3D className="size-full opacity-70" />
+          </Suspense>
+        </div>
+        <div className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-b from-black/50 via-black/10 to-transparent" />
         <h2 className="text-3xl sm:text-5xl">{t('home.ctaTitle')}</h2>
         <p className="mx-auto mt-3 max-w-md text-white">{t('home.ctaText')}</p>
-        <Link to="/assistant" className={`${linkBtn} mt-7 bg-ink text-white hover:bg-slate-800`}>
+        <Link to="/assistant" className={`${linkBtn} mt-7 bg-white text-ink hover:bg-brand-50`}>
           {t('home.askAssistant')}
         </Link>
       </section>
