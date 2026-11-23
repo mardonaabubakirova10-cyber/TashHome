@@ -79,7 +79,7 @@ export default function Estimate() {
           {!r && !m.isError && <Card className="p-6 text-slate-600">{t('estimate.empty')}</Card>}
           {r && (
             <>
-              <div className="rounded-lg bg-brand-500/15 p-6">
+              <div className="rounded-lg bg-white/10 p-6">
                 <p className="text-sm text-slate-600">{t('estimate.result')}</p>
                 <p className="font-display text-5xl font-semibold text-brand-100">{format(r.predicted_price)}</p>
                 <p className="mt-2 text-sm text-slate-600">

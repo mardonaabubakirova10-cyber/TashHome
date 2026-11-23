@@ -26,7 +26,7 @@ export default function MortgageMini({ priceUsd }: { priceUsd: number }) {
         <Input label={t('property.mortgage.term')} type="number" min={1} max={30} value={years} onChange={(e) => setYears(Number(e.target.value))} />
         <Input label={t('property.mortgage.rate')} type="number" min={0} max={60} value={rate} onChange={(e) => setRate(Number(e.target.value))} />
       </div>
-      <div className="rounded-lg bg-brand-500/15 p-4">
+      <div className="rounded-lg bg-white/10 p-4">
         <p className="text-sm text-slate-600">{t('property.mortgage.monthly')}</p>
         <p className="text-2xl font-bold text-brand-100">{format(payment)}</p>
       </div>

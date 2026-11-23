@@ -77,7 +77,7 @@ export default function Mortgage() {
         </Card>
 
         <div className="grid content-start gap-4">
-          <div className="rounded-lg bg-brand-500/15 p-6">
+          <div className="rounded-lg bg-white/10 p-6">
             <p className="text-sm text-slate-600">{t('property.mortgage.monthly')}</p>
             <p className="font-display text-5xl font-semibold text-brand-100">{format(monthly)}</p>
           </div>

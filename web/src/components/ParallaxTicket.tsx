@@ -158,7 +158,7 @@ export default function ParallaxTicket({ image, label, front, back, actions }: P
     <div ref={stageRef} className="ticket-stage">
       <div ref={ticketRef} className="ticket">
         <div
-          className="ticket-side cursor-pointer outline-offset-2 focus-visible:outline-2 focus-visible:outline-brand-500"
+          className="ticket-side cursor-pointer outline-offset-2 focus-visible:outline-2 focus-visible:outline-white"
           role="button"
           tabIndex={0}
           aria-pressed={flipped}

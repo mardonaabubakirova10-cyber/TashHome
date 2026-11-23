@@ -32,7 +32,7 @@ export default function Button({
       aria-busy={loading || undefined}
       className={cn(
         'inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-colors',
-        'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500',
+        'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white',
         'disabled:cursor-not-allowed disabled:opacity-50',
         variants[variant],
         sizes[size],

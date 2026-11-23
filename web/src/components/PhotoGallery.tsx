@@ -18,7 +18,7 @@ export default function PhotoGallery({ photos }: { photos: string[] }) {
             aria-pressed={i === active}
             className={cn(
               'aspect-[4/3] overflow-hidden rounded-lg bg-slate-200 outline-offset-2',
-              i === active ? 'outline-2 outline-brand-500' : 'opacity-80 hover:opacity-100',
+              i === active ? 'outline-2 outline-white' : 'opacity-80 hover:opacity-100',
             )}
           >
             <img src={src} alt="" loading="lazy" className="size-full object-cover" />

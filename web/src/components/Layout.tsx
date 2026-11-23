@@ -79,7 +79,7 @@ export default function Layout() {
               >
                 {t(`nav.${l.key}`)}
                 {counts[l.key] > 0 && (
-                  <span className="ml-1.5 rounded-full bg-brand-500 px-1.5 py-0.5 text-[11px] leading-none text-white">{counts[l.key]}</span>
+                  <span className="ml-1.5 rounded-full bg-white/15 px-1.5 py-0.5 text-[11px] leading-none text-white">{counts[l.key]}</span>
                 )}
               </NavLink>
             ))}

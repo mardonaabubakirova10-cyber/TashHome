@@ -4,7 +4,7 @@ import { useToast } from './ui/Toast'
 
 const btn =
   'flex size-9 items-center justify-center rounded-full bg-black/60 text-white backdrop-blur transition-colors ' +
-  'hover:bg-black/80 aria-pressed:bg-brand-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500'
+  'hover:bg-black/80 aria-pressed:bg-white/25 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white'
 
 /** Два круглых значка: в избранное (сердце) и в сравнение (стрелки). */
 export default function ItemActions({ id }: { id: number }) {

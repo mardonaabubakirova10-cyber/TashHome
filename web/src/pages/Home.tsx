@@ -184,7 +184,7 @@ export default function Home() {
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
           {why.map((n) => (
             <div key={n}>
-              <p className="font-display text-5xl text-brand-500">0{n}</p>
+              <p className="font-display text-5xl text-slate-500">0{n}</p>
               <h3 className="mt-3 text-lg font-semibold">{t(`home.why${n}Title`)}</h3>
               <p className="mt-1 text-sm text-slate-600">{t(`home.why${n}Text`)}</p>
             </div>

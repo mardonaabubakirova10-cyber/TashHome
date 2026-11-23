@@ -1,10 +1,10 @@
 @import "tailwindcss";
 
 /*
-  Тёмная тема: чёрный фон, белый текст, фиолетово-розовый акцент.
+  Тёмная тема: чёрный фон, белый текст, серый акцент.
   Шкала slate ИНВЕРТИРОВАНА: slate-50 — самый тёмный (фон страницы), slate-900 — самый светлый (основной текст).
   Поэтому bg-slate-100 — поверхность карточек, text-slate-600 — вторичный текст, border-slate-200 — тонкая линия.
-  text-white — белый: для текста на тёмных блоках и на фиолетово-розовых кнопках.
+  text-white — белый: для текста на тёмных блоках и на серых кнопках.
 */
 @theme {
   --font-sans: "Manrope", system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -25,11 +25,11 @@
   --color-slate-800: #e6e6e6;
   --color-slate-900: #ffffff;
 
-  --color-brand-50: #fbe6f5;
+  --color-brand-50: #e6e6e6;
   --color-brand-100: #ffffff;
-  --color-brand-500: #c026d3;
-  --color-brand-600: #a21caf;
-  --color-brand-700: #86198f;
+  --color-brand-500: #3a3a3a;
+  --color-brand-600: #4a4a4a;
+  --color-brand-700: #1a1a1a;
 }
 
 :root {
