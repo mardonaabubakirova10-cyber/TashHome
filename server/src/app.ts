@@ -5,13 +5,14 @@ import { config } from './config.js'
 import { errorHandler, notFound } from './lib/errors.js'
 import { currencyRouter } from './routes/currency.js'
 import { createMemoryStore, type Store } from './lib/store.js'
+import { noopNotifier, type Notifier } from './lib/notifier.js'
 import { estimateRouter } from './routes/estimate.js'
 import { leadsRouter } from './routes/leads.js'
 import { reviewsRouter } from './routes/reviews.js'
 import { catalogRouter } from './routes/properties.js'
 import { mortgageRouter } from './routes/mortgage.js'
 
-export function createApp(store: Store = createMemoryStore()) {
+export function createApp(store: Store = createMemoryStore(), notifier: Notifier = noopNotifier) {
   const app = express()
   app.disable('x-powered-by')
   app.use(cors({ origin: config.webOrigin.split(',') }))
@@ -25,8 +26,8 @@ export function createApp(store: Store = createMemoryStore()) {
   app.use('/api/currency', currencyRouter)
   app.use('/api/estimate', estimateRouter)
   app.use('/api', catalogRouter(store))
-  app.use('/api/leads', leadsRouter(store))
-  app.use('/api/reviews', reviewsRouter(store))
+  app.use('/api/leads', leadsRouter(store, notifier))
+  app.use('/api/reviews', reviewsRouter(store, notifier))
 
   app.use(notFound)
   app.use(errorHandler)

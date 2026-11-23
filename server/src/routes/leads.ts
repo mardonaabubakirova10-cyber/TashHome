@@ -1,5 +1,6 @@
 import { Router } from 'express'
 import { z } from 'zod'
+import { noopNotifier, type Notifier } from '../lib/notifier.js'
 import type { Store } from '../lib/store.js'
 
 // Телефон Узбекистана: +998 и девять цифр. Пробелы, скобки и дефисы разрешаем и убираем.
@@ -16,7 +17,7 @@ const schema = z.object({
   source: z.enum(['site', 'miniapp', 'bot', 'assistant']).default('site'),
 })
 
-export function leadsRouter(store: Store) {
+export function leadsRouter(store: Store, notifier: Notifier = noopNotifier) {
   const router = Router()
   router.post('/', async (req, res) => {
     const data = schema.parse(req.body)
@@ -27,6 +28,7 @@ export function leadsRouter(store: Store) {
       message: data.message || null,
       source: data.source,
     })
+    void notifier.newLead(lead) // не ждём Telegram: клиент получает ответ сразу
     res.status(201).json({ id: lead.id })
   })
   return router
