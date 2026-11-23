@@ -10,7 +10,7 @@ export default function BlueprintHouse({ className, variant = 1 }: { className?:
       viewBox="0 0 640 360"
       fill="none"
       stroke="currentColor"
-      strokeWidth="1"
+      strokeWidth="1.3"
       strokeLinecap="round"
       strokeLinejoin="round"
       aria-hidden

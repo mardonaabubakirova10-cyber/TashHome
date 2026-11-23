@@ -141,7 +141,8 @@ export default function Home() {
       </div>
 
       {/* Цифры */}
-      <section className="grid gap-6 sm:grid-cols-3">
+      <section className="relative isolate grid gap-6 sm:grid-cols-3">
+        <BlueprintHouse className="absolute -top-24 left-[38%] -z-10 hidden w-[28rem] text-white opacity-[0.28] md:block" />
         {stats.map((s) => (
           <div key={s.label} className="border-t border-slate-900 pt-4">
             <p className="font-display text-6xl font-semibold">{s.value}</p>
@@ -181,7 +182,7 @@ export default function Home() {
 
       {/* Преимущества: на фоне — архитектурный чертёж */}
       <section className="relative isolate">
-        <BlueprintHouse className="absolute -right-8 -top-6 -z-10 hidden w-[36rem] text-white opacity-[0.17] md:block" />
+        <BlueprintHouse className="absolute -right-8 -top-6 -z-10 hidden w-[36rem] text-white opacity-[0.34] md:block" />
         <SectionHead title={t('home.whyTitle')} />
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
           {why.map((n) => (
@@ -200,8 +201,8 @@ export default function Home() {
         <img
           src={PROPERTIES[17].photo}
           alt=""
-          className="pointer-events-none absolute inset-y-0 right-0 -z-10 h-full w-full object-cover opacity-45 lg:w-3/5"
-          style={{ maskImage: 'linear-gradient(to left, black 35%, transparent)', WebkitMaskImage: 'linear-gradient(to left, black 35%, transparent)' }}
+          className="pointer-events-none absolute inset-y-0 right-0 -z-10 h-full w-full object-cover opacity-95 saturate-110 lg:w-[68%]"
+          style={{ maskImage: 'linear-gradient(to left, black 55%, transparent 98%)', WebkitMaskImage: 'linear-gradient(to left, black 55%, transparent 98%)' }}
         />
         <div>
           <h2 className="text-3xl sm:text-4xl">{t('home.aiTitle')}</h2>
@@ -215,7 +216,7 @@ export default function Home() {
             <div
               key={k}
               className={`max-w-[90%] rounded-2xl px-5 py-3 text-sm ${
-                i % 2 === 0 ? 'rounded-bl-sm bg-white/10 text-white' : 'ml-auto rounded-br-sm bg-brand-500 text-white'
+                i % 2 === 0 ? 'rounded-bl-sm bg-black/45 text-white backdrop-blur-md ring-1 ring-white/10' : 'ml-auto rounded-br-sm bg-white/90 text-ink backdrop-blur-md'
               }`}
             >
               {t(`home.${k}`)}
@@ -226,7 +227,7 @@ export default function Home() {
 
       {/* Как это работает: чертёж другого дома */}
       <section className="relative isolate">
-        <BlueprintHouse variant={2} className="absolute -bottom-10 right-0 -z-10 hidden w-[30rem] text-white opacity-[0.14] md:block" />
+        <BlueprintHouse variant={2} className="absolute -bottom-10 right-0 -z-10 hidden w-[30rem] text-white opacity-[0.32] md:block" />
         <SectionHead title={t('home.stepsTitle')} />
         <div className="grid gap-8 sm:grid-cols-3">
           {steps.map((n) => (
@@ -243,7 +244,7 @@ export default function Home() {
 
       {/* Призыв */}
       <section className="relative isolate overflow-hidden rounded-2xl bg-brand-500 px-6 py-14 text-center text-white">
-        <img src={PROPERTIES[26].photo} alt="" className="pointer-events-none absolute inset-0 -z-10 size-full object-cover opacity-30" />
+        <img src={PROPERTIES[19].photo} alt="" className="pointer-events-none absolute inset-0 -z-10 size-full object-cover opacity-70" />
         <div className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-t from-black/70 via-black/30 to-black/60" />
         <h2 className="text-3xl sm:text-5xl">{t('home.ctaTitle')}</h2>
         <p className="mx-auto mt-3 max-w-md text-white">{t('home.ctaText')}</p>
