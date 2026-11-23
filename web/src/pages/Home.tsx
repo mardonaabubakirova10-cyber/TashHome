@@ -20,16 +20,15 @@ const HouseBlueprint3D = lazy(() => import('../components/HouseBlueprint3D'))
 const HouseBuild3D = lazy(() => import('../components/HouseBuild3D'))
 
 // Плавный переход мозаики в чёрный фон: сверху к горизонту, по краям — в стороны (ступени подобраны, чтобы не было видно границы)
-const FADE_Y = 'linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.04) 12%, rgba(0,0,0,0.14) 26%, rgba(0,0,0,0.34) 42%, rgba(0,0,0,0.62) 60%, rgba(0,0,0,0.88) 78%, black 92%)'
-const FADE_X = 'linear-gradient(to right, transparent 0%, rgba(0,0,0,0.5) 7%, black 22%, black 78%, rgba(0,0,0,0.5) 93%, transparent 100%)'
+const FADE_Y = 'linear-gradient(to bottom, transparent 0%, transparent 10%, rgba(0,0,0,0.08) 22%, rgba(0,0,0,0.25) 34%, rgba(0,0,0,0.55) 48%, rgba(0,0,0,0.85) 62%, black 76%)'
+const FADE_X = 'linear-gradient(to right, rgba(0,0,0,0.35) 0%, black 10%, black 90%, rgba(0,0,0,0.35) 100%)'
 
 const COLS = 34
 const ROWS = 14
 const floor = Array.from({ length: COLS * ROWS }, (_, i) => {
   const row = Math.floor(i / COLS)
-  // дальние ряды (сверху) почти чёрные и постепенно проявляются к зрителю: переход получается по глубине, а не по рамке блока
-  const fade = Math.pow(Math.max(0, row / (ROWS - 1) - 0.3) / 0.7, 1.5) // верхние ряды полностью невидимы: фон под кнопками чистый
-  return { src: HOUSE_PHOTOS[(i * 7 + row * 13) % HOUSE_PHOTOS.length], col: i % COLS, fade }
+  // для мозаики берём маленькие копии (public/houses/thumb): плитка на экране около 60 px, полный кадр не нужен
+  return { src: HOUSE_PHOTOS[(i * 7 + row * 13) % HOUSE_PHOTOS.length].replace('/houses/', '/houses/thumb/'), col: i % COLS }
 })
 
 const linkBtn = 'inline-flex items-center justify-center rounded-lg px-6 py-3 text-base font-medium transition-colors'
@@ -111,7 +110,7 @@ export default function Home() {
                     alt=""
                     decoding="async"
                     className="aspect-square w-full rounded-[2px] object-cover"
-                    style={{ transform: `translateZ(${Math.round(dx * dx * 1.35)}px)`, opacity: tile.fade }}
+                    style={{ transform: `translateZ(${Math.round(dx * dx * 0.55)}px)` }}
                   />
                 )
               })}
