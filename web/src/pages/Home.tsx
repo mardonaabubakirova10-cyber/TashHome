@@ -272,7 +272,26 @@ export default function Home() {
       </section>
 
       {/* Как это работает: 3D-дом строится вместе с прокруткой, а шаги слева подсвечиваются по стадиям */}
-      <section ref={stepsRef} className="grid gap-8 lg:grid-cols-2 lg:items-center">
+      <section ref={stepsRef} className="relative isolate grid gap-8 lg:grid-cols-2 lg:items-center">
+        {/* пол из сетки на весь блок: продолжает сетку 3D-сцены и уходит под текст шагов */}
+        <div
+          className="pointer-events-none absolute -inset-x-6 bottom-[-2rem] -z-10 h-[78%] overflow-hidden [perspective:640px]"
+          style={{
+            maskImage: 'linear-gradient(to top, black 15%, transparent 95%)',
+            WebkitMaskImage: 'linear-gradient(to top, black 15%, transparent 95%)',
+          }}
+          aria-hidden
+        >
+          <div
+            className="absolute -inset-x-[40%] bottom-[-10%] h-[210%] origin-bottom"
+            style={{
+              transform: 'rotateX(66deg)',
+              backgroundImage:
+                'linear-gradient(rgba(138,150,200,0.38) 1px, transparent 1px), linear-gradient(90deg, rgba(138,150,200,0.38) 1px, transparent 1px)',
+              backgroundSize: '52px 52px',
+            }}
+          />
+        </div>
         <div>
           <SectionHead title={t('home.stepsTitle')} bare />
           <ol className="grid gap-6">
