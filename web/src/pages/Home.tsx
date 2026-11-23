@@ -347,10 +347,14 @@ export default function Home() {
             style={{ backgroundImage: 'radial-gradient(55% 60% at 50% 60%, rgba(110,130,255,0.16), transparent 70%)' }}
           />
           <Suspense fallback={null}>
-            <HouseBlueprint3D className="size-full opacity-70" />
+            <HouseBlueprint3D className="size-full opacity-45" />
           </Suspense>
         </div>
-        <div className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-b from-black/50 via-black/10 to-transparent" />
+        {/* тёмное пятно за текстом: надпись и кнопка не сливаются с линиями чертежа */}
+        <div
+          className="pointer-events-none absolute inset-0 -z-10"
+          style={{ backgroundImage: 'radial-gradient(ellipse 48% 62% at 50% 52%, rgba(0,0,0,0.88), rgba(0,0,0,0.55) 60%, transparent 100%)' }}
+        />
         <h2 className="text-3xl sm:text-5xl">{t('home.ctaTitle')}</h2>
         <p className="mx-auto mt-3 max-w-md text-white">{t('home.ctaText')}</p>
         <Link to="/assistant" className={`${linkBtn} mt-7 bg-white text-ink hover:bg-brand-50`}>
