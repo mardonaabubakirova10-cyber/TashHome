@@ -26,6 +26,7 @@ export type AgentDeps = {
   getProperty: (id: number) => Promise<Property | null>
   searchKnowledge: (question: string) => Promise<KbHit[]>
   estimate: (params: Record<string, unknown>) => Promise<unknown>
+  transcribe: (audio: Buffer, mime: string) => Promise<string>
   createLead: (lead: { name: string; phone: string; property_id?: number; message?: string }) => Promise<Lead>
 }
 

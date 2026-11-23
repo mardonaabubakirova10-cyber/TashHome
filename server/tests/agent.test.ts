@@ -26,6 +26,7 @@ function scripted(steps: GenerateResult[], overrides: Partial<AgentDeps> = {}) {
   const deps: AgentDeps = {
     llm: llm as unknown as AgentDeps['llm'],
     searchProperties: vi.fn(async () => houses.slice(0, 2)),
+    transcribe: vi.fn(async () => 'привет'),
     getProperty: vi.fn(async (id) => houses.find((p) => p.id === id) ?? null),
     searchKnowledge: vi.fn(async () => []),
     estimate: vi.fn(async () => ({ predicted_price_usd: 100000 })),

@@ -1,9 +1,10 @@
-import { useEffect, useRef, useState, type FormEvent, type KeyboardEvent } from 'react'
+import { useCallback, useEffect, useRef, useState, type FormEvent, type KeyboardEvent } from 'react'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { DISTRICTS, type Property } from '../../data/properties'
 import { useChat, type ChatMsg } from '../../lib/chat'
 import { useCurrency } from '../../lib/currency'
+import { MAX_RECORD_SECONDS, useVoiceInput } from '../../lib/voice'
 import PriceLabelBadge from '../PriceLabelBadge'
 import Markdown from './Markdown'
 
@@ -101,6 +102,12 @@ export default function ChatPanel({ onNavigate, autoFocus }: { onNavigate?: () =
   const onKey = (e: KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) submit(e)
   }
+  const onVoiceText = useCallback((v: string) => {
+    setText((prev) => (prev.trim() ? `${prev.trim()} ${v}` : v))
+    inputRef.current?.focus()
+  }, [])
+  const voice = useVoiceInput(onVoiceText)
+  const mmss = `${Math.floor(voice.seconds / 60)}:${String(voice.seconds % 60).padStart(2, '0')}`
   const suggestions = t('chat.suggestions', { returnObjects: true }) as string[]
 
   return (
@@ -130,6 +137,18 @@ export default function ChatPanel({ onNavigate, autoFocus }: { onNavigate?: () =
       </div>
 
       <form onSubmit={submit} className="border-t border-slate-200 p-3">
+        {(voice.state !== 'idle' || voice.error) && (
+          <p className={`mb-2 flex items-center gap-2 text-xs ${voice.error ? 'text-red-400' : 'text-slate-600'}`} role="status">
+            {voice.state === 'recording' && (
+              <>
+                <span className="size-2 animate-pulse rounded-full bg-red-500" aria-hidden />
+                {t('chat.voice.recording', { time: mmss, max: MAX_RECORD_SECONDS })}
+              </>
+            )}
+            {voice.state === 'processing' && t('chat.voice.processing')}
+            {voice.state === 'idle' && voice.error && t(`chat.voice.${voice.error}`)}
+          </p>
+        )}
         <div className="flex items-end gap-2">
           <textarea
             ref={inputRef}
@@ -142,6 +161,28 @@ export default function ChatPanel({ onNavigate, autoFocus }: { onNavigate?: () =
             aria-label={t('chat.placeholder')}
             className="max-h-28 min-h-[2.5rem] flex-1 resize-none rounded-lg border border-slate-300 bg-slate-100 px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus-visible:outline-2 focus-visible:outline-white"
           />
+          {voice.supported && (
+            <button
+              type="button"
+              onClick={() => (voice.state === 'recording' ? voice.stop() : voice.start())}
+              disabled={voice.state === 'processing' || sending}
+              aria-label={voice.state === 'recording' ? t('chat.voice.stop') : t('chat.voice.start')}
+              aria-pressed={voice.state === 'recording'}
+              title={voice.state === 'recording' ? t('chat.voice.stop') : t('chat.voice.start')}
+              className={`grid size-10 shrink-0 place-items-center rounded-lg border transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white disabled:cursor-not-allowed disabled:opacity-40 ${voice.state === 'recording' ? 'animate-pulse border-red-500 bg-red-500/20 text-red-400' : 'border-slate-300 text-slate-700 hover:border-slate-500 hover:text-slate-900'}`}
+            >
+              {voice.state === 'recording' ? (
+                <svg viewBox="0 0 24 24" className="size-4" fill="currentColor" aria-hidden>
+                  <rect x="6" y="6" width="12" height="12" rx="2" />
+                </svg>
+              ) : (
+                <svg viewBox="0 0 24 24" className="size-5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                  <rect x="9" y="3" width="6" height="12" rx="3" />
+                  <path d="M5 11a7 7 0 0 0 14 0M12 18v3" />
+                </svg>
+              )}
+            </button>
+          )}
           <button
             type="submit"
             disabled={sending || !text.trim()}

@@ -270,6 +270,15 @@
       "calc_mortgage": "Ipotekani hisoblayapman…",
       "estimate_price": "Narxni baholayapman…",
       "create_lead": "Ariza rasmiylashtiryapman…"
+    },
+    "voice": {
+      "start": "Ovozli yozish",
+      "stop": "Yozishni to‘xtatish",
+      "recording": "Yozilmoqda {{time}} / 0:{{max}}",
+      "processing": "Matnga o‘girilmoqda…",
+      "denied": "Mikrofonga ruxsat yo‘q. Brauzer sozlamalarida ruxsat bering.",
+      "empty": "Nutq eshitilmadi, qayta urinib ko‘ring.",
+      "failed": "Yozuvni matnga o‘girib bo‘lmadi. Matn bilan yozing."
     }
   }
 }

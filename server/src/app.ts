@@ -11,6 +11,7 @@ import { leadsRouter } from './routes/leads.js'
 import { reviewsRouter } from './routes/reviews.js'
 import { createAgentDeps } from './ai/deps.js'
 import type { AgentDeps } from './ai/agent.js'
+import { transcribeRouter } from './routes/transcribe.js'
 import { chatRouter } from './routes/chat.js'
 import { catalogRouter } from './routes/properties.js'
 import { mortgageRouter } from './routes/mortgage.js'
@@ -29,6 +30,7 @@ export function createApp(store: Store = createMemoryStore(), notifier: Notifier
   app.use('/api/currency', currencyRouter)
   app.use('/api/estimate', estimateRouter)
   app.use('/api', catalogRouter(store))
+  app.use('/api/transcribe', transcribeRouter(agentDeps.transcribe))
   app.use('/api/chat', chatRouter(store, agentDeps))
   app.use('/api/leads', leadsRouter(store, notifier))
   app.use('/api/reviews', reviewsRouter(store, notifier))

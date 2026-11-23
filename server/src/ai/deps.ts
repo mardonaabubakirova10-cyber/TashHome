@@ -4,6 +4,7 @@ import type { Notifier } from '../lib/notifier.js'
 import type { Store } from '../lib/store.js'
 import type { AgentDeps } from './agent.js'
 import { embed, generateStream } from './gemini.js'
+import { transcribeAudio } from './transcribe.js'
 
 /** Боевые зависимости агента: Gemini, хранилище, ml-сервис и уведомления менеджерам. */
 export function createAgentDeps(store: Store, notifier: Notifier): AgentDeps {
@@ -22,6 +23,7 @@ export function createAgentDeps(store: Store, notifier: Notifier): AgentDeps {
       return store.matchProperties(vector, filters, k)
     },
     getProperty: (id) => store.getProperty(id),
+    transcribe: transcribeAudio,
     async searchKnowledge(question) {
       const [v] = await embed([question], 'RETRIEVAL_QUERY')
       return store.matchKnowledge(v, 5)
