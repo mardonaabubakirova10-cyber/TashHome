@@ -9,6 +9,7 @@
 1. `migrations/0001_schema.sql` — таблицы, индексы, расширение `vector`.
 2. `migrations/0002_security.sql` — профили при регистрации, роли, политики доступа (RLS).
 3. `migrations/0003_search_functions.sql` — `match_kb_chunks` и `match_properties`.
+3a. `migrations/0004_grants.sql` — права ролей на таблицы (нужны в новых проектах Supabase, иначе API отвечает permission denied).
 4. `seed/01_districts_and_mortgage.sql` — 12 районов и 6 демонстрационных ипотечных программ.
 
 Первого администратора назначают вручную после регистрации:
