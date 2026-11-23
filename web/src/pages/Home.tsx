@@ -20,13 +20,16 @@ const HouseBlueprint3D = lazy(() => import('../components/HouseBlueprint3D'))
 const HouseBuild3D = lazy(() => import('../components/HouseBuild3D'))
 
 // Плавный переход мозаики в чёрный фон: сверху к горизонту, по краям — в стороны (ступени подобраны, чтобы не было видно границы)
-const FADE_Y = 'linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.12) 14%, rgba(0,0,0,0.4) 30%, rgba(0,0,0,0.75) 48%, black 68%)'
+const FADE_Y = 'linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.04) 12%, rgba(0,0,0,0.14) 26%, rgba(0,0,0,0.34) 42%, rgba(0,0,0,0.62) 60%, rgba(0,0,0,0.88) 78%, black 92%)'
 const FADE_X = 'linear-gradient(to right, transparent 0%, rgba(0,0,0,0.5) 7%, black 22%, black 78%, rgba(0,0,0,0.5) 93%, transparent 100%)'
 
 const COLS = 34
 const ROWS = 14
 const floor = Array.from({ length: COLS * ROWS }, (_, i) => {
-  return { src: HOUSE_PHOTOS[(i * 7 + Math.floor(i / COLS) * 13) % HOUSE_PHOTOS.length], col: i % COLS }
+  const row = Math.floor(i / COLS)
+  // дальние ряды (сверху) почти чёрные и постепенно проявляются к зрителю: переход получается по глубине, а не по рамке блока
+  const fade = Math.pow(row / (ROWS - 1), 1.7)
+  return { src: HOUSE_PHOTOS[(i * 7 + row * 13) % HOUSE_PHOTOS.length], col: i % COLS, fade }
 })
 
 const linkBtn = 'inline-flex items-center justify-center rounded-lg px-6 py-3 text-base font-medium transition-colors'
@@ -108,7 +111,7 @@ export default function Home() {
                     alt=""
                     decoding="async"
                     className="aspect-square w-full rounded-[2px] object-cover"
-                    style={{ transform: `translateZ(${Math.round(dx * dx * 0.55)}px)` }}
+                    style={{ transform: `translateZ(${Math.round(dx * dx * 0.55)}px)`, opacity: 0.04 + tile.fade * 0.96 }}
                   />
                 )
               })}
