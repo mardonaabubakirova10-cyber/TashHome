@@ -40,7 +40,7 @@ export default function HouseBuild3D({ className }: { className?: string }) {
 
     const scene = new THREE.Scene()
     const camera = new THREE.PerspectiveCamera(34, 1, 0.1, 100)
-    camera.position.set(8.2, 5.4, 12)
+    camera.position.set(7, 4.6, 10.2)
     camera.lookAt(0, 1.6, 0)
 
     scene.add(new THREE.AmbientLight(0x6070a0, 1.1))
@@ -164,8 +164,9 @@ export default function HouseBuild3D({ className }: { className?: string }) {
       renderer.domElement.style.width = '100%'
       renderer.domElement.style.height = '100%'
       camera.aspect = w / h
-      camera.position.set(8.2, 5.4, 12)
-      if (w / h < 1) camera.position.multiplyScalar(1.3) // на узком экране отодвигаем камеру
+      camera.position.set(7, 4.6, 10.2)
+      // чем уже сцена, тем дальше камера, чтобы дом помещался целиком при любой ширине
+      if (w / h < 1.7) camera.position.multiplyScalar(1.7 / (w / h))
       camera.lookAt(0, 1.6, 0)
       camera.updateProjectionMatrix()
     }

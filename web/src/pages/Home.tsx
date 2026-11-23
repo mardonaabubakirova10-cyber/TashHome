@@ -25,9 +25,9 @@ const floor = Array.from({ length: COLS * ROWS }, (_, i) => {
 
 const linkBtn = 'inline-flex items-center justify-center rounded-lg px-6 py-3 text-base font-medium transition-colors'
 
-function SectionHead({ title, action }: { title: string; action?: ReactNode }) {
+function SectionHead({ title, action, bare }: { title: string; action?: ReactNode; bare?: boolean }) {
   return (
-    <div className="mb-8 flex items-end justify-between gap-4 border-b border-slate-300 pb-4">
+    <div className={`mb-8 flex items-end justify-between gap-4 pb-4 ${bare ? '' : 'border-b border-slate-300'}`}>
       <h2 className="text-3xl sm:text-4xl">{title}</h2>
       {action}
     </div>
@@ -274,7 +274,7 @@ export default function Home() {
       {/* Как это работает: 3D-дом строится вместе с прокруткой, а шаги слева подсвечиваются по стадиям */}
       <section ref={stepsRef} className="grid gap-8 lg:grid-cols-2 lg:items-center">
         <div>
-          <SectionHead title={t('home.stepsTitle')} />
+          <SectionHead title={t('home.stepsTitle')} bare />
           <ol className="grid gap-6">
             {steps.map((n) => {
               const active = stage === n - 1
@@ -290,10 +290,18 @@ export default function Home() {
             })}
           </ol>
         </div>
+        {/* сцена выходит за границы колонки влево, а края растворяются, поэтому резкой границы между текстом и 3D нет */}
         <div
-          className="relative h-[22rem] sm:h-[28rem]"
-          style={{ backgroundImage: 'radial-gradient(55% 60% at 50% 55%, rgba(110,130,255,0.16), transparent 70%)' }}
+          className="relative h-[22rem] sm:h-[30rem] lg:-ml-20 lg:w-[calc(100%+5rem)]"
+          style={{
+            maskImage: 'radial-gradient(ellipse closest-side at 50% 50%, black 55%, transparent 100%)',
+            WebkitMaskImage: 'radial-gradient(ellipse closest-side at 50% 50%, black 55%, transparent 100%)',
+          }}
         >
+          <div
+            className="absolute inset-0"
+            style={{ backgroundImage: 'radial-gradient(55% 60% at 50% 55%, rgba(110,130,255,0.16), transparent 70%)' }}
+          />
           <Suspense fallback={null}>
             <HouseBuild3D className="size-full" />
           </Suspense>
