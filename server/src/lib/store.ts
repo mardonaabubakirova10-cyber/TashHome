@@ -1,3 +1,8 @@
+import { buildDemoProperties, DEMO_DISTRICTS, type Property } from './demoProperties.js'
+import { applyFilters, type Page, type PropertyFilters } from './propertyFilters.js'
+
+export type District = { id: string; name_ru: string; name_uz: string; lat: number; lng: number }
+
 /**
  * Хранилище заявок и отзывов. Пока без базы данных всё лежит в памяти процесса и теряется при перезапуске.
  * Интерфейс Store сделан так, чтобы на шаге подключения Supabase заменить только эту реализацию, а маршруты не трогать.
@@ -28,6 +33,9 @@ export interface Store {
   listLeads(): Promise<Lead[]>
   addReview(input: Pick<Review, 'author' | 'rating' | 'text'>): Promise<Review>
   listReviews(limit: number): Promise<Review[]>
+  listProperties(filters: PropertyFilters): Promise<Page<Property>>
+  getProperty(id: number): Promise<Property | null>
+  listDistricts(): Promise<District[]>
 }
 
 export function createMemoryStore(): Store {
@@ -35,6 +43,7 @@ export function createMemoryStore(): Store {
   const reviews: Review[] = []
   let leadId = 0
   let reviewId = 0
+  const properties = buildDemoProperties()
 
   // Демонстрационные отзывы, чтобы блок на сайте не был пустым
   const demo: Array<[string, number, string, number]> = [
@@ -70,6 +79,15 @@ export function createMemoryStore(): Store {
     },
     async listReviews(limit) {
       return [...reviews].sort((a, b) => b.created_at.localeCompare(a.created_at)).slice(0, limit)
+    },
+    async listProperties(filters) {
+      return applyFilters(properties, filters)
+    },
+    async getProperty(id) {
+      return properties.find((p) => p.id === id) ?? null
+    },
+    async listDistricts() {
+      return DEMO_DISTRICTS.map((d) => ({ id: d.id, name_ru: d.ru, name_uz: d.uz, lat: d.lat, lng: d.lng }))
     },
   }
 }
