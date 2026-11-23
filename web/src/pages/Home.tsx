@@ -240,16 +240,16 @@ export default function Home() {
       </section>
 
       {/* Как это работает: чертёж другого дома */}
-      <section className="relative isolate lg:min-h-[22rem]">
+      <section className="relative isolate sm:min-h-[26rem]">
         {/* карандашный эскиз дома: инвертирован в светлые линии на чёрном и растворяется по краям */}
         <img
           src={sketch}
           alt=""
-          className="pointer-events-none absolute inset-y-0 right-0 -z-10 hidden h-full w-[50%] object-cover object-[50%_45%] opacity-75 mix-blend-screen md:block"
+          className="pointer-events-none absolute inset-0 -z-10 size-full max-w-none object-cover object-[50%_42%] opacity-40 mix-blend-screen"
           style={{
             filter: 'invert(1) grayscale(1) contrast(1.15) brightness(0.8)',
-            maskImage: 'radial-gradient(ellipse closest-side at 55% 50%, black 35%, transparent 100%)',
-            WebkitMaskImage: 'radial-gradient(ellipse closest-side at 55% 50%, black 35%, transparent 100%)',
+            maskImage: 'radial-gradient(ellipse 62% 72% at 50% 50%, black 40%, transparent 100%)',
+            WebkitMaskImage: 'radial-gradient(ellipse 62% 72% at 50% 50%, black 40%, transparent 100%)',
           }}
         />
         <SectionHead title={t('home.stepsTitle')} />
