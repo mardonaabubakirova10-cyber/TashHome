@@ -1,10 +1,10 @@
-import { lazy, Suspense, useState, type FormEvent, type ReactNode } from 'react'
+import { lazy, Suspense, useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import ctaPhoto from '../assets/showcase/cta.webp'
-import sketch from '../assets/showcase/sketch.webp'
 import BlueprintStreet from '../components/BlueprintStreet'
 import BlueprintHouse from '../components/BlueprintHouse'
+import { scrollProgress, stageOf } from '../lib/scrollProgress'
 import HouseCarousel from '../components/HouseCarousel'
 import Button from '../components/ui/Button'
 import { Input, Select } from '../components/ui/Field'
@@ -13,6 +13,8 @@ import { DISTRICTS, PROPERTIES } from '../data/properties'
 // «Пол» главного экрана: мелкие квадратные миниатюры домов. Уникальных адресов всего 36, остальное берётся из кеша браузера.
 // 3D-сцена тянет Three.js, поэтому грузится отдельным файлом
 const GlassCubes = lazy(() => import('../components/GlassCubes'))
+
+const HouseBuild3D = lazy(() => import('../components/HouseBuild3D'))
 
 const COLS = 34
 const ROWS = 14
@@ -38,6 +40,22 @@ export default function Home() {
   const [district, setDistrict] = useState('')
   const [rooms, setRooms] = useState('')
   const [price, setPrice] = useState('')
+
+  // стадия блока «Как это работает» (0, 1, 2) по прокрутке: подсвечивает нужный шаг
+  const stepsRef = useRef<HTMLElement>(null)
+  const [stage, setStage] = useState<0 | 1 | 2>(0)
+  useEffect(() => {
+    const onScroll = () => {
+      if (stepsRef.current) setStage(stageOf(scrollProgress(stepsRef.current)))
+    }
+    onScroll()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('resize', onScroll)
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', onScroll)
+    }
+  }, [])
 
   const districtName = (d: (typeof DISTRICTS)[number]) => (i18n.language === 'uz' ? d.uz : d.ru)
 
@@ -253,30 +271,32 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Как это работает: чертёж другого дома */}
-      <section className="relative isolate sm:min-h-[26rem]">
-        {/* карандашный эскиз дома: инвертирован в светлые линии на чёрном и растворяется по краям */}
-        <img
-          src={sketch}
-          alt=""
-          className="pointer-events-none absolute inset-0 -z-10 size-full max-w-none object-cover object-[50%_42%] opacity-40 mix-blend-screen"
-          style={{
-            filter: 'invert(1) grayscale(1) contrast(1.15) brightness(0.8)',
-            maskImage: 'radial-gradient(ellipse 62% 72% at 50% 50%, black 40%, transparent 100%)',
-            WebkitMaskImage: 'radial-gradient(ellipse 62% 72% at 50% 50%, black 40%, transparent 100%)',
-          }}
-        />
-        <SectionHead title={t('home.stepsTitle')} />
-        <div className="grid gap-8 sm:grid-cols-3">
-          {steps.map((n) => (
-            <div key={n} className="flex gap-4">
-              <p className="font-display text-6xl leading-none text-slate-400">{n}</p>
-              <div>
-                <h3 className="text-lg font-semibold">{t(`home.step${n}Title`)}</h3>
-                <p className="mt-1 text-sm text-slate-600">{t(`home.step${n}Text`)}</p>
-              </div>
-            </div>
-          ))}
+      {/* Как это работает: 3D-дом строится вместе с прокруткой, а шаги слева подсвечиваются по стадиям */}
+      <section ref={stepsRef} className="grid gap-8 lg:grid-cols-2 lg:items-center">
+        <div>
+          <SectionHead title={t('home.stepsTitle')} />
+          <ol className="grid gap-6">
+            {steps.map((n) => {
+              const active = stage === n - 1
+              return (
+                <li key={n} className={`flex gap-4 transition-opacity duration-500 ${active ? 'opacity-100' : 'opacity-45'}`}>
+                  <p className={`font-display text-6xl leading-none transition-colors duration-500 ${active ? 'text-white' : 'text-slate-400'}`}>{n}</p>
+                  <div>
+                    <h3 className="text-lg font-semibold">{t(`home.step${n}Title`)}</h3>
+                    <p className="mt-1 text-sm text-slate-600">{t(`home.step${n}Text`)}</p>
+                  </div>
+                </li>
+              )
+            })}
+          </ol>
+        </div>
+        <div
+          className="relative h-[22rem] sm:h-[28rem]"
+          style={{ backgroundImage: 'radial-gradient(55% 60% at 50% 55%, rgba(110,130,255,0.16), transparent 70%)' }}
+        >
+          <Suspense fallback={null}>
+            <HouseBuild3D className="size-full" />
+          </Suspense>
         </div>
       </section>
 
