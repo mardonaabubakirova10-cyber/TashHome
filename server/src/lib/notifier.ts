@@ -25,8 +25,10 @@ export function leadText(lead: Lead, webUrl = config.webOrigin.split(',')[0]): s
   return lines.join('\n')
 }
 
+const TOPICS: Record<NonNullable<Review['topic']>, string> = { service: 'обслуживание', price: 'цена', property: 'дом', manager: 'менеджер', other: 'другое' }
+
 export function reviewText(r: Review): string {
-  return ['⚠️ <b>Низкая оценка отзыва</b>', `Оценка: ${r.rating} из 5`, `Автор: ${esc(r.author || 'аноним')}`, `Текст: ${esc(r.text)}`].join('\n')
+  return ['⚠️ <b>Негативный отзыв</b>', `Оценка: ${r.rating} из 5${r.topic ? `, тема: ${TOPICS[r.topic]}` : ''}`, `Автор: ${esc(r.author || 'аноним')}`, `Текст: ${esc(r.text)}`].join('\n')
 }
 
 export function createTelegramNotifier(token: string, chatId: string, fetchImpl: typeof fetch = fetch): Notifier {

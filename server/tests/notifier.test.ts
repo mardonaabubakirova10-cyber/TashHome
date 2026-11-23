@@ -56,6 +56,6 @@ describe('вызовы из API', () => {
     await request(app).post('/api/reviews').send({ rating: 5, text: 'отлично' }).expect(201)
     expect(notifier.negativeReview).not.toHaveBeenCalled()
     await request(app).post('/api/reviews').send({ rating: 1, text: 'плохо' }).expect(201)
-    expect(notifier.negativeReview).toHaveBeenCalledTimes(1)
+    await vi.waitFor(() => expect(notifier.negativeReview).toHaveBeenCalledTimes(1))
   })
 })

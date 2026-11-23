@@ -39,6 +39,7 @@ export interface Store {
   listLeads(): Promise<Lead[]>
   addReview(input: Pick<Review, 'author' | 'rating' | 'text'>): Promise<Review>
   listReviews(limit: number): Promise<Review[]>
+  setReviewAnalysis(id: number, sentiment: NonNullable<Review['sentiment']>, topic: NonNullable<Review['topic']>): Promise<void>
   listProperties(filters: PropertyFilters): Promise<Page<Property>>
   getProperty(id: number): Promise<Property | null>
   listDistricts(): Promise<District[]>
@@ -91,6 +92,10 @@ export function createMemoryStore(): Store {
       const review: Review = { ...input, id: ++reviewId, sentiment: null, topic: null, created_at: new Date().toISOString() }
       reviews.push(review)
       return review
+    },
+    async setReviewAnalysis(id, sentiment, topic) {
+      const r = reviews.find((x) => x.id === id)
+      if (r) Object.assign(r, { sentiment, topic })
     },
     async listReviews(limit) {
       return [...reviews].sort((a, b) => b.created_at.localeCompare(a.created_at)).slice(0, limit)

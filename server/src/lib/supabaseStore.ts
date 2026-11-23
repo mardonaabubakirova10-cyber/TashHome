@@ -114,6 +114,9 @@ export function createSupabaseStore(url: string, serviceKey: string): Store {
       return rows.reverse()
     },
     listDistricts: () => call<District[]>('/districts?select=id,name_ru,name_uz,lat,lng&order=name_ru.asc'),
+    async setReviewAnalysis(id, sentiment, topic) {
+      await call(`/reviews?id=eq.${id}`, { method: 'PATCH', body: JSON.stringify({ sentiment, topic }), headers: { Prefer: 'return=minimal' } }).catch(() => undefined)
+    },
     listReviews: (limit) => call<Review[]>(`/reviews?select=id,author,rating,text,sentiment,topic,created_at&order=created_at.desc&limit=${limit}`),
   }
 }

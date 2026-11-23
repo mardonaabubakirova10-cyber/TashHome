@@ -12,11 +12,12 @@ import { reviewsRouter } from './routes/reviews.js'
 import { createAgentDeps } from './ai/deps.js'
 import type { AgentDeps } from './ai/agent.js'
 import { transcribeRouter } from './routes/transcribe.js'
+import { noopAnalyzer, type ReviewAnalyzer } from './ai/reviewAnalysis.js'
 import { chatRouter } from './routes/chat.js'
 import { catalogRouter } from './routes/properties.js'
 import { mortgageRouter } from './routes/mortgage.js'
 
-export function createApp(store: Store = createMemoryStore(), notifier: Notifier = noopNotifier, agentDeps: AgentDeps = createAgentDeps(store, notifier)) {
+export function createApp(store: Store = createMemoryStore(), notifier: Notifier = noopNotifier, agentDeps: AgentDeps = createAgentDeps(store, notifier), reviewAnalyzer: ReviewAnalyzer = noopAnalyzer) {
   const app = express()
   app.disable('x-powered-by')
   app.use(cors({ origin: config.webOrigin.split(',') }))
@@ -33,7 +34,7 @@ export function createApp(store: Store = createMemoryStore(), notifier: Notifier
   app.use('/api/transcribe', transcribeRouter(agentDeps.transcribe))
   app.use('/api/chat', chatRouter(store, agentDeps))
   app.use('/api/leads', leadsRouter(store, notifier))
-  app.use('/api/reviews', reviewsRouter(store, notifier))
+  app.use('/api/reviews', reviewsRouter(store, notifier, reviewAnalyzer))
 
   app.use(notFound)
   app.use(errorHandler)
