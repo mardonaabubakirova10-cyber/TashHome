@@ -28,7 +28,7 @@ const ROWS = 14
 const floor = Array.from({ length: COLS * ROWS }, (_, i) => {
   const row = Math.floor(i / COLS)
   // дальние ряды (сверху) почти чёрные и постепенно проявляются к зрителю: переход получается по глубине, а не по рамке блока
-  const fade = Math.pow(row / (ROWS - 1), 1.7)
+  const fade = Math.pow(Math.max(0, row / (ROWS - 1) - 0.3) / 0.7, 1.5) // верхние ряды полностью невидимы: фон под кнопками чистый
   return { src: HOUSE_PHOTOS[(i * 7 + row * 13) % HOUSE_PHOTOS.length], col: i % COLS, fade }
 })
 
@@ -111,7 +111,7 @@ export default function Home() {
                     alt=""
                     decoding="async"
                     className="aspect-square w-full rounded-[2px] object-cover"
-                    style={{ transform: `translateZ(${Math.round(dx * dx * 1.35)}px)`, opacity: 0.04 + tile.fade * 0.96 }}
+                    style={{ transform: `translateZ(${Math.round(dx * dx * 1.35)}px)`, opacity: tile.fade }}
                   />
                 )
               })}
