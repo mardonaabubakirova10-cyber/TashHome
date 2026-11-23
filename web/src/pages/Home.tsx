@@ -6,8 +6,13 @@ import Button from '../components/ui/Button'
 import { Input, Select } from '../components/ui/Field'
 import { DISTRICTS, PROPERTIES } from '../data/properties'
 
-// Миниатюры домов для «пола» на главном экране: 36 фото повторяются по кругу
-const floor = Array.from({ length: 70 }, (_, i) => PROPERTIES[i % PROPERTIES.length].photo.replace('/800/600', '/240/180'))
+// «Пол» главного экрана: мелкие квадратные миниатюры домов. Уникальных адресов всего 36, остальное берётся из кеша браузера.
+const COLS = 34
+const ROWS = 14
+const floor = Array.from({ length: COLS * ROWS }, (_, i) => {
+  const photo = PROPERTIES[(i * 7 + Math.floor(i / COLS) * 13) % PROPERTIES.length].photo
+  return { src: photo.replace('/800/600', '/160/160'), col: i % COLS }
+})
 
 const linkBtn = 'inline-flex items-center justify-center rounded-lg px-6 py-3 text-base font-medium transition-colors'
 
@@ -53,20 +58,32 @@ export default function Home() {
       <div>
         <section className="relative isolate min-h-[36rem] overflow-hidden rounded-2xl bg-ink text-white sm:min-h-[44rem]">
           <div
-            className="pointer-events-none absolute inset-x-0 bottom-0 z-0 h-[62%] overflow-hidden [perspective:620px]"
-            style={{ maskImage: 'linear-gradient(to bottom, transparent 0%, black 45%)', WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, black 45%)' }}
+            className="pointer-events-none absolute inset-x-0 bottom-0 z-0 h-[64%] overflow-hidden [perspective:700px]"
+            style={{ maskImage: 'linear-gradient(to bottom, transparent 0%, black 55%)', WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, black 55%)' }}
             aria-hidden
           >
+            {/* Пол наклонён назад, а плитки у краёв приподняты: получается чаша, как горизонт, уходящий вверх */}
             <div
-              className="absolute bottom-[-18%] left-1/2 grid w-[230%] origin-bottom grid-cols-14 gap-2"
-              style={{ transform: 'translateX(-50%) rotateX(58deg)' }}
+              className="absolute bottom-[-30%] left-1/2 grid w-[250%] origin-bottom gap-[3px]"
+              style={{ gridTemplateColumns: `repeat(${COLS}, 1fr)`, transform: 'translateX(-50%) rotateX(64deg)', transformStyle: 'preserve-3d' }}
             >
-              {floor.map((src, i) => (
-                <img key={i} src={src} alt="" loading="lazy" decoding="async" className="aspect-[4/3] w-full rounded-md object-cover opacity-90" />
-              ))}
+              {floor.map((tile, i) => {
+                const dx = tile.col - (COLS - 1) / 2
+                return (
+                  <img
+                    key={i}
+                    src={tile.src}
+                    alt=""
+                    loading="lazy"
+                    decoding="async"
+                    className="aspect-square w-full rounded-[2px] object-cover"
+                    style={{ transform: `translateZ(${Math.round(dx * dx * 0.55)}px)` }}
+                  />
+                )
+              })}
             </div>
           </div>
-          <div className="pointer-events-none absolute inset-0 z-10 bg-gradient-to-b from-black/40 via-transparent to-black/50" />
+          <div className="pointer-events-none absolute inset-0 z-10 bg-gradient-to-b from-black/30 via-transparent to-black/20" />
 
           <div className="relative z-20 flex flex-col items-center px-5 pt-16 text-center sm:pt-24">
             <p className="text-[0.7rem] font-medium uppercase tracking-[0.3em] text-white/60">{t('home.eyebrow')}</p>
@@ -91,7 +108,7 @@ export default function Home() {
 
         <form
           onSubmit={onSearch}
-          className="relative z-10 mx-4 -mt-8 grid gap-3 rounded-xl bg-slate-100 p-4 text-slate-900 shadow-xl ring-1 ring-white/10 sm:mx-10 sm:grid-cols-[1fr_1fr_1fr_auto] sm:items-end"
+          className="relative z-10 mx-0 mt-4 grid gap-3 rounded-xl bg-slate-100 p-4 text-slate-900 shadow-xl ring-1 ring-white/10 sm:grid-cols-[1fr_1fr_1fr_auto] sm:items-end"
         >
           <Select label={t('filters.district')} value={district} onChange={(e) => setDistrict(e.target.value)}>
             <option value="">{t('filters.anyDistrict')}</option>
