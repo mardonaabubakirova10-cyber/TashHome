@@ -52,12 +52,11 @@ export default function Home() {
       {/* Hero: тёмная карта, поверх две наложенные надписи разных цветов */}
       <div>
         <section className="relative isolate min-h-[34rem] overflow-hidden rounded-2xl bg-ink text-white [container-type:inline-size] sm:min-h-[40rem]">
-          <div className="absolute inset-0 isolate z-0">
-            <Suspense fallback={null}>
-              <HeroMap />
-            </Suspense>
-          </div>
-          <div className="pointer-events-none absolute inset-0 z-10 bg-gradient-to-b from-black/60 via-black/20 to-black/75" />
+          {/* Фон главного экрана временный: карта переехала в блок районов, экран переделаем позже */}
+          <div
+            className="pointer-events-none absolute inset-0 z-0"
+            style={{ backgroundImage: 'radial-gradient(60% 70% at 70% 30%, rgba(192,38,211,0.35), transparent 70%), radial-gradient(50% 60% at 20% 80%, rgba(107,33,168,0.35), transparent 70%)' }}
+          />
 
           <h1
             aria-label="TashHome"
@@ -158,6 +157,11 @@ export default function Home() {
               {districtName(d)}
             </Link>
           ))}
+        </div>
+        <div className="relative isolate mt-8 h-[22rem] overflow-hidden rounded-2xl bg-ink ring-1 ring-white/10 sm:h-[30rem]">
+          <Suspense fallback={null}>
+            <HeroMap />
+          </Suspense>
         </div>
       </section>
 

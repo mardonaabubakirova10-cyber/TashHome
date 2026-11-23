@@ -4,7 +4,7 @@ import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import { PROPERTIES } from '../data/properties'
 
-/** Тёмная карта Ташкента для фона главной: точки — дома из каталога, по клику открывается страница дома. */
+/** Тёмная карта Ташкента на главной (блок районов): точки — дома из каталога, по клику открывается страница дома. */
 export default function HeroMap() {
   const ref = useRef<HTMLDivElement>(null)
   const navigate = useNavigate()
