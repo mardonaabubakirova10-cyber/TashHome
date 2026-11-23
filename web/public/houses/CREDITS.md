@@ -29,3 +29,7 @@
 | house-26.jpg | Райымбек, Байтурсынова 11-1.jpg | Nikolai Bulykin | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:%D0%A0%D0%B0%D0%B9%D1%8B%D0%BC%D0%B1%D0%B5%D0%BA,_%D0%91%D0%B0%D0%B9%D1%82%D1%83%D1%80%D1%81%D1%8B%D0%BD%D0%BE%D0%B2%D0%B0_11-1.jpg |
 | house-27.jpg | Alpin Villa 40m2.jpg | Alpin Villa | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:Alpin_Villa_40m2.jpg |
 | house-28.jpg | My Home At Spring.jpg | MustafaERTAN | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:My_Home_At_Spring.jpg |
+| house-29.jpg | Дом лесовода Баума в Алма-Ате.jpg | User 0100 | Public domain | https://commons.wikimedia.org/wiki/File:%D0%94%D0%BE%D0%BC_%D0%BB%D0%B5%D1%81%D0%BE%D0%B2%D0%BE%D0%B4%D0%B0_%D0%91%D0%B0%D1%83%D0%BC%D0%B0_%D0%B2_%D0%90%D0%BB%D0%BC%D0%B0-%D0%90%D1%82%D0%B5.jpg |
+| house-30.jpg | Космос, дома на Желтоксане.jpg | Nikolai Bulykin | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:%D0%9A%D0%BE%D1%81%D0%BC%D0%BE%D1%81,_%D0%B4%D0%BE%D0%BC%D0%B0_%D0%BD%D0%B0_%D0%96%D0%B5%D0%BB%D1%82%D0%BE%D0%BA%D1%81%D0%B0%D0%BD%D0%B5.jpg |
+| house-31.jpg | Ташкент, Матонат 38.jpg | Nikolai Bulykin | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:%D0%A2%D0%B0%D1%88%D0%BA%D0%B5%D0%BD%D1%82,_%D0%9C%D0%B0%D1%82%D0%BE%D0%BD%D0%B0%D1%82_38.jpg |
+| house-32.jpg | Ташкент, Мироншах 92.jpg | Nikolai Bulykin | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:%D0%A2%D0%B0%D1%88%D0%BA%D0%B5%D0%BD%D1%82,_%D0%9C%D0%B8%D1%80%D0%BE%D0%BD%D1%88%D0%B0%D1%85_92.jpg |
