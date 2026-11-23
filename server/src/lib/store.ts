@@ -34,11 +34,19 @@ export type KbHit = { title: string; content: string; similarity: number }
 /** Фильтры поиска домов ассистентом (структурные; смысловая часть идёт отдельно эмбеддингом). */
 export type SearchFilters = { deal_type?: 'sale' | 'rent'; district_id?: string; min_price?: number; max_price?: number; min_rooms?: number; min_area?: number; min_land?: number }
 
+export type LeadStatus = Lead['status']
+export type LeadFilter = { status?: LeadStatus; page: number; pageSize: number }
+export type ReviewFilter = { sentiment?: NonNullable<Review['sentiment']>; topic?: NonNullable<Review['topic']>; page: number; pageSize: number }
+export type AdminPage<T> = { items: T[]; total: number; page: number; pageSize: number }
+
 export interface Store {
   addLead(input: Omit<Lead, 'id' | 'status' | 'created_at'>): Promise<Lead>
   listLeads(): Promise<Lead[]>
   addReview(input: Pick<Review, 'author' | 'rating' | 'text'>): Promise<Review>
   listReviews(limit: number): Promise<Review[]>
+  adminListLeads(f: LeadFilter): Promise<AdminPage<Lead>>
+  adminUpdateLead(id: number, patch: { status: LeadStatus }): Promise<Lead | null>
+  adminListReviews(f: ReviewFilter): Promise<AdminPage<Review>>
   setReviewAnalysis(id: number, sentiment: NonNullable<Review['sentiment']>, topic: NonNullable<Review['topic']>): Promise<void>
   listProperties(filters: PropertyFilters): Promise<Page<Property>>
   getProperty(id: number): Promise<Property | null>
@@ -92,6 +100,20 @@ export function createMemoryStore(): Store {
       const review: Review = { ...input, id: ++reviewId, sentiment: null, topic: null, created_at: new Date().toISOString() }
       reviews.push(review)
       return review
+    },
+    async adminListLeads(f) {
+      const list = leads.filter((l) => !f.status || l.status === f.status).sort((a, b) => b.id - a.id)
+      return { items: list.slice((f.page - 1) * f.pageSize, f.page * f.pageSize), total: list.length, page: f.page, pageSize: f.pageSize }
+    },
+    async adminUpdateLead(id, patch) {
+      const l = leads.find((x) => x.id === id)
+      if (!l) return null
+      l.status = patch.status
+      return l
+    },
+    async adminListReviews(f) {
+      const list = reviews.filter((r) => (!f.sentiment || r.sentiment === f.sentiment) && (!f.topic || r.topic === f.topic)).sort((a, b) => b.id - a.id)
+      return { items: list.slice((f.page - 1) * f.pageSize, f.page * f.pageSize), total: list.length, page: f.page, pageSize: f.pageSize }
     },
     async setReviewAnalysis(id, sentiment, topic) {
       const r = reviews.find((x) => x.id === id)

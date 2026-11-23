@@ -114,6 +114,25 @@ export function createSupabaseStore(url: string, serviceKey: string): Store {
       return rows.reverse()
     },
     listDistricts: () => call<District[]>('/districts?select=id,name_ru,name_uz,lat,lng&order=name_ru.asc'),
+    async adminListLeads(f) {
+      const q = new URLSearchParams({ select: '*', order: 'id.desc', limit: String(f.pageSize), offset: String((f.page - 1) * f.pageSize) })
+      if (f.status) q.set('status', `eq.${f.status}`)
+      const res = await fetch(`${base}/leads?${q}`, { headers: { ...headers, Prefer: 'count=exact' } })
+      if (!res.ok) throw new Error(`Supabase ${res.status} leads`)
+      return { items: (await res.json()) as Lead[], total: Number(res.headers.get('content-range')?.split('/')[1] ?? 0), page: f.page, pageSize: f.pageSize }
+    },
+    async adminUpdateLead(id, patch) {
+      const rows = await call<Lead[]>(`/leads?id=eq.${id}`, { method: 'PATCH', headers: { Prefer: 'return=representation' }, body: JSON.stringify(patch) })
+      return rows[0] ?? null
+    },
+    async adminListReviews(f) {
+      const q = new URLSearchParams({ select: '*', order: 'id.desc', limit: String(f.pageSize), offset: String((f.page - 1) * f.pageSize) })
+      if (f.sentiment) q.set('sentiment', `eq.${f.sentiment}`)
+      if (f.topic) q.set('topic', `eq.${f.topic}`)
+      const res = await fetch(`${base}/reviews?${q}`, { headers: { ...headers, Prefer: 'count=exact' } })
+      if (!res.ok) throw new Error(`Supabase ${res.status} reviews`)
+      return { items: (await res.json()) as Review[], total: Number(res.headers.get('content-range')?.split('/')[1] ?? 0), page: f.page, pageSize: f.pageSize }
+    },
     async setReviewAnalysis(id, sentiment, topic) {
       await call(`/reviews?id=eq.${id}`, { method: 'PATCH', body: JSON.stringify({ sentiment, topic }), headers: { Prefer: 'return=minimal' } }).catch(() => undefined)
     },

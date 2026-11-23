@@ -63,6 +63,19 @@ cp .env.example .env
    (подставьте токен вместо `<ВАШ_ТОКЕН>`) и найдите `"chat":{"id":-100…}`. Это число (с минусом) идёт в `TELEGRAM_MANAGERS_CHAT_ID`.
 3. Не публикуйте ссылку с токеном, она содержит секрет.
 
+
+## 5. Учётная запись администратора (вход в /admin)
+
+Пароль вы придумываете сами и нигде, кроме Supabase, не вводите.
+
+1. В Supabase откройте **Authentication → Users → Add user → Create new user**. Введите свою почту и пароль, отметьте **Auto Confirm User**, нажмите **Create user**.
+2. Откройте **SQL Editor** и выполните (подставьте свою почту):
+   ```sql
+   update profiles set role = 'admin' where id = (select id from auth.users where email = 'ВАША_ПОЧТА');
+   ```
+   Роль `manager` (только заявки и отзывы) выдаётся так же, с `role = 'manager'`.
+3. Откройте `http://localhost:5173/admin` и войдите этой почтой и паролем.
+
 ---
 
 ## Итоговый вид `.env`

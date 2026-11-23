@@ -1,10 +1,15 @@
 import { lazy, Suspense } from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { AuthProvider } from './lib/auth'
 import { ChatProvider } from './lib/chat'
 import { CollectionsProvider } from './lib/collections'
 import { CurrencyProvider } from './lib/currency'
 import Layout from './components/Layout'
+import AdminLayout from './pages/admin/AdminLayout'
+import AdminLeads from './pages/admin/AdminLeads'
+import AdminLogin from './pages/admin/AdminLogin'
+import AdminReviews from './pages/admin/AdminReviews'
 import Assistant from './pages/Assistant'
 import Catalog from './pages/Catalog'
 import Estimate from './pages/Estimate'
@@ -27,9 +32,15 @@ export default function App() {
       <CurrencyProvider>
        <ToastProvider>
         <CollectionsProvider>
+        <AuthProvider>
         <ChatProvider>
         <BrowserRouter>
           <Routes>
+            <Route path="admin/login" element={<AdminLogin />} />
+            <Route path="admin" element={<AdminLayout />}>
+              <Route index element={<AdminLeads />} />
+              <Route path="reviews" element={<AdminReviews />} />
+            </Route>
             <Route element={<Layout />}>
               <Route index element={<Home />} />
               <Route path="estimate" element={<Estimate />} />
@@ -45,6 +56,7 @@ export default function App() {
           </Routes>
         </BrowserRouter>
         </ChatProvider>
+        </AuthProvider>
         </CollectionsProvider>
        </ToastProvider>
       </CurrencyProvider>
