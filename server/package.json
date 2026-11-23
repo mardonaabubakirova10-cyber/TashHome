@@ -11,6 +11,7 @@
     "kb:index": "tsx scripts/index-kb.ts",
     "props:embed": "tsx scripts/embed-properties.ts",
     "reviews:analyze": "tsx scripts/analyze-reviews.ts",
+    "props:photos": "tsx scripts/reassign-photos.ts",
     "props:score": "tsx scripts/score-properties.ts"
   },
   "dependencies": {

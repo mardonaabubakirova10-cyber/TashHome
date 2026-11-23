@@ -50,10 +50,52 @@ export const DEMO_DISTRICTS: DistrictDemo[] = [
   { id: 'yangihayot', ru: 'Янгихаёт', uz: 'Yangihayot', ppm2: 400, land: 3200, lat: 41.34, lng: 69.13 },
 ]
 
-/** Файлы лежат в web/public/houses и отдаются сайтом по пути /houses/… */
-const PHOTO_FILES = [1, 2, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28].map(
-  (n) => `/houses/house-${String(n).padStart(2, '0')}.jpg`,
-)
+const photo = (n: number) => `/houses/house-${String(n).padStart(2, '0')}.jpg`
+
+/**
+ * Разметка 25 фото по виду дома (просмотрены вручную). Дом получает фото своего класса, чтобы картинка не противоречила описанию:
+ * одноэтажный дом без ремонта не должен выглядеть как особняк.
+ */
+export const PHOTO_TIERS = {
+  premium: [16, 18, 19, 20, 21].map(photo), // современные и дворцовые, 2–3 этажа, дизайнерский ремонт
+  classic: [7, 8, 9, 10, 14, 15, 22].map(photo), // большие кирпичные и оштукатуренные дома, 2–3 этажа, евроремонт
+  mid2: [1, 13, 23, 11].map(photo), // обычные двухэтажные
+  mid1: [12, 28, 27].map(photo), // аккуратные одноэтажные
+  simple1: [24, 25, 26].map(photo), // простые одноэтажные
+  extras: [2, 5, 6].map(photo), // детали: фасад, улица, бассейн; только как дополнительные снимки
+} as const
+
+type Tier = Exclude<keyof typeof PHOTO_TIERS, 'extras'>
+const NEIGHBOUR: Record<Tier, Tier[]> = { premium: ['classic'], classic: ['premium', 'mid2'], mid2: ['classic', 'mid1'], mid1: ['mid2', 'simple1'], simple1: ['mid1'] }
+
+/** Класс дома по этажности, ремонту и площади. */
+export function photoTier(p: { floors: number; renovation: Renovation; areaM2: number }): Tier {
+  if (p.floors >= 2) {
+    if (p.renovation === 'designer') return 'premium'
+    if (p.renovation === 'euro') return p.areaM2 >= 150 ? 'classic' : 'mid2'
+    return p.areaM2 >= 200 ? 'classic' : 'mid2'
+  }
+  if (p.renovation === 'designer' || p.renovation === 'euro') return 'mid1'
+  return p.areaM2 >= 110 && p.renovation === 'basic' ? 'mid1' : 'simple1'
+}
+
+/** Четыре фото дома: первое и два следующих из его класса, четвёртое из соседнего класса или детали. Без случайности: набор всегда один и тот же. */
+export function photosFor(p: { id: number; floors: number; renovation: Renovation; areaM2: number }): string[] {
+  const tier = photoTier(p)
+  const own = PHOTO_TIERS[tier]
+  const neighbours = NEIGHBOUR[tier].flatMap((t) => PHOTO_TIERS[t])
+  const first = p.id % own.length
+  const list = [own[first], own[(first + 1) % own.length], own[(first + 2) % own.length], neighbours[p.id % neighbours.length] ?? PHOTO_TIERS.extras[p.id % PHOTO_TIERS.extras.length]]
+  // если в классе меньше трёх фото, дубли заменяем снимками соседнего класса и деталями
+  const spare = [...neighbours, ...PHOTO_TIERS.extras]
+  const out: string[] = []
+  for (const u of list) {
+    let c = u
+    for (let k = 0; out.includes(c); k++) c = spare[(p.id + k) % spare.length]
+    out.push(c)
+  }
+  return out
+}
 
 const STREETS = ['ул. Навруз', 'ул. Сарыкуль', 'ул. Кичик Халка Йули', 'ул. Фергана Йули', 'ул. Беруни', 'ул. Кукча', 'ул. Минор', 'ул. Янги Узбекистан']
 const RENOVATION_FACTOR: Record<Renovation, number> = { none: 0.8, basic: 0.93, euro: 1.08, designer: 1.25 }
@@ -90,7 +132,7 @@ export function buildDemoProperties(count = 100): Property[] {
     const noise = 0.88 + rnd() * 0.26
     const sale = Math.round((areaM2 * d.ppm2 * RENOVATION_FACTOR[renovation] + landSotka * d.land) * noise / 500) * 500
     const dealType: DealType = i % 5 === 0 ? 'rent' : 'sale'
-    const photos = [0, 1, 2, 3].map((k) => PHOTO_FILES[(i * 7 + k * 11) % PHOTO_FILES.length])
+    const photos = photosFor({ id: i, floors, renovation, areaM2 })
     const street = pick(STREETS)
     items.push({
       id: i,

@@ -1,7 +1,7 @@
 import request from 'supertest'
 import { describe, expect, it } from 'vitest'
 import { createApp } from '../src/app.js'
-import { buildDemoProperties } from '../src/lib/demoProperties.js'
+import { buildDemoProperties, PHOTO_TIERS, photoTier } from '../src/lib/demoProperties.js'
 import { applyFilters, filtersSchema, toPostgrestParams } from '../src/lib/propertyFilters.js'
 
 const app = createApp()
@@ -82,5 +82,30 @@ describe('GET /api', () => {
   it('/districts возвращает 12 районов', async () => {
     const r = await request(app).get('/api/districts')
     expect(r.body).toHaveLength(12)
+  })
+})
+
+describe('фото соответствуют дому', () => {
+  const tierOf = (url: string) => (Object.entries(PHOTO_TIERS).find(([, list]) => (list as readonly string[]).includes(url)) ?? ['?'])[0]
+
+  it('у каждого дома 4 разных фото', () => {
+    for (const p of all) expect(new Set(p.photos).size).toBe(4)
+  })
+
+  it('главное фото всегда из класса дома', () => {
+    for (const p of all) expect(tierOf(p.photo)).toBe(photoTier({ floors: p.floors, renovation: p.renovation, areaM2: p.areaM2 }))
+  })
+
+  it('дизайнерский ремонт с 2+ этажами — премиум, одноэтажный без ремонта — простой класс', () => {
+    expect(photoTier({ floors: 3, renovation: 'designer', areaM2: 200 })).toBe('premium')
+    expect(photoTier({ floors: 1, renovation: 'none', areaM2: 80 })).toBe('simple1')
+    expect(photoTier({ floors: 1, renovation: 'none', areaM2: 150 })).toBe('simple1')
+  })
+
+  it('особняки не достаются домам без ремонта и одноэтажным', () => {
+    for (const p of all) {
+      if (p.floors === 1) expect(['premium', 'classic']).not.toContain(tierOf(p.photo))
+      if (p.renovation === 'none') expect(tierOf(p.photo)).not.toBe('premium')
+    }
   })
 })
