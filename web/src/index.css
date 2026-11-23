@@ -110,3 +110,25 @@ div.leaflet-container {
   background: radial-gradient(240px circle at var(--gx, 50%) var(--gy, 30%), rgba(255, 255, 255, 0.22), transparent 60%);
   mix-blend-mode: screen;
 }
+
+/* Бегущая лента: список продублирован, поэтому сдвиг на половину ширины даёт бесшовную петлю */
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+.marquee-track {
+  animation: marquee 45s linear infinite;
+}
+.marquee:hover .marquee-track,
+.marquee:focus-within .marquee-track {
+  animation-play-state: paused;
+}
+@media (prefers-reduced-motion: reduce) {
+  .marquee {
+    overflow-x: auto;
+  }
+  .marquee-track {
+    animation: none;
+  }
+}

@@ -58,7 +58,7 @@ export default function Home() {
   const examples = ['aiEx1', 'aiEx2', 'aiEx3'] as const
 
   return (
-    <div className="grid gap-20">
+    <div className="grid grid-cols-[minmax(0,1fr)] gap-20">
       {/* Hero: заголовок и «пол» из наклонённых фотографий домов */}
       <div>
         <section className="relative isolate min-h-[36rem] overflow-hidden rounded-2xl bg-ink text-white sm:min-h-[44rem]">
@@ -181,16 +181,27 @@ export default function Home() {
       {/* Районы */}
       <section>
         <SectionHead title={t('home.districts')} />
-        <div className="flex flex-wrap gap-3">
-          {DISTRICTS.map((d) => (
-            <Link
-              key={d.id}
-              to={`/catalog?district=${d.id}`}
-              className="rounded-full border border-slate-400 px-5 py-2 text-sm transition-colors hover:border-white hover:bg-white hover:text-ink"
-            >
-              {districtName(d)}
-            </Link>
-          ))}
+        {/* Бегущая лента районов: движется сама, при наведении останавливается */}
+        <div
+          className="marquee overflow-hidden py-1"
+          style={{ maskImage: 'linear-gradient(to right, transparent, black 6%, black 94%, transparent)', WebkitMaskImage: 'linear-gradient(to right, transparent, black 6%, black 94%, transparent)' }}
+        >
+          <div className="marquee-track flex w-max">
+            {[...DISTRICTS, ...DISTRICTS].map((d, i) => {
+              const copy = i >= DISTRICTS.length // вторая копия нужна только для бесшовной петли
+              return (
+                <Link
+                  key={`${d.id}-${i}`}
+                  to={`/catalog?district=${d.id}`}
+                  aria-hidden={copy || undefined}
+                  tabIndex={copy ? -1 : undefined}
+                  className="mr-3 whitespace-nowrap rounded-full border border-slate-400 px-5 py-2 text-sm transition-colors hover:border-white hover:bg-white hover:text-ink"
+                >
+                  {districtName(d)}
+                </Link>
+              )
+            })}
+          </div>
         </div>
       </section>
 
