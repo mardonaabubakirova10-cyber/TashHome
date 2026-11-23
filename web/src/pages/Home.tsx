@@ -19,6 +19,10 @@ const GlassCubes = lazy(() => import('../components/GlassCubes'))
 const HouseBlueprint3D = lazy(() => import('../components/HouseBlueprint3D'))
 const HouseBuild3D = lazy(() => import('../components/HouseBuild3D'))
 
+// Плавный переход мозаики в чёрный фон: сверху к горизонту, по краям — в стороны (ступени подобраны, чтобы не было видно границы)
+const FADE_Y = 'linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.12) 14%, rgba(0,0,0,0.4) 30%, rgba(0,0,0,0.75) 48%, black 68%)'
+const FADE_X = 'linear-gradient(to right, transparent 0%, rgba(0,0,0,0.5) 7%, black 22%, black 78%, rgba(0,0,0,0.5) 93%, transparent 100%)'
+
 const COLS = 34
 const ROWS = 14
 const floor = Array.from({ length: COLS * ROWS }, (_, i) => {
@@ -86,11 +90,10 @@ export default function Home() {
       {/* Hero: заголовок и «пол» из наклонённых фотографий домов */}
       <div>
         <section className="relative isolate min-h-[36rem] overflow-hidden rounded-2xl bg-ink text-white sm:min-h-[44rem]">
-          <div
-            className="pointer-events-none absolute inset-x-0 bottom-0 z-0 h-[64%] overflow-hidden [perspective:700px]"
-            style={{ maskImage: 'linear-gradient(to bottom, transparent 0%, black 55%)', WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, black 55%)' }}
-            aria-hidden
-          >
+          {/* Затухание делаем на внешних слоях: маска на элементе с perspective в 3D не срабатывает */}
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 z-0 h-[64%]" style={{ maskImage: FADE_Y, WebkitMaskImage: FADE_Y }} aria-hidden>
+           <div className="h-full w-full" style={{ maskImage: FADE_X, WebkitMaskImage: FADE_X }}>
+            <div className="h-full w-full overflow-hidden [perspective:700px]">
             {/* Пол наклонён назад, а плитки у краёв приподняты: получается чаша, как горизонт, уходящий вверх */}
             <div
               className="absolute bottom-[-30%] left-1/2 grid w-[250%] origin-bottom gap-[3px]"
@@ -103,7 +106,6 @@ export default function Home() {
                     key={i}
                     src={tile.src}
                     alt=""
-                    loading="lazy"
                     decoding="async"
                     className="aspect-square w-full rounded-[2px] object-cover"
                     style={{ transform: `translateZ(${Math.round(dx * dx * 0.55)}px)` }}
@@ -111,6 +113,8 @@ export default function Home() {
                 )
               })}
             </div>
+            </div>
+           </div>
           </div>
           <div className="pointer-events-none absolute inset-0 z-10 bg-gradient-to-b from-black/30 via-transparent to-black/20" />
 
