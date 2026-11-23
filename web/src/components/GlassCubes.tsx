@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react'
 import * as THREE from 'three'
-import { PROPERTIES } from '../data/properties'
+import { HOUSE_PHOTOS } from '../data/photos'
 
 /**
  * 3D-фон: облако полупрозрачных кубов с фотографиями домов на гранях. Медленно вращается и чуть поворачивается за мышью.
@@ -39,8 +39,8 @@ export default function GlassCubes({ className }: { className?: string }) {
 
     // фото домов для граней
     const loader = new THREE.TextureLoader()
-    const textures = PROPERTIES.slice(0, 8).map((p) => {
-      const t = loader.load(p.photo)
+    const textures = HOUSE_PHOTOS.slice(0, 8).map((src) => {
+      const t = loader.load(src)
       t.colorSpace = THREE.SRGBColorSpace
       return t
     })

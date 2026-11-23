@@ -8,7 +8,9 @@ import { scrollProgress, stageOf } from '../lib/scrollProgress'
 import HouseCarousel from '../components/HouseCarousel'
 import Button from '../components/ui/Button'
 import { Input, Select } from '../components/ui/Field'
-import { DISTRICTS, PROPERTIES } from '../data/properties'
+import { HOUSE_PHOTOS } from '../data/photos'
+import { DISTRICTS } from '../data/properties'
+import { useHomeHouses, useTotalHouses } from '../lib/queries'
 
 // «Пол» главного экрана: мелкие квадратные миниатюры домов. Уникальных адресов всего 36, остальное берётся из кеша браузера.
 // 3D-сцена тянет Three.js, поэтому грузится отдельным файлом
@@ -20,8 +22,7 @@ const HouseBuild3D = lazy(() => import('../components/HouseBuild3D'))
 const COLS = 34
 const ROWS = 14
 const floor = Array.from({ length: COLS * ROWS }, (_, i) => {
-  const photo = PROPERTIES[(i * 7 + Math.floor(i / COLS) * 13) % PROPERTIES.length].photo
-  return { src: photo.replace('/800/600', '/160/160'), col: i % COLS }
+  return { src: HOUSE_PHOTOS[(i * 7 + Math.floor(i / COLS) * 13) % HOUSE_PHOTOS.length], col: i % COLS }
 })
 
 const linkBtn = 'inline-flex items-center justify-center rounded-lg px-6 py-3 text-base font-medium transition-colors'
@@ -69,8 +70,10 @@ export default function Home() {
     navigate(`/catalog?${p.toString()}`)
   }
 
+  const total = useTotalHouses().data
+  const fresh = useHomeHouses().data?.items.slice(0, 9) ?? []
   const stats = [
-    { value: PROPERTIES.length, label: t('home.statHouses') },
+    { value: total ?? '—', label: t('home.statHouses') },
     { value: DISTRICTS.length, label: t('home.statDistricts') },
     { value: '24/7', label: t('home.statSupport') },
   ]
@@ -200,7 +203,7 @@ export default function Home() {
             </Link>
           }
         />
-        <HouseCarousel items={PROPERTIES.filter((p) => p.dealType === 'sale').slice(0, 9)} />
+        {fresh.length > 0 && <HouseCarousel items={fresh} />}
       </section>
 
       {/* Районы */}

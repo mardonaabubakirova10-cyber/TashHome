@@ -1,4 +1,4 @@
-import { PROPERTIES, type DealType, type Property } from '../data/properties'
+import type { DealType } from '../data/properties'
 
 export type Sort = 'default' | 'price_asc' | 'price_desc'
 
@@ -38,21 +38,16 @@ export function parseFilters(p: URLSearchParams): Filters {
   }
 }
 
-export const ROOMS_MAX_OPTION = 6
-
-export function applyFilters(f: Filters, items: Property[] = PROPERTIES): Property[] {
-  const res = items.filter(
-    (x) =>
-      (!f.deal || x.dealType === f.deal) &&
-      (!f.district || x.districtId === f.district) &&
-      // последний вариант («6+») означает «6 и больше»
-      (f.rooms === undefined || (f.rooms >= ROOMS_MAX_OPTION ? x.rooms >= ROOMS_MAX_OPTION : x.rooms === f.rooms)) &&
-      (f.priceFrom === undefined || x.priceUsd >= f.priceFrom) &&
-      (f.priceTo === undefined || x.priceUsd <= f.priceTo) &&
-      (f.areaFrom === undefined || x.areaM2 >= f.areaFrom) &&
-      (f.landFrom === undefined || x.landSotka >= f.landFrom),
-  )
-  if (f.sort === 'price_asc') res.sort((a, b) => a.priceUsd - b.priceUsd)
-  if (f.sort === 'price_desc') res.sort((a, b) => b.priceUsd - a.priceUsd)
-  return res
-}
+/** Фильтры страницы → параметры запроса /api/properties. */
+export const filtersToParams = (f: Filters) => ({
+  deal: f.deal,
+  district: f.district,
+  rooms: f.rooms,
+  priceFrom: f.priceFrom,
+  priceTo: f.priceTo,
+  areaFrom: f.areaFrom,
+  landFrom: f.landFrom,
+  sort: f.sort === 'default' ? undefined : f.sort,
+  page: f.page,
+  pageSize: PAGE_SIZE,
+})

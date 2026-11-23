@@ -28,6 +28,8 @@ function toProperty(r: Row): Property {
     lng: r.lng,
     photo: photos[0] ?? '',
     photos,
+    predictedPriceUsd: r.predicted_price_usd === null ? null : Number(r.predicted_price_usd),
+    priceLabel: r.price_label ?? null,
   }
 }
 

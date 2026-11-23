@@ -5,17 +5,18 @@ import HouseTicket from '../components/HouseTicket'
 import Button from '../components/ui/Button'
 import { Input, Select } from '../components/ui/Field'
 import { DISTRICTS } from '../data/properties'
-import { applyFilters, PAGE_SIZE, parseFilters } from '../lib/filters'
+import { parseFilters } from '../lib/filters'
+import { useCatalog } from '../lib/queries'
 
 export default function Catalog() {
   const { t, i18n } = useTranslation()
   const [params, setParams] = useSearchParams()
   const filters = useMemo(() => parseFilters(params), [params])
-  const results = useMemo(() => applyFilters(filters), [filters])
-
-  const pages = Math.max(1, Math.ceil(results.length / PAGE_SIZE))
+  const q = useCatalog(filters)
+  const visible = q.data?.items ?? []
+  const total = q.data?.total ?? 0
+  const pages = Math.max(1, Math.ceil(total / (q.data?.pageSize ?? 9)))
   const page = Math.min(filters.page, pages)
-  const visible = results.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)
 
   // Любое изменение фильтра сбрасывает страницу на первую
   const setParam = (key: string, value: string) => {
@@ -68,11 +69,15 @@ export default function Catalog() {
       </div>
 
       <div className="flex flex-wrap items-center justify-between gap-2 text-sm text-slate-500">
-        <p>{t('catalog.found', { count: results.length })}</p>
+        <p>{q.isPending ? t('catalog.loading') : t('catalog.found', { count: total })}</p>
         <p>{t('ticket.hint')}</p>
       </div>
 
-      {visible.length === 0 ? (
+      {q.isError ? (
+        <div className="rounded-xl border border-dashed border-slate-300 py-16 text-center">
+          <p className="font-medium">{t('catalog.loadError')}</p>
+        </div>
+      ) : q.isPending ? null : visible.length === 0 ? (
         <div className="rounded-xl border border-dashed border-slate-300 py-16 text-center">
           <p className="font-medium">{t('catalog.empty')}</p>
           <p className="mt-1 text-sm text-slate-500">{t('catalog.emptyHint')}</p>

@@ -28,6 +28,9 @@ export type Property = {
   lng: number
   photo: string
   photos: string[]
+  /** Оценка модели и метка «ниже / по / выше рынка»; считает scripts/score-properties.ts */
+  predictedPriceUsd: number | null
+  priceLabel: 'below' | 'fair' | 'above' | null
 }
 
 export type DistrictDemo = { id: string; ru: string; uz: string; ppm2: number; land: number; lat: number; lng: number }
@@ -110,6 +113,8 @@ export function buildDemoProperties(count = 100): Property[] {
       lng: Math.round((d.lng + (rnd() - 0.5) * 0.02) * 1e6) / 1e6,
       photo: photos[0],
       photos,
+      predictedPriceUsd: null,
+      priceLabel: null,
     })
   }
   return items

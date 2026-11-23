@@ -86,7 +86,7 @@
     "sortPriceDesc": "Avval qimmatlari",
     "reset": "Tozalash"
   },
-  "catalog": { "found": "Topildi: {{count}}", "empty": "Filtrlar bo‘yicha hech narsa topilmadi", "emptyHint": "Filtrlarni o‘zgartiring yoki tozalang.", "prev": "Orqaga", "next": "Oldinga", "page": "{{page}} / {{pages}} sahifa" },
+  "catalog": { "loading": "Uylar yuklanmoqda…", "loadError": "Katalogni yuklab bo‘lmadi. Server ishlayotganini tekshiring.", "found": "Topildi: {{count}}", "empty": "Filtrlar bo‘yicha hech narsa topilmadi", "emptyHint": "Filtrlarni o‘zgartiring yoki tozalang.", "prev": "Orqaga", "next": "Oldinga", "page": "{{page}} / {{pages}} sahifa" },
   "property": {
     "title": "{{rooms}} xonali uy, {{district}}",
     "back": "← Katalogga",

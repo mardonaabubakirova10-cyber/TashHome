@@ -10,7 +10,8 @@ import Badge from '../components/ui/Badge'
 import Button from '../components/ui/Button'
 import Card from '../components/ui/Card'
 import Modal from '../components/ui/Modal'
-import { DISTRICTS, PROPERTIES } from '../data/properties'
+import { DISTRICTS } from '../data/properties'
+import { useProperty } from '../lib/queries'
 import { useCurrency } from '../lib/currency'
 import { LabelBadge } from '../components/PriceLabelBadge'
 import { propertyEstimate } from '../lib/priceLabel'
@@ -21,7 +22,9 @@ export default function Property() {
   const { format } = useCurrency()
   const [open, setOpen] = useState(false)
 
-  const item = PROPERTIES.find((p) => String(p.id) === id)
+  const q = useProperty(id)
+  const item = q.data
+  if (q.isPending && q.fetchStatus !== 'idle') return <p className="py-16 text-center text-slate-600">{t('catalog.loading')}</p>
   if (!item) {
     return (
       <div className="py-16 text-center">

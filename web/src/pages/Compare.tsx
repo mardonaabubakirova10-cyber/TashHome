@@ -2,15 +2,16 @@ import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import Button from '../components/ui/Button'
 import Card from '../components/ui/Card'
-import { DISTRICTS, PROPERTIES, type Property } from '../data/properties'
+import { DISTRICTS, type Property } from '../data/properties'
 import { COMPARE_MAX, useCollections } from '../lib/collections'
+import { useProperties } from '../lib/queries'
 import { useCurrency } from '../lib/currency'
 
 export default function Compare() {
   const { t, i18n } = useTranslation()
   const { format } = useCurrency()
   const { compare, toggleCompare, clearCompare } = useCollections()
-  const items = compare.map((id) => PROPERTIES.find((p) => p.id === id)).filter((p) => p !== undefined)
+  const { items, loading } = useProperties(compare)
 
   const districtName = (p: Property) => {
     const d = DISTRICTS.find((x) => x.id === p.districtId)
@@ -42,7 +43,9 @@ export default function Compare() {
         )}
       </div>
 
-      {items.length === 0 ? (
+      {loading && compare.length > 0 ? (
+        <p className="text-slate-600">{t('catalog.loading')}</p>
+      ) : items.length === 0 ? (
         <div className="rounded-xl border border-dashed border-slate-300 py-16 text-center">
           <p className="font-medium">{t('compare.empty')}</p>
           <p className="mt-1 text-sm text-slate-500">{t('compare.emptyHint', { max: COMPARE_MAX })}</p>
