@@ -115,7 +115,7 @@
 - [x] **8.4** Lighthouse на мобильном, доступность (контраст, alt, фокус). Итог в lighthouse/README.md: доступность, практики и SEO 100, скорость каталога 96, главной 62.
 
 ## Этап 9. Деплой и сдача
-- [ ] **9.1** Деплой: web → Vercel, server и ml-service → Render, вебхук бота на прод-URL.
+- [~] **9.1** Деплой: web → Vercel, server и ml-service → Render, вебхук бота на прод-URL. Сайт https://tash-home.vercel.app, API и модель на Render работают; бот (вебхук) и Mini App осталось включить: перезапустить tashhome-api в Render и проверить.
   ⚠ Подготовлено: render.yaml, ml/Dockerfile, web/vercel.json, DEPLOY.md. Осталось выполнить шаги из DEPLOY.md в панелях Render и Vercel (нужны ваши входы).
   ✔ Весь сценарий демо работает по публичным ссылкам.
 - [x] **9.2** README: описание, архитектура, запуск.
