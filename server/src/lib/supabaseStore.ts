@@ -1,7 +1,8 @@
 import type { Property } from './demoProperties.js'
 import { toPostgrestParams } from './propertyFilters.js'
 import { vectorLiteral } from './supabaseRest.js'
-import type { ChatMessage, District, KbHit, Lead, Review, Store } from './store.js'
+import type { AdminProperty, PropertyInput, PropertyPatch } from './adminProperty.js'
+import type { ChatMessage, District, KbHit, Lead, Review, StatsData, Store } from './store.js'
 
 type Row = Record<string, any> // строка таблицы properties вместе с фото
 const SELECT = 'select=*,property_photos(url,position)'
@@ -33,6 +34,31 @@ function toProperty(r: Row): Property {
     priceLabel: r.price_label ?? null,
   }
 }
+
+const toAdmin = (r: Row): AdminProperty => ({
+  id: r.id,
+  deal_type: r.deal_type,
+  title_ru: r.title_ru,
+  title_uz: r.title_uz,
+  description_ru: r.description_ru ?? null,
+  description_uz: r.description_uz ?? null,
+  district_id: r.district_id,
+  address: r.address ?? null,
+  lat: r.lat ?? null,
+  lng: r.lng ?? null,
+  price_usd: Number(r.price_usd),
+  area_m2: Number(r.area_m2),
+  land_sotka: Number(r.land_sotka),
+  rooms: r.rooms,
+  floors: r.floors,
+  building_type: r.building_type,
+  renovation: r.renovation,
+  year_built: r.year_built ?? null,
+  status: r.status,
+  predicted_price_usd: r.predicted_price_usd === null || r.predicted_price_usd === undefined ? null : Number(r.predicted_price_usd),
+  price_label: r.price_label ?? null,
+  photos: [...(r.property_photos ?? [])].sort((a: Row, b: Row) => a.position - b.position).map((x: Row) => x.url),
+})
 
 /** Хранилище на Supabase через REST (PostgREST). Работает с ключом сервера, который обходит RLS. */
 export function createSupabaseStore(url: string, serviceKey: string): Store {
@@ -132,6 +158,54 @@ export function createSupabaseStore(url: string, serviceKey: string): Store {
       const res = await fetch(`${base}/reviews?${q}`, { headers: { ...headers, Prefer: 'count=exact' } })
       if (!res.ok) throw new Error(`Supabase ${res.status} reviews`)
       return { items: (await res.json()) as Review[], total: Number(res.headers.get('content-range')?.split('/')[1] ?? 0), page: f.page, pageSize: f.pageSize }
+    },
+    async adminListProperties(f) {
+      const q = new URLSearchParams({ select: '*,property_photos(url,position)', order: 'id.desc', limit: String(f.pageSize), offset: String((f.page - 1) * f.pageSize) })
+      if (f.status) q.set('status', `eq.${f.status}`)
+      if (f.deal) q.set('deal_type', `eq.${f.deal}`)
+      const term = f.q?.trim().replace(/[^\p{L}\p{N} -]/gu, '') // запятые и скобки в поиск не пускаем: они управляют фильтром PostgREST
+      if (term) q.set('or', /^\d+$/.test(term) ? `(id.eq.${term},title_ru.ilike.*${term}*)` : `(title_ru.ilike.*${term}*,address.ilike.*${term}*)`)
+      const res = await fetch(`${base}/properties?${q}`, { headers: { ...headers, Prefer: 'count=exact' } })
+      if (!res.ok) throw new Error(`Supabase ${res.status} properties`)
+      return { items: ((await res.json()) as Row[]).map(toAdmin), total: Number(res.headers.get('content-range')?.split('/')[1] ?? 0), page: f.page, pageSize: f.pageSize }
+    },
+    async adminGetProperty(id) {
+      const rows = await call<Row[]>(`/properties?${SELECT}&id=eq.${id}&limit=1`)
+      return rows[0] ? toAdmin(rows[0]) : null
+    },
+    async adminCreateProperty(input: PropertyInput) {
+      const { photos, ...row } = input
+      const created = await insert<Row>('properties', row)
+      if (photos.length) await insert('property_photos', photos.map((url, position) => ({ property_id: created.id, url, position })))
+      return (await this.adminGetProperty(created.id))!
+    },
+    async adminUpdateProperty(id, patch: PropertyPatch) {
+      const { photos, ...row } = patch
+      if (Object.keys(row).length) {
+        const rows = await call<Row[]>(`/properties?id=eq.${id}`, { method: 'PATCH', headers: { Prefer: 'return=representation' }, body: JSON.stringify(row) })
+        if (!rows.length) return null
+      }
+      if (photos) {
+        await call(`/property_photos?property_id=eq.${id}`, { method: 'DELETE', headers: { Prefer: 'return=minimal' } }).catch(() => undefined)
+        if (photos.length) await insert('property_photos', photos.map((url, position) => ({ property_id: id, url, position })))
+      }
+      return this.adminGetProperty(id)
+    },
+    async setPropertyAnalysis(id, predicted, label) {
+      await call(`/properties?id=eq.${id}`, { method: 'PATCH', headers: { Prefer: 'return=minimal' }, body: JSON.stringify({ predicted_price_usd: predicted, price_label: label }) }).catch(() => undefined)
+    },
+    async setPropertyEmbedding(id, vector) {
+      await call(`/properties?id=eq.${id}`, { method: 'PATCH', headers: { Prefer: 'return=minimal' }, body: JSON.stringify({ search_embedding: vectorLiteral(vector) }) }).catch(() => undefined)
+    },
+    async adminStatsData(): Promise<StatsData> {
+      const since = new Date(Date.now() - 90 * 86_400_000).toISOString()
+      const [leads, reviews, properties, chat] = await Promise.all([
+        call<StatsData['leads']>(`/leads?select=created_at,source,status&created_at=gte.${since}&limit=5000`),
+        call<StatsData['reviews']>('/reviews?select=rating,sentiment,topic&limit=5000'),
+        call<StatsData['properties']>('/properties?select=district_id,status&limit=5000'),
+        call<StatsData['chat']>(`/chat_messages?select=role,content,tool_calls,rating,latency_ms,created_at&created_at=gte.${since}&order=id.desc&limit=3000`),
+      ])
+      return { leads, reviews, properties, chat }
     },
     async setReviewAnalysis(id, sentiment, topic) {
       await call(`/reviews?id=eq.${id}`, { method: 'PATCH', body: JSON.stringify({ sentiment, topic }), headers: { Prefer: 'return=minimal' } }).catch(() => undefined)

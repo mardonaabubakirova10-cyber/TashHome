@@ -4,6 +4,7 @@ import type { Notifier } from '../lib/notifier.js'
 import type { Store } from '../lib/store.js'
 import type { AgentDeps } from './agent.js'
 import { embed, generateStream } from './gemini.js'
+import { describeProperty } from './describe.js'
 import { transcribeAudio } from './transcribe.js'
 
 /** Боевые зависимости агента: Gemini, хранилище, ml-сервис и уведомления менеджерам. */
@@ -24,6 +25,8 @@ export function createAgentDeps(store: Store, notifier: Notifier): AgentDeps {
     },
     getProperty: (id) => store.getProperty(id),
     transcribe: transcribeAudio,
+    embedDocument: async (text) => (await embed([text], 'RETRIEVAL_DOCUMENT'))[0],
+    describeProperty: describeProperty,
     async searchKnowledge(question) {
       const [v] = await embed([question], 'RETRIEVAL_QUERY')
       return store.matchKnowledge(v, 5)

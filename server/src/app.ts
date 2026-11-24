@@ -35,7 +35,7 @@ export function createApp(store: Store = createMemoryStore(), notifier: Notifier
   app.use('/api', catalogRouter(store))
   app.use('/api/transcribe', transcribeRouter(agentDeps.transcribe))
   app.use('/api/chat', chatRouter(store, agentDeps))
-  app.use('/api/admin', adminRouter(store, auth))
+  app.use('/api/admin', adminRouter(store, auth, agentDeps))
   app.use('/api/leads', leadsRouter(store, notifier))
   app.use('/api/reviews', reviewsRouter(store, notifier, reviewAnalyzer))
 

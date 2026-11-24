@@ -1,4 +1,5 @@
 import { buildDemoProperties, DEMO_DISTRICTS, type Property } from './demoProperties.js'
+import { toAdminProperty, type AdminProperty, type PropertyInput, type PropertyListFilter, type PropertyPatch } from './adminProperty.js'
 import { applyFilters, type Page, type PropertyFilters } from './propertyFilters.js'
 
 export type District = { id: string; name_ru: string; name_uz: string; lat: number; lng: number }
@@ -39,6 +40,14 @@ export type LeadFilter = { status?: LeadStatus; page: number; pageSize: number }
 export type ReviewFilter = { sentiment?: NonNullable<Review['sentiment']>; topic?: NonNullable<Review['topic']>; page: number; pageSize: number }
 export type AdminPage<T> = { items: T[]; total: number; page: number; pageSize: number }
 
+/** Сырые данные для дашборда: статистику считает чистая функция buildStats. */
+export type StatsData = {
+  leads: Array<{ created_at: string; source: Lead['source']; status: Lead['status'] }>
+  reviews: Array<{ rating: number; sentiment: Review['sentiment']; topic: Review['topic'] }>
+  properties: Array<{ district_id: string; status: AdminProperty['status'] }>
+  chat: Array<{ role: ChatRole; content: string | null; tool_calls: unknown | null; rating: number; latency_ms: number | null; created_at: string }>
+}
+
 export interface Store {
   addLead(input: Omit<Lead, 'id' | 'status' | 'created_at'>): Promise<Lead>
   listLeads(): Promise<Lead[]>
@@ -47,6 +56,13 @@ export interface Store {
   adminListLeads(f: LeadFilter): Promise<AdminPage<Lead>>
   adminUpdateLead(id: number, patch: { status: LeadStatus }): Promise<Lead | null>
   adminListReviews(f: ReviewFilter): Promise<AdminPage<Review>>
+  adminListProperties(f: PropertyListFilter): Promise<AdminPage<AdminProperty>>
+  adminGetProperty(id: number): Promise<AdminProperty | null>
+  adminCreateProperty(input: PropertyInput): Promise<AdminProperty>
+  adminUpdateProperty(id: number, patch: PropertyPatch): Promise<AdminProperty | null>
+  setPropertyAnalysis(id: number, predicted: number | null, label: AdminProperty['price_label']): Promise<void>
+  setPropertyEmbedding(id: number, vector: number[]): Promise<void>
+  adminStatsData(): Promise<StatsData>
   setReviewAnalysis(id: number, sentiment: NonNullable<Review['sentiment']>, topic: NonNullable<Review['topic']>): Promise<void>
   listProperties(filters: PropertyFilters): Promise<Page<Property>>
   getProperty(id: number): Promise<Property | null>
@@ -68,6 +84,9 @@ export function createMemoryStore(): Store {
   const sessions = new Set<string>()
   const messages: ChatMessage[] = []
   const properties = buildDemoProperties()
+  const adminProps: AdminProperty[] = properties.map(toAdminProperty)
+  let propId = adminProps.length
+  const embeddings = new Map<number, number[]>()
 
   // Демонстрационные отзывы, чтобы блок на сайте не был пустым
   const demo: Array<[string, number, string, number]> = [
@@ -114,6 +133,42 @@ export function createMemoryStore(): Store {
     async adminListReviews(f) {
       const list = reviews.filter((r) => (!f.sentiment || r.sentiment === f.sentiment) && (!f.topic || r.topic === f.topic)).sort((a, b) => b.id - a.id)
       return { items: list.slice((f.page - 1) * f.pageSize, f.page * f.pageSize), total: list.length, page: f.page, pageSize: f.pageSize }
+    },
+    async adminListProperties(f) {
+      const q = f.q?.trim().toLowerCase()
+      const list = adminProps
+        .filter((p) => (!f.status || p.status === f.status) && (!f.deal || p.deal_type === f.deal) && (!q || `${p.title_ru} ${p.address ?? ''} ${p.id}`.toLowerCase().includes(q)))
+        .sort((a, b) => b.id - a.id)
+      return { items: list.slice((f.page - 1) * f.pageSize, f.page * f.pageSize), total: list.length, page: f.page, pageSize: f.pageSize }
+    },
+    async adminGetProperty(id) {
+      return adminProps.find((p) => p.id === id) ?? null
+    },
+    async adminCreateProperty(input) {
+      const p: AdminProperty = { ...input, id: ++propId, predicted_price_usd: null, price_label: null }
+      adminProps.push(p)
+      return p
+    },
+    async adminUpdateProperty(id, patch) {
+      const p = adminProps.find((x) => x.id === id)
+      if (!p) return null
+      Object.assign(p, patch)
+      return p
+    },
+    async setPropertyAnalysis(id, predicted, label) {
+      const p = adminProps.find((x) => x.id === id)
+      if (p) Object.assign(p, { predicted_price_usd: predicted, price_label: label })
+    },
+    async setPropertyEmbedding(id, vector) {
+      embeddings.set(id, vector)
+    },
+    async adminStatsData() {
+      return {
+        leads: leads.map((l) => ({ created_at: l.created_at, source: l.source, status: l.status })),
+        reviews: reviews.map((r) => ({ rating: r.rating, sentiment: r.sentiment, topic: r.topic })),
+        properties: adminProps.map((p) => ({ district_id: p.district_id, status: p.status })),
+        chat: messages.map((m) => ({ role: m.role, content: m.content, tool_calls: m.tool_calls, rating: m.rating, latency_ms: m.latency_ms, created_at: m.created_at })),
+      }
     },
     async setReviewAnalysis(id, sentiment, topic) {
       const r = reviews.find((x) => x.id === id)

@@ -1,5 +1,6 @@
 import type { Property } from '../lib/demoProperties.js'
 import type { Lead, SearchFilters, KbHit } from '../lib/store.js'
+import type { DescribeInput, Described } from './describe.js'
 import { AiUnavailableError, type Content, type GenerateRequest, type GenerateResult, type Part } from './gemini.js'
 import { estimateArgs, knowledgeResult, leadArgs, mortgageArgs, mortgageResult, propertyForModel, searchArgs, TOOL_DECLARATIONS } from './tools.js'
 
@@ -27,6 +28,8 @@ export type AgentDeps = {
   searchKnowledge: (question: string) => Promise<KbHit[]>
   estimate: (params: Record<string, unknown>) => Promise<unknown>
   transcribe: (audio: Buffer, mime: string) => Promise<string>
+  embedDocument: (text: string) => Promise<number[]>
+  describeProperty: (p: DescribeInput) => Promise<Described>
   createLead: (lead: { name: string; phone: string; property_id?: number; message?: string }) => Promise<Lead>
 }
 

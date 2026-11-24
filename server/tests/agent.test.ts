@@ -27,6 +27,8 @@ function scripted(steps: GenerateResult[], overrides: Partial<AgentDeps> = {}) {
     llm: llm as unknown as AgentDeps['llm'],
     searchProperties: vi.fn(async () => houses.slice(0, 2)),
     transcribe: vi.fn(async () => 'привет'),
+    embedDocument: vi.fn(async () => [0.1]),
+    describeProperty: vi.fn(async () => ({ ru: 'описание дома на русском языке', uz: 'uy tavsifi oʻzbek tilida' })),
     getProperty: vi.fn(async (id) => houses.find((p) => p.id === id) ?? null),
     searchKnowledge: vi.fn(async () => []),
     estimate: vi.fn(async () => ({ predicted_price_usd: 100000 })),
