@@ -2,6 +2,7 @@ import { lazy, Suspense } from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { AuthProvider } from './lib/auth'
+import TelegramBridge from './components/TelegramBridge'
 import { ChatProvider } from './lib/chat'
 import { CollectionsProvider } from './lib/collections'
 import { CurrencyProvider } from './lib/currency'
@@ -39,6 +40,7 @@ export default function App() {
         <AuthProvider>
         <ChatProvider>
         <BrowserRouter>
+          <TelegramBridge />
           <Routes>
             <Route path="admin/login" element={<AdminLogin />} />
             <Route path="admin" element={<AdminLayout />}>

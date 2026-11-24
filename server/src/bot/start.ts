@@ -14,7 +14,7 @@ export function webhookHandler(bot: Bot, token: string): RequestHandler {
  * Запуск бота. С адресом вебхука (боевой сервер) Telegram сам присылает обновления.
  * Без адреса (разработка на своём компьютере) бот опрашивает Telegram сам (long polling).
  */
-export async function launchBot(bot: Bot, token: string, webhookUrl: string): Promise<'webhook' | 'polling'> {
+export async function launchBot(bot: Bot, token: string, webhookUrl: string, webAppUrl = ''): Promise<'webhook' | 'polling'> {
   await bot.api.setMyCommands([
     { command: 'start', description: 'Начать / Boshlash' },
     { command: 'manager', description: 'Написать менеджеру / Menejerga yozish' },
@@ -22,6 +22,10 @@ export async function launchBot(bot: Bot, token: string, webhookUrl: string): Pr
     { command: 'new', description: 'Новый диалог / Yangi suhbat' },
     { command: 'help', description: 'Помощь / Yordam' },
   ])
+  // Кнопка меню рядом с полем ввода открывает сайт как Mini App. Telegram требует https, поэтому локально её нет
+  if (/^https:\/\//.test(webAppUrl)) {
+    await bot.api.setChatMenuButton({ menu_button: { type: 'web_app', text: 'TashHome', web_app: { url: webAppUrl } } }).catch(() => undefined)
+  }
   if (webhookUrl) {
     await bot.api.setWebhook(webhookUrl, { secret_token: webhookSecret(token), allowed_updates: ['message', 'callback_query'] })
     return 'webhook'

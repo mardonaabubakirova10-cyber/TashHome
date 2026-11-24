@@ -2,6 +2,7 @@ import { useState, type FormEvent } from 'react'
 import { useMutation } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { ApiError, postLead } from '../lib/api'
+import { tg } from '../lib/telegram'
 import Button from './ui/Button'
 import { Input, Textarea } from './ui/Field'
 import { useToast } from './ui/Toast'
@@ -11,7 +12,7 @@ const PHONE_RE = /^\+998\d{9}$/
 export default function LeadForm({ propertyId, onDone }: { propertyId: number; onDone: () => void }) {
   const { t } = useTranslation()
   const toast = useToast()
-  const [name, setName] = useState('')
+  const [name, setName] = useState(() => tg()?.initDataUnsafe.user?.first_name ?? '')
   const [phone, setPhone] = useState('+998')
   const [message, setMessage] = useState('')
   const [errors, setErrors] = useState<{ name?: string; phone?: string }>({})
@@ -19,6 +20,7 @@ export default function LeadForm({ propertyId, onDone }: { propertyId: number; o
   const m = useMutation({
     mutationFn: postLead,
     onSuccess: () => {
+      tg()?.HapticFeedback?.notificationOccurred('success')
       toast(t('property.form.sent'), 'success')
       onDone()
     },
@@ -40,7 +42,7 @@ export default function LeadForm({ propertyId, onDone }: { propertyId: number; o
     setErrors(next)
     if (Object.keys(next).length) return
 
-    m.mutate({ property_id: propertyId, name: name.trim(), phone: phone.replace(/[\s()-]/g, ''), message: message.trim() || undefined })
+    m.mutate({ property_id: propertyId, name: name.trim(), phone: phone.replace(/[\s()-]/g, ''), message: message.trim() || undefined, init_data: tg()?.initData })
   }
 
   return (

@@ -41,7 +41,8 @@ export const getReviews = () => request<Review[]>('/reviews')
 export const postReview = (body: { author?: string; rating: number; text: string }) =>
   request<{ id: number }>('/reviews', { method: 'POST', body: JSON.stringify(body) })
 
-export const postLead = (body: { property_id?: number; name: string; phone: string; message?: string }) =>
+/** В Mini App к заявке добавляется подпись Telegram: сервер проверяет её и сам ставит источник «Mini App». */
+export const postLead = (body: { property_id?: number; name: string; phone: string; message?: string; init_data?: string }) =>
   request<{ id: number }>('/leads', { method: 'POST', body: JSON.stringify({ ...body, source: 'site' }) })
 
 export type PropertyPage = { items: Property[]; total: number; page: number; pageSize: number }

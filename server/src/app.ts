@@ -16,6 +16,7 @@ import { noopAnalyzer, type ReviewAnalyzer } from './ai/reviewAnalysis.js'
 import { denyAllAuth, type Auth } from './lib/auth.js'
 import { adminRouter } from './routes/admin.js'
 import { textsRouter } from './routes/texts.js'
+import { telegramRouter } from './routes/telegram.js'
 import { chatRouter } from './routes/chat.js'
 import { catalogRouter } from './routes/properties.js'
 import { mortgageRouter } from './routes/mortgage.js'
@@ -38,7 +39,8 @@ export function createApp(store: Store = createMemoryStore(), notifier: Notifier
   app.use('/api/chat', chatRouter(store, agentDeps))
   app.use('/api/texts', textsRouter(store))
   app.use('/api/admin', adminRouter(store, auth, agentDeps))
-  app.use('/api/leads', leadsRouter(store, notifier))
+  app.use('/api/telegram', telegramRouter(config.telegramToken))
+  app.use('/api/leads', leadsRouter(store, notifier, config.telegramToken))
   app.use('/api/reviews', reviewsRouter(store, notifier, reviewAnalyzer))
 
   mount?.(app) // дополнительные маршруты (вебхук Telegram) до обработчика «не найдено»

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import ItemActions from '../components/ItemActions'
@@ -12,6 +12,7 @@ import Card from '../components/ui/Card'
 import Modal from '../components/ui/Modal'
 import { DISTRICTS } from '../data/properties'
 import { useProperty } from '../lib/queries'
+import { tg } from '../lib/telegram'
 import { useCurrency } from '../lib/currency'
 import { LabelBadge } from '../components/PriceLabelBadge'
 import { propertyEstimate } from '../lib/priceLabel'
@@ -24,6 +25,19 @@ export default function Property() {
 
   const q = useProperty(id)
   const item = q.data
+  // В Mini App главная кнопка Telegram открывает форму записи на просмотр
+  useEffect(() => {
+    const w = tg()
+    if (!w || !item) return
+    const onClick = () => setOpen(true)
+    w.MainButton.setText(t('property.book'))
+    w.MainButton.show()
+    w.MainButton.onClick(onClick)
+    return () => {
+      w.MainButton.offClick(onClick)
+      w.MainButton.hide()
+    }
+  }, [item, t])
   if (q.isPending && q.fetchStatus !== 'idle') return <p className="py-16 text-center text-slate-600">{t('catalog.loading')}</p>
   if (!item) {
     return (

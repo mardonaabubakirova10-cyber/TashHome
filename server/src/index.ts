@@ -28,7 +28,7 @@ const app = createApp(store, notifier, deps, analyzeReviewWithGemini, useDb ? cr
 app.listen(config.port, () => {
   console.log(`API: http://localhost:${config.port}/api/health (хранилище: ${useDb ? 'Supabase' : 'память'})`)
   if (bot) {
-    launchBot(bot, config.telegramToken, config.telegramWebhookUrl)
+    launchBot(bot, config.telegramToken, config.telegramWebhookUrl, config.webOrigin.split(',')[0])
       .then((mode) => console.log(`Telegram-бот запущен (${mode})`))
       .catch((e) => console.error('Telegram-бот не запустился:', e instanceof Error ? e.message : e))
   } else {
