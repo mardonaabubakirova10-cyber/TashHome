@@ -52,6 +52,9 @@ export default function AdminLayout() {
             <NavLink to="/admin/reviews" className={link}>
               Отзывы
             </NavLink>
+            <NavLink to="/admin/texts" className={link}>
+              Тексты
+            </NavLink>
           </nav>
           <div className="ml-auto flex items-center gap-3 text-sm text-slate-600">
             <span className="hidden sm:inline">

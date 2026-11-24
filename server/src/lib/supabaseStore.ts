@@ -2,7 +2,7 @@ import type { Property } from './demoProperties.js'
 import { toPostgrestParams } from './propertyFilters.js'
 import { vectorLiteral } from './supabaseRest.js'
 import type { AdminProperty, PropertyInput, PropertyPatch } from './adminProperty.js'
-import type { ChatMessage, District, KbHit, Lead, Review, StatsData, Store } from './store.js'
+import type { ChatMessage, District, KbHit, Lead, Review, SiteTexts, StatsData, Store } from './store.js'
 
 type Row = Record<string, any> // строка таблицы properties вместе с фото
 const SELECT = 'select=*,property_photos(url,position)'
@@ -206,6 +206,19 @@ export function createSupabaseStore(url: string, serviceKey: string): Store {
         call<StatsData['chat']>(`/chat_messages?select=role,content,tool_calls,rating,latency_ms,created_at&created_at=gte.${since}&order=id.desc&limit=3000`),
       ])
       return { leads, reviews, properties, chat }
+    },
+    async listTexts() {
+      const rows = await call<Array<{ key: string; lang: 'ru' | 'uz'; value: string }>>('/site_texts?select=key,lang,value')
+      const out: SiteTexts = { ru: {}, uz: {} }
+      for (const r of rows) out[r.lang][r.key] = r.value
+      return out
+    },
+    async setText(lang, key, value) {
+      if (value === null) {
+        await call(`/site_texts?lang=eq.${lang}&key=eq.${encodeURIComponent(key)}`, { method: 'DELETE', headers: { Prefer: 'return=minimal' } }).catch(() => undefined)
+        return
+      }
+      await call('/site_texts?on_conflict=key,lang', { method: 'POST', headers: { Prefer: 'resolution=merge-duplicates,return=minimal' }, body: JSON.stringify({ key, lang, value, updated_at: new Date().toISOString() }) }).catch(() => undefined)
     },
     async setReviewAnalysis(id, sentiment, topic) {
       await call(`/reviews?id=eq.${id}`, { method: 'PATCH', body: JSON.stringify({ sentiment, topic }), headers: { Prefer: 'return=minimal' } }).catch(() => undefined)

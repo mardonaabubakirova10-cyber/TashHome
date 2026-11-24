@@ -48,6 +48,8 @@ export type StatsData = {
   chat: Array<{ role: ChatRole; content: string | null; tool_calls: unknown | null; rating: number; latency_ms: number | null; created_at: string }>
 }
 
+export type SiteTexts = { ru: Record<string, string>; uz: Record<string, string> }
+
 export interface Store {
   addLead(input: Omit<Lead, 'id' | 'status' | 'created_at'>): Promise<Lead>
   listLeads(): Promise<Lead[]>
@@ -63,6 +65,9 @@ export interface Store {
   setPropertyAnalysis(id: number, predicted: number | null, label: AdminProperty['price_label']): Promise<void>
   setPropertyEmbedding(id: number, vector: number[]): Promise<void>
   adminStatsData(): Promise<StatsData>
+  listTexts(): Promise<SiteTexts>
+  /** value = null возвращает стандартный текст */
+  setText(lang: 'ru' | 'uz', key: string, value: string | null): Promise<void>
   setReviewAnalysis(id: number, sentiment: NonNullable<Review['sentiment']>, topic: NonNullable<Review['topic']>): Promise<void>
   listProperties(filters: PropertyFilters): Promise<Page<Property>>
   getProperty(id: number): Promise<Property | null>
@@ -87,6 +92,7 @@ export function createMemoryStore(): Store {
   const adminProps: AdminProperty[] = properties.map(toAdminProperty)
   let propId = adminProps.length
   const embeddings = new Map<number, number[]>()
+  const texts: SiteTexts = { ru: {}, uz: {} }
 
   // Демонстрационные отзывы, чтобы блок на сайте не был пустым
   const demo: Array<[string, number, string, number]> = [
@@ -169,6 +175,13 @@ export function createMemoryStore(): Store {
         properties: adminProps.map((p) => ({ district_id: p.district_id, status: p.status })),
         chat: messages.map((m) => ({ role: m.role, content: m.content, tool_calls: m.tool_calls, rating: m.rating, latency_ms: m.latency_ms, created_at: m.created_at })),
       }
+    },
+    async listTexts() {
+      return { ru: { ...texts.ru }, uz: { ...texts.uz } }
+    },
+    async setText(lang, key, value) {
+      if (value === null) delete texts[lang][key]
+      else texts[lang][key] = value
     },
     async setReviewAnalysis(id, sentiment, topic) {
       const r = reviews.find((x) => x.id === id)

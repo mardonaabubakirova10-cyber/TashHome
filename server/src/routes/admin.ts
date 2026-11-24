@@ -31,6 +31,12 @@ const propertyQuery = z.object({
 })
 const describeInput = propertyInput.pick({ deal_type: true, district_id: true, address: true, area_m2: true, land_sotka: true, rooms: true, floors: true, building_type: true, renovation: true, year_built: true })
 
+const textBody = z.object({
+  lang: z.enum(['ru', 'uz']),
+  key: z.string().regex(/^home\.[A-Za-z0-9]+$/, 'Недопустимый ключ текста'),
+  value: z.string().trim().max(600).nullable(), // null или пустая строка = вернуть стандартный текст
+})
+
 const idParam = (raw: string | string[] | undefined, what: string) => {
   const id = Number(raw)
   if (!Number.isInteger(id) || id < 1) throw new HttpError(400, `Неверный номер: ${what}`)
@@ -113,6 +119,16 @@ export function adminRouter(store: Store, auth: Auth, deps?: AgentDeps) {
       if (e instanceof AiUnavailableError) throw new HttpError(503, 'Не удалось сгенерировать описание, попробуйте позже')
       throw e
     }
+  })
+
+  // ---- тексты сайта
+  router.get('/texts', async (_req, res) => {
+    res.json(await store.listTexts())
+  })
+  router.put('/texts', async (req, res) => {
+    const b = textBody.parse(req.body)
+    await store.setText(b.lang, b.key, b.value ? b.value : null)
+    res.json({ ok: true })
   })
 
   // ---- дашборд

@@ -12,6 +12,7 @@ import AdminLeads from './pages/admin/AdminLeads'
 import AdminProperties from './pages/admin/AdminProperties'
 import AdminLogin from './pages/admin/AdminLogin'
 import AdminReviews from './pages/admin/AdminReviews'
+import AdminTexts from './pages/admin/AdminTexts'
 import Assistant from './pages/Assistant'
 import Catalog from './pages/Catalog'
 import Estimate from './pages/Estimate'
@@ -44,6 +45,7 @@ export default function App() {
               <Route path="leads" element={<AdminLeads />} />
               <Route path="properties" element={<AdminProperties />} />
               <Route path="reviews" element={<AdminReviews />} />
+              <Route path="texts" element={<AdminTexts />} />
             </Route>
             <Route element={<Layout />}>
               <Route index element={<Home />} />

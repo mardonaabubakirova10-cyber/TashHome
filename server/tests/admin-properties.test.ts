@@ -226,3 +226,29 @@ describe('загрузка фото', () => {
     await request(make().app).post('/api/admin/uploads').set('content-type', 'image/jpeg').send(jpeg).expect(401)
   })
 })
+
+describe('тексты сайта', () => {
+  it('публичный GET отдаёт изменённые тексты после правки в админке', async () => {
+    const { app } = make()
+    expect((await request(app).get('/api/texts').expect(200)).body).toEqual({ ru: {}, uz: {} })
+    await request(app).put('/api/admin/texts').set(H).send({ lang: 'ru', key: 'home.heroLine1', value: 'Новый заголовок' }).expect(200)
+    expect((await request(app).get('/api/texts')).body.ru).toEqual({ 'home.heroLine1': 'Новый заголовок' })
+  })
+
+  it('пустое значение возвращает стандартный текст', async () => {
+    const { app } = make()
+    await request(app).put('/api/admin/texts').set(H).send({ lang: 'uz', key: 'home.title', value: 'X' }).expect(200)
+    await request(app).put('/api/admin/texts').set(H).send({ lang: 'uz', key: 'home.title', value: '' }).expect(200)
+    expect((await request(app).get('/api/texts')).body.uz).toEqual({})
+  })
+
+  it.each([['чужой раздел', 'nav.home'], ['служебные символы', 'home.a;drop'], ['вложенный путь', 'home.a.b']])('недопустимый ключ отклоняется: %s', async (_n, key) => {
+    await request(make().app).put('/api/admin/texts').set(H).send({ lang: 'ru', key, value: 'x' }).expect(400)
+  })
+
+  it('слишком длинный текст → 400, клиент не может менять тексты', async () => {
+    const { app } = make()
+    await request(app).put('/api/admin/texts').set(H).send({ lang: 'ru', key: 'home.title', value: 'я'.repeat(601) }).expect(400)
+    await request(app).put('/api/admin/texts').set({ Authorization: 'Bearer c' }).send({ lang: 'ru', key: 'home.title', value: 'x' }).expect(403)
+  })
+})
