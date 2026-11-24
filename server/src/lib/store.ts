@@ -78,6 +78,9 @@ export interface Store {
   saveBotUser(u: Partial<BotUser> & { chat_id: number }): Promise<BotUser>
   saveBotThread(groupMessageId: number, clientChatId: number): Promise<void>
   getBotThread(groupMessageId: number): Promise<number | null>
+  getFavorites(userId: string): Promise<number[]>
+  /** Заменяет избранное пользователя; несуществующие дома пропускаются */
+  setFavorites(userId: string, ids: number[]): Promise<number[]>
   listTexts(): Promise<SiteTexts>
   /** value = null возвращает стандартный текст */
   setText(lang: 'ru' | 'uz', key: string, value: string | null): Promise<void>
@@ -108,6 +111,7 @@ export function createMemoryStore(): Store {
   const texts: SiteTexts = { ru: {}, uz: {} }
   const kbDocs: KbDoc[] = []
   const botUsers = new Map<number, BotUser>()
+  const favorites = new Map<string, number[]>()
   const botThreads = new Map<number, number>()
 
   // Демонстрационные отзывы, чтобы блок на сайте не был пустым
@@ -223,6 +227,14 @@ export function createMemoryStore(): Store {
     },
     async getBotThread(groupMessageId) {
       return botThreads.get(groupMessageId) ?? null
+    },
+    async getFavorites(userId) {
+      return favorites.get(userId) ?? []
+    },
+    async setFavorites(userId, ids) {
+      const valid = [...new Set(ids)].filter((id) => adminProps.some((p) => p.id === id))
+      favorites.set(userId, valid)
+      return valid
     },
     async listTexts() {
       return { ru: { ...texts.ru }, uz: { ...texts.uz } }

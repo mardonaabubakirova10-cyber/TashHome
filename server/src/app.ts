@@ -17,6 +17,7 @@ import { denyAllAuth, type Auth } from './lib/auth.js'
 import { adminRouter } from './routes/admin.js'
 import { textsRouter } from './routes/texts.js'
 import { telegramRouter } from './routes/telegram.js'
+import { meRouter } from './routes/me.js'
 import { chatRouter } from './routes/chat.js'
 import { catalogRouter } from './routes/properties.js'
 import { mortgageRouter } from './routes/mortgage.js'
@@ -37,6 +38,7 @@ export function createApp(store: Store = createMemoryStore(), notifier: Notifier
   app.use('/api', catalogRouter(store))
   app.use('/api/transcribe', transcribeRouter(agentDeps.transcribe))
   app.use('/api/chat', chatRouter(store, agentDeps))
+  app.use('/api/me', meRouter(store, auth))
   app.use('/api/texts', textsRouter(store))
   app.use('/api/admin', adminRouter(store, auth, agentDeps))
   app.use('/api/telegram', telegramRouter(config.telegramToken))

@@ -241,6 +241,17 @@ export function createSupabaseStore(url: string, serviceKey: string): Store {
       const rows = await call<Array<{ client_chat_id: number }>>(`/bot_threads?select=client_chat_id&group_message_id=eq.${groupMessageId}&limit=1`)
       return rows[0]?.client_chat_id ?? null
     },
+    async getFavorites(userId) {
+      return (await call<Array<{ property_id: number }>>(`/favorites?select=property_id&user_id=eq.${userId}&order=created_at.asc`)).map((r) => r.property_id)
+    },
+    async setFavorites(userId, ids) {
+      const unique = [...new Set(ids)]
+      const existing = unique.length ? (await call<Array<{ id: number }>>(`/properties?select=id&id=in.(${unique.join(',')})`)).map((r) => r.id) : []
+      const valid = unique.filter((id) => existing.includes(id))
+      await call(`/favorites?user_id=eq.${userId}`, { method: 'DELETE', headers: { Prefer: 'return=minimal' } }).catch(() => undefined)
+      if (valid.length) await insert('favorites', valid.map((property_id) => ({ user_id: userId, property_id })))
+      return valid
+    },
     async listTexts() {
       const rows = await call<Array<{ key: string; lang: 'ru' | 'uz'; value: string }>>('/site_texts?select=key,lang,value')
       const out: SiteTexts = { ru: {}, uz: {} }

@@ -280,5 +280,27 @@
       "empty": "Nutq eshitilmadi, qayta urinib ko‘ring.",
       "failed": "Yozuvni matnga o‘girib bo‘lmadi. Matn bilan yozing."
     }
+  },
+  "account": {
+    "login": "Kirish",
+    "title": "Shaxsiy kabinet",
+    "loginTitle": "TashHome ga kirish",
+    "loginText": "Sevimlilarni saqlash va ularni istalgan qurilmada ko‘rish uchun Google akkaunti orqali kiring.",
+    "google": "Google orqali kirish",
+    "notConfigured": "Kirish sozlanmagan: .env faylida Supabase kalitlari yo‘q.",
+    "staff": "Xodimmisiz?",
+    "staffLink": "Xodimlar uchun kirish",
+    "signingIn": "Kirilmoqda…",
+    "failedTitle": "Kirib bo‘lmadi",
+    "failedText": "Google orqali kirish tugallanmadi. Qayta urinib ko‘ring.",
+    "tryAgain": "Qayta urinish",
+    "favorites": "Sevimlilar",
+    "favoritesText_one": "Sevimlilarda {{count}} ta uy bor. Ular akkauntingizda saqlanadi.",
+    "favoritesText_other": "Sevimlilarda {{count}} ta uy bor. Ular akkauntingizda saqlanadi.",
+    "openFavorites": "Sevimlilarni ochish",
+    "logout": "Chiqish",
+    "admin": "Xizmat bo‘limi",
+    "roleAdmin": "Administrator",
+    "roleManager": "Menejer"
   }
 }

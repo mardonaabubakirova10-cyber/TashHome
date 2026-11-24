@@ -6,6 +6,8 @@ type Ctx = {
   favorites: number[]
   compare: number[]
   toggleFavorite: (id: number) => void
+  /** Заменяет список целиком (синхронизация с аккаунтом) */
+  replaceFavorites: (ids: number[]) => void
   /** false, если список сравнения заполнен и дом добавить нельзя */
   toggleCompare: (id: number) => boolean
   clearCompare: () => void
@@ -41,6 +43,11 @@ export function CollectionsProvider({ children }: { children: ReactNode }) {
     save('favorites', next)
   }
 
+  const replaceFavorites = (ids: number[]) => {
+    setFavorites(ids)
+    save('favorites', ids)
+  }
+
   const toggleCompare = (id: number) => {
     if (compare.includes(id)) {
       const next = compare.filter((x) => x !== id)
@@ -61,7 +68,7 @@ export function CollectionsProvider({ children }: { children: ReactNode }) {
   }
 
   return (
-    <CollectionsContext value={{ favorites, compare, toggleFavorite, toggleCompare, clearCompare }}>
+    <CollectionsContext value={{ favorites, compare, toggleFavorite, replaceFavorites, toggleCompare, clearCompare }}>
       {children}
     </CollectionsContext>
   )
