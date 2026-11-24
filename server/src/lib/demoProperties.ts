@@ -79,13 +79,13 @@ export function photoTier(p: { floors: number; renovation: Renovation; areaM2: n
   return p.areaM2 >= 110 && p.renovation === 'basic' ? 'mid1' : 'simple1'
 }
 
-/** Четыре фото дома: первое и два следующих из его класса, четвёртое из соседнего класса или детали. Без случайности: набор всегда один и тот же. */
-export function photosFor(p: { id: number; floors: number; renovation: Renovation; areaM2: number }): string[] {
+/** Четыре фото дома: первое и два следующих из его класса (rank: порядковый номер дома среди домов того же класса, поэтому первые фото по кругу идут подряд и повторяются как можно реже), четвёртое из соседнего класса или детали. Без случайности: набор всегда один и тот же. */
+export function photosFor(p: { id: number; rank: number; floors: number; renovation: Renovation; areaM2: number }, lead?: string): string[] {
   const tier = photoTier(p)
   const own = PHOTO_TIERS[tier]
   const neighbours = NEIGHBOUR[tier].flatMap((t) => PHOTO_TIERS[t])
-  const first = p.id % own.length
-  const list = [own[first], own[(first + 1) % own.length], own[(first + 2) % own.length], neighbours[p.id % neighbours.length] ?? PHOTO_TIERS.extras[p.id % PHOTO_TIERS.extras.length]]
+  const first = p.rank % own.length
+  const list = [lead ?? own[first], own[(first + 1) % own.length], own[(first + 2) % own.length], neighbours[p.rank % neighbours.length] ?? PHOTO_TIERS.extras[p.id % PHOTO_TIERS.extras.length]]
   // если в классе меньше трёх фото, дубли заменяем снимками соседнего класса и деталями
   const spare = [...neighbours, ...PHOTO_TIERS.extras]
   const out: string[] = []
@@ -121,6 +121,9 @@ export function buildDemoProperties(count = 100): Property[] {
   const rnd = mulberry32(42)
   const pick = <T,>(arr: T[]) => arr[Math.floor(rnd() * arr.length)]
   const items: Property[] = []
+  const seen: Partial<Record<Tier, number>> = {}
+  const used: Record<string, number> = {}
+  const recent: string[] = []
   for (let i = 1; i <= count; i++) {
     const d = DEMO_DISTRICTS[(i * 5 + Math.floor(i / 12)) % DEMO_DISTRICTS.length]
     const rooms = 3 + Math.floor(rnd() * 5) // 3–7
@@ -132,7 +135,17 @@ export function buildDemoProperties(count = 100): Property[] {
     const noise = 0.88 + rnd() * 0.26
     const sale = Math.round((areaM2 * d.ppm2 * RENOVATION_FACTOR[renovation] + landSotka * d.land) * noise / 500) * 500
     const dealType: DealType = i % 5 === 0 ? 'rent' : 'sale'
-    const photos = photosFor({ id: i, floors, renovation, areaM2 })
+    const tier = photoTier({ floors, renovation, areaM2 })
+    const rank = seen[tier] ?? 0
+    seen[tier] = rank + 1
+    // главное фото: из своего класса или из соседнего (они похожи по виду дома); берём наименее использованное и не показанное у последних 8 домов
+    const own = PHOTO_TIERS[tier]
+    const candidates = [...own, ...NEIGHBOUR[tier].flatMap((t) => PHOTO_TIERS[t])].filter((u) => !recent.includes(u))
+    const lead = candidates.reduce((best, u) => ((used[u] ?? 0) < (used[best] ?? 0) ? u : best), candidates[0] ?? own[0])
+    used[lead] = (used[lead] ?? 0) + 1
+    recent.push(lead)
+    if (recent.length > 8) recent.shift()
+    const photos = photosFor({ id: i, rank, floors, renovation, areaM2 }, lead)
     const street = pick(STREETS)
     items.push({
       id: i,

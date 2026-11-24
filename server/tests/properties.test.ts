@@ -92,8 +92,9 @@ describe('фото соответствуют дому', () => {
     for (const p of all) expect(new Set(p.photos).size).toBe(4)
   })
 
-  it('главное фото всегда из класса дома', () => {
-    for (const p of all) expect(tierOf(p.photo)).toBe(photoTier({ floors: p.floors, renovation: p.renovation, areaM2: p.areaM2 }))
+  it('главное фото из класса дома или соседнего класса', () => {
+    const near: Record<string, string[]> = { premium: ['premium', 'classic'], classic: ['classic', 'premium', 'mid2'], mid2: ['mid2', 'classic', 'mid1'], mid1: ['mid1', 'mid2', 'simple1'], simple1: ['simple1', 'mid1'] }
+    for (const p of all) expect(near[photoTier({ floors: p.floors, renovation: p.renovation, areaM2: p.areaM2 })]).toContain(tierOf(p.photo))
   })
 
   it('дизайнерский ремонт с 2+ этажами — премиум, одноэтажный без ремонта — простой класс', () => {
