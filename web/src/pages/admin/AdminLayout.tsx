@@ -55,6 +55,11 @@ export default function AdminLayout() {
             <NavLink to="/admin/texts" className={link}>
               Тексты
             </NavLink>
+            {me.data.role === 'admin' && (
+              <NavLink to="/admin/kb" className={link}>
+                База знаний
+              </NavLink>
+            )}
           </nav>
           <div className="ml-auto flex items-center gap-3 text-sm text-slate-600">
             <span className="hidden sm:inline">

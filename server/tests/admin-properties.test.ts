@@ -252,3 +252,38 @@ describe('тексты сайта', () => {
     await request(app).put('/api/admin/texts').set({ Authorization: 'Bearer c' }).send({ lang: 'ru', key: 'home.title', value: 'x' }).expect(403)
   })
 })
+
+describe('база знаний в админке', () => {
+  const doc = { title: 'Налоги при покупке', content: 'Налоги и сборы при покупке дома зависят от стоимости объекта и действующего порядка. '.repeat(30) }
+  const adminAuth: Auth = { verify: async (t) => (t === 'a' ? { id: 'a', email: null, role: 'admin' } : t === 'm' ? { id: 'm', email: null, role: 'manager' } : null) }
+  const build = () => {
+    const store = createMemoryStore()
+    const deps = { embedMany: vi.fn(async (t: string[]) => t.map(() => [0.1])) } as unknown as AgentDeps
+    return { deps, app: createApp(store, undefined, deps, undefined, adminAuth) }
+  }
+  const A = { Authorization: 'Bearer a' }
+
+  it('документ разбивается на фрагменты, индексируется и появляется в списке; удаляется', async () => {
+    const { app, deps } = build()
+    const r = await request(app).post('/api/admin/kb').set(A).send(doc).expect(201)
+    expect(r.body.chunks).toBeGreaterThan(1)
+    expect(vi.mocked(deps.embedMany).mock.calls[0][0]).toHaveLength(r.body.chunks)
+    expect((await request(app).get('/api/admin/kb').set(A)).body).toHaveLength(1)
+    await request(app).delete(`/api/admin/kb/${r.body.id}`).set(A).expect(200)
+    await request(app).delete(`/api/admin/kb/${r.body.id}`).set(A).expect(404)
+  })
+
+  it('менеджеру база знаний недоступна (403)', async () => {
+    const { app } = build()
+    await request(app).get('/api/admin/kb').set({ Authorization: 'Bearer m' }).expect(403)
+    await request(app).post('/api/admin/kb').set({ Authorization: 'Bearer m' }).send(doc).expect(403)
+  })
+
+  it('слишком короткий текст и сбой ИИ', async () => {
+    const { app, deps } = build()
+    await request(app).post('/api/admin/kb').set(A).send({ title: 'Коротко', content: 'мало' }).expect(400)
+    vi.mocked(deps.embedMany).mockRejectedValueOnce(new AiUnavailableError())
+    const r = await request(app).post('/api/admin/kb').set(A).send(doc).expect(503)
+    expect(r.body.error).toContain('попробуйте позже')
+  })
+})

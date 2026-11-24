@@ -2,7 +2,7 @@ import type { Property } from './demoProperties.js'
 import { toPostgrestParams } from './propertyFilters.js'
 import { vectorLiteral } from './supabaseRest.js'
 import type { AdminProperty, PropertyInput, PropertyPatch } from './adminProperty.js'
-import type { ChatMessage, District, KbHit, Lead, Review, SiteTexts, StatsData, Store } from './store.js'
+import type { ChatMessage, District, KbDoc, KbHit, Lead, Review, SiteTexts, StatsData, Store } from './store.js'
 
 type Row = Record<string, any> // строка таблицы properties вместе с фото
 const SELECT = 'select=*,property_photos(url,position)'
@@ -206,6 +206,22 @@ export function createSupabaseStore(url: string, serviceKey: string): Store {
         call<StatsData['chat']>(`/chat_messages?select=role,content,tool_calls,rating,latency_ms,created_at&created_at=gte.${since}&order=id.desc&limit=3000`),
       ])
       return { leads, reviews, properties, chat }
+    },
+    async adminListKb() {
+      const docs = await call<Array<{ id: number; title: string; source_file: string | null; created_at: string }>>('/kb_documents?select=id,title,source_file,created_at&order=id.desc')
+      const chunks = await call<Array<{ document_id: number }>>('/kb_chunks?select=document_id&limit=20000')
+      const n = new Map<number, number>()
+      for (const c of chunks) n.set(c.document_id, (n.get(c.document_id) ?? 0) + 1)
+      return docs.map((d): KbDoc => ({ ...d, chunks: n.get(d.id) ?? 0 }))
+    },
+    async adminAddKb(title, chunks) {
+      const doc = await insert<{ id: number; created_at: string }>('kb_documents', { title })
+      await insert('kb_chunks', chunks.map((c) => ({ document_id: doc.id, content: c.content, embedding: vectorLiteral(c.embedding) })))
+      return { id: doc.id, title, source_file: null, chunks: chunks.length, created_at: doc.created_at }
+    },
+    async adminDeleteKb(id) {
+      const rows = await call<unknown[]>(`/kb_documents?id=eq.${id}`, { method: 'DELETE', headers: { Prefer: 'return=representation' } })
+      return rows.length > 0 // фрагменты удаляются каскадом
     },
     async listTexts() {
       const rows = await call<Array<{ key: string; lang: 'ru' | 'uz'; value: string }>>('/site_texts?select=key,lang,value')

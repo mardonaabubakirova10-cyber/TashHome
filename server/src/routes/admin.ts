@@ -2,6 +2,7 @@ import express, { Router } from 'express'
 import { rateLimit } from 'express-rate-limit'
 import { z } from 'zod'
 import type { AgentDeps } from '../ai/agent.js'
+import { chunkText } from '../ai/chunk.js'
 import { AiUnavailableError } from '../ai/gemini.js'
 import { reindexProperty } from '../ai/reindex.js'
 import { propertyInput, propertyPatch } from '../lib/adminProperty.js'
@@ -119,6 +120,28 @@ export function adminRouter(store: Store, auth: Auth, deps?: AgentDeps) {
       if (e instanceof AiUnavailableError) throw new HttpError(503, 'Не удалось сгенерировать описание, попробуйте позже')
       throw e
     }
+  })
+
+  // ---- база знаний ассистента: меняет ответы ИИ, поэтому только администратор
+  const adminOnly = requireRole(auth, 'admin')
+  router.get('/kb', adminOnly, async (_req, res) => {
+    res.json(await store.adminListKb())
+  })
+  router.post('/kb', adminOnly, rateLimit({ windowMs: 60_000, limit: 6, standardHeaders: 'draft-8', legacyHeaders: false }), async (req, res) => {
+    if (!deps) throw new HttpError(503, 'ИИ недоступен')
+    const body = z.object({ title: z.string().trim().min(3, 'Введите название').max(150), content: z.string().trim().min(50, 'Текст слишком короткий').max(30_000, 'Текст слишком длинный') }).parse(req.body)
+    const chunks = chunkText(body.content)
+    try {
+      const vectors = await deps.embedMany(chunks)
+      res.status(201).json(await store.adminAddKb(body.title, chunks.map((content, i) => ({ content, embedding: vectors[i] }))))
+    } catch (e) {
+      if (e instanceof AiUnavailableError) throw new HttpError(503, 'Не удалось проиндексировать документ, попробуйте позже')
+      throw e
+    }
+  })
+  router.delete('/kb/:id', adminOnly, async (req, res) => {
+    if (!(await store.adminDeleteKb(idParam(req.params.id, 'документа')))) throw new HttpError(404, 'Документ не найден')
+    res.json({ ok: true })
   })
 
   // ---- тексты сайта

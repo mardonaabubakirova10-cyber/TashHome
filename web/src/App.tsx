@@ -8,6 +8,7 @@ import { CurrencyProvider } from './lib/currency'
 import Layout from './components/Layout'
 import AdminLayout from './pages/admin/AdminLayout'
 import AdminDashboard from './pages/admin/AdminDashboard'
+import AdminKnowledge from './pages/admin/AdminKnowledge'
 import AdminLeads from './pages/admin/AdminLeads'
 import AdminProperties from './pages/admin/AdminProperties'
 import AdminLogin from './pages/admin/AdminLogin'
@@ -46,6 +47,7 @@ export default function App() {
               <Route path="properties" element={<AdminProperties />} />
               <Route path="reviews" element={<AdminReviews />} />
               <Route path="texts" element={<AdminTexts />} />
+              <Route path="kb" element={<AdminKnowledge />} />
             </Route>
             <Route element={<Layout />}>
               <Route index element={<Home />} />

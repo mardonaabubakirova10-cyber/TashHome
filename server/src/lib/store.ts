@@ -48,6 +48,9 @@ export type StatsData = {
   chat: Array<{ role: ChatRole; content: string | null; tool_calls: unknown | null; rating: number; latency_ms: number | null; created_at: string }>
 }
 
+export type KbDoc = { id: number; title: string; source_file: string | null; chunks: number; created_at: string }
+export type KbChunkInput = { content: string; embedding: number[] }
+
 export type SiteTexts = { ru: Record<string, string>; uz: Record<string, string> }
 
 export interface Store {
@@ -65,6 +68,9 @@ export interface Store {
   setPropertyAnalysis(id: number, predicted: number | null, label: AdminProperty['price_label']): Promise<void>
   setPropertyEmbedding(id: number, vector: number[]): Promise<void>
   adminStatsData(): Promise<StatsData>
+  adminListKb(): Promise<KbDoc[]>
+  adminAddKb(title: string, chunks: KbChunkInput[]): Promise<KbDoc>
+  adminDeleteKb(id: number): Promise<boolean>
   listTexts(): Promise<SiteTexts>
   /** value = null возвращает стандартный текст */
   setText(lang: 'ru' | 'uz', key: string, value: string | null): Promise<void>
@@ -93,6 +99,7 @@ export function createMemoryStore(): Store {
   let propId = adminProps.length
   const embeddings = new Map<number, number[]>()
   const texts: SiteTexts = { ru: {}, uz: {} }
+  const kbDocs: KbDoc[] = []
 
   // Демонстрационные отзывы, чтобы блок на сайте не был пустым
   const demo: Array<[string, number, string, number]> = [
@@ -175,6 +182,20 @@ export function createMemoryStore(): Store {
         properties: adminProps.map((p) => ({ district_id: p.district_id, status: p.status })),
         chat: messages.map((m) => ({ role: m.role, content: m.content, tool_calls: m.tool_calls, rating: m.rating, latency_ms: m.latency_ms, created_at: m.created_at })),
       }
+    },
+    async adminListKb() {
+      return [...kbDocs].sort((a, b) => b.id - a.id)
+    },
+    async adminAddKb(title, chunks) {
+      const d: KbDoc = { id: kbDocs.length + 1, title, source_file: null, chunks: chunks.length, created_at: new Date().toISOString() }
+      kbDocs.push(d)
+      return d
+    },
+    async adminDeleteKb(id) {
+      const i = kbDocs.findIndex((d) => d.id === id)
+      if (i < 0) return false
+      kbDocs.splice(i, 1)
+      return true
     },
     async listTexts() {
       return { ru: { ...texts.ru }, uz: { ...texts.uz } }

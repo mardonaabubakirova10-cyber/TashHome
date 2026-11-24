@@ -27,6 +27,7 @@ export function createAgentDeps(store: Store, notifier: Notifier): AgentDeps {
     getProperty: (id) => store.getProperty(id),
     transcribe: transcribeAudio,
     uploadImage: (data, mime, ext) => uploadToSupabase(data, mime, ext),
+    embedMany: (texts) => embed(texts, 'RETRIEVAL_DOCUMENT'),
     embedDocument: async (text) => (await embed([text], 'RETRIEVAL_DOCUMENT'))[0],
     describeProperty: describeProperty,
     async searchKnowledge(question) {
