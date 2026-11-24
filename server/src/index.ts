@@ -21,7 +21,8 @@ const botEnabled = Boolean(useDb && config.telegramToken && config.telegramChatI
 const bot = botEnabled ? createBot({ token: config.telegramToken, managersChatId: Number(config.telegramChatId), webUrl: config.webOrigin.split(',')[0] }, store, deps) : null
 
 const app = createApp(store, notifier, deps, analyzeReviewWithGemini, useDb ? createSupabaseAuth(config.supabaseUrl, config.supabaseKey) : denyAllAuth, (a) => {
-  if (bot) a.post('/api/telegram/webhook', json({ limit: '1mb' }), webhookHandler(bot, config.telegramToken))
+  // маршрут вебхука подключаем только в режиме вебхука: grammY не разрешает смешивать его с polling
+  if (bot && config.telegramWebhookUrl) a.post('/api/telegram/webhook', json({ limit: '1mb' }), webhookHandler(bot, config.telegramToken))
 })
 
 app.listen(config.port, () => {
