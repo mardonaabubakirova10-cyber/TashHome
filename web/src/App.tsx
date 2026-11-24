@@ -7,7 +7,9 @@ import { CollectionsProvider } from './lib/collections'
 import { CurrencyProvider } from './lib/currency'
 import Layout from './components/Layout'
 import AdminLayout from './pages/admin/AdminLayout'
+import AdminDashboard from './pages/admin/AdminDashboard'
 import AdminLeads from './pages/admin/AdminLeads'
+import AdminProperties from './pages/admin/AdminProperties'
 import AdminLogin from './pages/admin/AdminLogin'
 import AdminReviews from './pages/admin/AdminReviews'
 import Assistant from './pages/Assistant'
@@ -38,7 +40,9 @@ export default function App() {
           <Routes>
             <Route path="admin/login" element={<AdminLogin />} />
             <Route path="admin" element={<AdminLayout />}>
-              <Route index element={<AdminLeads />} />
+              <Route index element={<AdminDashboard />} />
+              <Route path="leads" element={<AdminLeads />} />
+              <Route path="properties" element={<AdminProperties />} />
               <Route path="reviews" element={<AdminReviews />} />
             </Route>
             <Route element={<Layout />}>

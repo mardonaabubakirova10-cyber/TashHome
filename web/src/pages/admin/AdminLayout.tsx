@@ -41,7 +41,13 @@ export default function AdminLayout() {
           </Link>
           <nav className="flex gap-1" aria-label="Разделы">
             <NavLink to="/admin" end className={link}>
+              Обзор
+            </NavLink>
+            <NavLink to="/admin/leads" className={link}>
               Заявки
+            </NavLink>
+            <NavLink to="/admin/properties" className={link}>
+              Дома
             </NavLink>
             <NavLink to="/admin/reviews" className={link}>
               Отзывы
