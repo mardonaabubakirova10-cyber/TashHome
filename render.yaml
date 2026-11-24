@@ -1,0 +1,41 @@
+# Blueprint для Render: два сервиса, API и сервис оценки цены. Секреты задаются в панели Render (sync: false), в репозиторий они не попадают.
+services:
+  - type: web
+    name: tashhome-api
+    runtime: node
+    rootDir: server
+    plan: free
+    buildCommand: npm ci
+    startCommand: npx tsx src/index.ts
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_VERSION
+        value: "24"
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: GEMINI_CHAT_MODEL
+        value: gemini-3.1-flash-lite
+      - key: GEMINI_EMBED_MODEL
+        value: gemini-embedding-001
+      - key: TELEGRAM_BOT_TOKEN
+        sync: false
+      - key: TELEGRAM_MANAGERS_CHAT_ID
+        sync: false
+      - key: ML_SERVICE_URL
+        sync: false # адрес сервиса tashhome-ml
+      - key: WEB_APP_URL
+        sync: false # адрес сайта на Vercel
+      - key: TELEGRAM_WEBHOOK_URL
+        sync: false # https://<адрес API>/api/telegram/webhook
+
+  - type: web
+    name: tashhome-ml
+    runtime: docker
+    rootDir: ml
+    plan: free
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /health
