@@ -29,6 +29,8 @@ export type AgentDeps = {
   estimate: (params: Record<string, unknown>) => Promise<unknown>
   transcribe: (audio: Buffer, mime: string) => Promise<string>
   embedDocument: (text: string) => Promise<number[]>
+  /** Сохраняет проверенное изображение и возвращает его публичный адрес */
+  uploadImage: (data: Buffer, mime: string, ext: string) => Promise<string>
   describeProperty: (p: DescribeInput) => Promise<Described>
   createLead: (lead: { name: string; phone: string; property_id?: number; message?: string }) => Promise<Lead>
 }

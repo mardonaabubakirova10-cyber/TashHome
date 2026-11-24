@@ -4,6 +4,7 @@ import type { Notifier } from '../lib/notifier.js'
 import type { Store } from '../lib/store.js'
 import type { AgentDeps } from './agent.js'
 import { embed, generateStream } from './gemini.js'
+import { uploadToSupabase } from '../lib/imageUpload.js'
 import { describeProperty } from './describe.js'
 import { transcribeAudio } from './transcribe.js'
 
@@ -25,6 +26,7 @@ export function createAgentDeps(store: Store, notifier: Notifier): AgentDeps {
     },
     getProperty: (id) => store.getProperty(id),
     transcribe: transcribeAudio,
+    uploadImage: (data, mime, ext) => uploadToSupabase(data, mime, ext),
     embedDocument: async (text) => (await embed([text], 'RETRIEVAL_DOCUMENT'))[0],
     describeProperty: describeProperty,
     async searchKnowledge(question) {

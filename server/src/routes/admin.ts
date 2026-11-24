@@ -1,4 +1,4 @@
-import { Router } from 'express'
+import express, { Router } from 'express'
 import { rateLimit } from 'express-rate-limit'
 import { z } from 'zod'
 import type { AgentDeps } from '../ai/agent.js'
@@ -7,6 +7,7 @@ import { reindexProperty } from '../ai/reindex.js'
 import { propertyInput, propertyPatch } from '../lib/adminProperty.js'
 import { requireRole, type Auth } from '../lib/auth.js'
 import { HttpError } from '../lib/errors.js'
+import { MAX_IMAGE_BYTES, sniffImage } from '../lib/imageUpload.js'
 import { buildStats } from '../lib/stats.js'
 import type { Store } from '../lib/store.js'
 
@@ -86,6 +87,19 @@ export function adminRouter(store: Store, auth: Auth, deps?: AgentDeps) {
     if (!updated) throw new HttpError(404, 'Дом не найден')
     res.json(updated)
     if (deps) void reindexProperty(store, deps, id)
+  })
+
+  // загрузка фото: тело запроса — сам файл; тип определяем по содержимому
+  router.post('/uploads', rateLimit({ windowMs: 60_000, limit: 30, standardHeaders: 'draft-8', legacyHeaders: false }), express.raw({ type: () => true, limit: MAX_IMAGE_BYTES }), async (req, res) => {
+    if (!deps) throw new HttpError(503, 'Загрузка недоступна')
+    const data = req.body as Buffer
+    const kind = Buffer.isBuffer(data) ? sniffImage(data) : null
+    if (!kind) throw new HttpError(415, 'Нужен файл JPG, PNG или WebP')
+    try {
+      res.status(201).json({ url: await deps.uploadImage(data, kind.mime, kind.ext) })
+    } catch {
+      throw new HttpError(502, 'Не удалось сохранить фото, попробуйте ещё раз')
+    }
   })
 
   // описание дома нейросетью: пользователь проверяет и правит текст сам, в базу он попадает только через сохранение

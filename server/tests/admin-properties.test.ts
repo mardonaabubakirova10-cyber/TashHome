@@ -199,3 +199,30 @@ describe('/api/admin/stats', () => {
     expect(r.body.leads.byDay).toHaveLength(30)
   })
 })
+
+describe('загрузка фото', () => {
+  const jpeg = Buffer.concat([Buffer.from([0xff, 0xd8, 0xff, 0xe0]), Buffer.alloc(200, 1)])
+  const png = Buffer.concat([Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]), Buffer.alloc(100, 1)])
+
+  it('JPG и PNG принимаются, возвращается адрес', async () => {
+    const { app, deps } = make({ uploadImage: vi.fn().mockResolvedValue('https://x.supabase.co/storage/v1/object/public/property-photos/a.jpg') } as never)
+    const r = await request(app).post('/api/admin/uploads').set(H).set('content-type', 'image/jpeg').send(jpeg).expect(201)
+    expect(r.body.url).toMatch(/^https:\/\//)
+    await request(app).post('/api/admin/uploads').set(H).set('content-type', 'application/octet-stream').send(png).expect(201)
+    expect(deps.uploadImage).toHaveBeenCalledWith(expect.any(Buffer), 'image/png', 'png')
+  })
+
+  it('не картинка под видом картинки → 415 (проверяется содержимое, а не заголовок)', async () => {
+    const { app } = make()
+    await request(app).post('/api/admin/uploads').set(H).set('content-type', 'image/jpeg').send(Buffer.from('<html><script>alert(1)</script></html>')).expect(415)
+  })
+
+  it('больше 5 МБ → 413', async () => {
+    const { app } = make()
+    await request(app).post('/api/admin/uploads').set(H).set('content-type', 'image/jpeg').send(Buffer.concat([jpeg, Buffer.alloc(5 * 1024 * 1024)])).expect(413)
+  })
+
+  it('без входа → 401', async () => {
+    await request(make().app).post('/api/admin/uploads').set('content-type', 'image/jpeg').send(jpeg).expect(401)
+  })
+})

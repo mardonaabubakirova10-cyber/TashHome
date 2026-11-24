@@ -56,6 +56,7 @@ export default function PropertyForm({ initial, onClose }: { initial: AdminPrope
   const qc = useQueryClient()
   const [d, setD] = useState<Draft>(() => (initial ? { ...EMPTY, ...initial } : EMPTY))
   const [message, setMessage] = useState<{ kind: 'error' | 'ok'; text: string } | null>(null)
+  const [uploading, setUploading] = useState(false)
   const set = <K extends keyof Draft>(k: K, v: Draft[K]) => setD((s) => ({ ...s, [k]: v }))
 
   const payload = () => ({
@@ -93,6 +94,28 @@ export default function PropertyForm({ initial, onClose }: { initial: AdminPrope
     e.preventDefault()
     setMessage(null)
     save.mutate()
+  }
+  const onFiles = async (files: FileList | null) => {
+    if (!files?.length) return
+    setUploading(true)
+    setMessage(null)
+    const added: string[] = []
+    let failed = 0
+    for (const f of Array.from(files).slice(0, 12)) {
+      if (f.size > 5 * 1024 * 1024) {
+        failed++
+        continue
+      }
+      try {
+        const r = await api<{ url: string }>('/admin/uploads', { method: 'POST', body: f, headers: { 'content-type': f.type || 'application/octet-stream' } })
+        added.push(r.url)
+      } catch {
+        failed++
+      }
+    }
+    setD((s) => ({ ...s, photos: [...s.photos, ...added].slice(0, 12) }))
+    setUploading(false)
+    if (failed) setMessage({ kind: 'error', text: `Не загружено файлов: ${failed}. Допустимы JPG, PNG, WebP до 5 МБ.` })
   }
   const togglePhoto = (url: string) => set('photos', d.photos.includes(url) ? d.photos.filter((p) => p !== url) : [...d.photos, url].slice(0, 12))
   const move = (i: number, dir: -1 | 1) => {
@@ -219,7 +242,7 @@ export default function PropertyForm({ initial, onClose }: { initial: AdminPrope
       <div className="grid gap-4 rounded-xl border border-slate-200 bg-slate-100 p-4">
         <div>
           <h2 className="text-base font-semibold">Фото ({d.photos.length} из 12)</h2>
-          <p className="text-xs text-slate-500">Первое фото главное. Выберите из библиотеки сайта или вставьте адрес https://… ниже. Загрузка своих файлов появится позже.</p>
+          <p className="text-xs text-slate-500">Первое фото главное. Загрузите свои файлы, выберите из библиотеки сайта или вставьте адрес https://…</p>
         </div>
         {d.photos.length > 0 && (
           <ol className="flex flex-wrap gap-3">
@@ -244,6 +267,22 @@ export default function PropertyForm({ initial, onClose }: { initial: AdminPrope
             ))}
           </ol>
         )}
+        <div>
+          <label className={`inline-flex cursor-pointer items-center rounded-lg border border-slate-300 px-4 py-2 text-sm hover:bg-slate-200 ${uploading || d.photos.length >= 12 ? 'pointer-events-none opacity-50' : ''}`}>
+            {uploading ? 'Загружаю…' : 'Загрузить фото с компьютера'}
+            <input
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+              multiple
+              className="sr-only"
+              onChange={(e) => {
+                void onFiles(e.target.files)
+                e.target.value = ''
+              }}
+            />
+          </label>
+          <span className="ml-3 text-xs text-slate-500">JPG, PNG или WebP до 5 МБ</span>
+        </div>
         <details>
           <summary className="cursor-pointer text-sm text-slate-700">Библиотека фото сайта ({library.length})</summary>
           <ul className="mt-3 grid grid-cols-3 gap-2 sm:grid-cols-5 lg:grid-cols-8">
