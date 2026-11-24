@@ -13,6 +13,7 @@ export const config = {
   geminiChatModel: process.env.GEMINI_CHAT_MODEL || 'gemini-3.1-flash-lite',
   geminiEmbedModel: process.env.GEMINI_EMBED_MODEL || 'gemini-embedding-001',
   telegramToken: process.env.TELEGRAM_BOT_TOKEN ?? '',
+  telegramWebhookUrl: process.env.TELEGRAM_WEBHOOK_URL ?? '',
   telegramChatId: process.env.TELEGRAM_MANAGERS_CHAT_ID ?? '',
   supabaseUrl: process.env.SUPABASE_URL ?? '',
   supabaseKey: process.env.SUPABASE_SERVICE_ROLE_KEY ?? '',

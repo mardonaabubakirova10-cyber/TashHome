@@ -32,12 +32,12 @@ export function reviewText(r: Review): string {
 }
 
 export function createTelegramNotifier(token: string, chatId: string, fetchImpl: typeof fetch = fetch): Notifier {
-  const send = async (text: string) => {
+  const send = async (text: string, markup?: object) => {
     try {
       const res = await fetchImpl(`https://api.telegram.org/bot${token}/sendMessage`, {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ chat_id: chatId, text, parse_mode: 'HTML', disable_web_page_preview: true }),
+        body: JSON.stringify({ chat_id: chatId, text, parse_mode: 'HTML', disable_web_page_preview: true, ...(markup ? { reply_markup: markup } : {}) }),
         signal: AbortSignal.timeout(8000),
       })
       if (!res.ok) console.error(`Telegram: не удалось отправить уведомление (статус ${res.status})`)
@@ -46,7 +46,7 @@ export function createTelegramNotifier(token: string, chatId: string, fetchImpl:
     }
   }
   return {
-    newLead: (lead) => send(leadText(lead)),
+    newLead: (lead) => send(leadText(lead), { inline_keyboard: [[{ text: '✅ Взять в работу', callback_data: `take:${lead.id}` }]] }),
     negativeReview: (review) => send(reviewText(review)),
   }
 }

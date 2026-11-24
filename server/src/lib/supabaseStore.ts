@@ -2,7 +2,7 @@ import type { Property } from './demoProperties.js'
 import { toPostgrestParams } from './propertyFilters.js'
 import { vectorLiteral } from './supabaseRest.js'
 import type { AdminProperty, PropertyInput, PropertyPatch } from './adminProperty.js'
-import type { ChatMessage, District, KbDoc, KbHit, Lead, Review, SiteTexts, StatsData, Store } from './store.js'
+import type { BotUser, ChatMessage, District, KbDoc, KbHit, Lead, Review, SiteTexts, StatsData, Store } from './store.js'
 
 type Row = Record<string, any> // строка таблицы properties вместе с фото
 const SELECT = 'select=*,property_photos(url,position)'
@@ -147,6 +147,9 @@ export function createSupabaseStore(url: string, serviceKey: string): Store {
       if (!res.ok) throw new Error(`Supabase ${res.status} leads`)
       return { items: (await res.json()) as Lead[], total: Number(res.headers.get('content-range')?.split('/')[1] ?? 0), page: f.page, pageSize: f.pageSize }
     },
+    async adminGetLead(id) {
+      return (await call<Lead[]>(`/leads?select=*&id=eq.${id}&limit=1`))[0] ?? null
+    },
     async adminUpdateLead(id, patch) {
       const rows = await call<Lead[]>(`/leads?id=eq.${id}`, { method: 'PATCH', headers: { Prefer: 'return=representation' }, body: JSON.stringify(patch) })
       return rows[0] ?? null
@@ -222,6 +225,21 @@ export function createSupabaseStore(url: string, serviceKey: string): Store {
     async adminDeleteKb(id) {
       const rows = await call<unknown[]>(`/kb_documents?id=eq.${id}`, { method: 'DELETE', headers: { Prefer: 'return=representation' } })
       return rows.length > 0 // фрагменты удаляются каскадом
+    },
+    async getBotUser(chatId) {
+      const rows = await call<BotUser[]>(`/bot_users?select=*&chat_id=eq.${chatId}&limit=1`)
+      return rows[0] ?? null
+    },
+    async saveBotUser(u) {
+      const rows = await call<BotUser[]>('/bot_users?on_conflict=chat_id', { method: 'POST', headers: { Prefer: 'resolution=merge-duplicates,return=representation' }, body: JSON.stringify(u) })
+      return rows[0]
+    },
+    async saveBotThread(groupMessageId, clientChatId) {
+      await call('/bot_threads?on_conflict=group_message_id', { method: 'POST', headers: { Prefer: 'resolution=merge-duplicates,return=minimal' }, body: JSON.stringify({ group_message_id: groupMessageId, client_chat_id: clientChatId }) })
+    },
+    async getBotThread(groupMessageId) {
+      const rows = await call<Array<{ client_chat_id: number }>>(`/bot_threads?select=client_chat_id&group_message_id=eq.${groupMessageId}&limit=1`)
+      return rows[0]?.client_chat_id ?? null
     },
     async listTexts() {
       const rows = await call<Array<{ key: string; lang: 'ru' | 'uz'; value: string }>>('/site_texts?select=key,lang,value')

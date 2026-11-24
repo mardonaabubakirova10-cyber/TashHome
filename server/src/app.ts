@@ -20,7 +20,7 @@ import { chatRouter } from './routes/chat.js'
 import { catalogRouter } from './routes/properties.js'
 import { mortgageRouter } from './routes/mortgage.js'
 
-export function createApp(store: Store = createMemoryStore(), notifier: Notifier = noopNotifier, agentDeps: AgentDeps = createAgentDeps(store, notifier), reviewAnalyzer: ReviewAnalyzer = noopAnalyzer, auth: Auth = denyAllAuth) {
+export function createApp(store: Store = createMemoryStore(), notifier: Notifier = noopNotifier, agentDeps: AgentDeps = createAgentDeps(store, notifier), reviewAnalyzer: ReviewAnalyzer = noopAnalyzer, auth: Auth = denyAllAuth, mount?: (app: express.Express) => void) {
   const app = express()
   app.disable('x-powered-by')
   app.use(cors({ origin: config.webOrigin.split(',') }))
@@ -41,6 +41,7 @@ export function createApp(store: Store = createMemoryStore(), notifier: Notifier
   app.use('/api/leads', leadsRouter(store, notifier))
   app.use('/api/reviews', reviewsRouter(store, notifier, reviewAnalyzer))
 
+  mount?.(app) // дополнительные маршруты (вебхук Telegram) до обработчика «не найдено»
   app.use(notFound)
   app.use(errorHandler)
   return app

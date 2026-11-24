@@ -51,6 +51,8 @@ export type StatsData = {
 export type KbDoc = { id: number; title: string; source_file: string | null; chunks: number; created_at: string }
 export type KbChunkInput = { content: string; embedding: number[] }
 
+export type BotUser = { chat_id: number; lang: 'ru' | 'uz'; session_id: string | null; username: string | null }
+
 export type SiteTexts = { ru: Record<string, string>; uz: Record<string, string> }
 
 export interface Store {
@@ -59,6 +61,7 @@ export interface Store {
   addReview(input: Pick<Review, 'author' | 'rating' | 'text'>): Promise<Review>
   listReviews(limit: number): Promise<Review[]>
   adminListLeads(f: LeadFilter): Promise<AdminPage<Lead>>
+  adminGetLead(id: number): Promise<Lead | null>
   adminUpdateLead(id: number, patch: { status: LeadStatus }): Promise<Lead | null>
   adminListReviews(f: ReviewFilter): Promise<AdminPage<Review>>
   adminListProperties(f: PropertyListFilter): Promise<AdminPage<AdminProperty>>
@@ -71,6 +74,10 @@ export interface Store {
   adminListKb(): Promise<KbDoc[]>
   adminAddKb(title: string, chunks: KbChunkInput[]): Promise<KbDoc>
   adminDeleteKb(id: number): Promise<boolean>
+  getBotUser(chatId: number): Promise<BotUser | null>
+  saveBotUser(u: Partial<BotUser> & { chat_id: number }): Promise<BotUser>
+  saveBotThread(groupMessageId: number, clientChatId: number): Promise<void>
+  getBotThread(groupMessageId: number): Promise<number | null>
   listTexts(): Promise<SiteTexts>
   /** value = null возвращает стандартный текст */
   setText(lang: 'ru' | 'uz', key: string, value: string | null): Promise<void>
@@ -100,6 +107,8 @@ export function createMemoryStore(): Store {
   const embeddings = new Map<number, number[]>()
   const texts: SiteTexts = { ru: {}, uz: {} }
   const kbDocs: KbDoc[] = []
+  const botUsers = new Map<number, BotUser>()
+  const botThreads = new Map<number, number>()
 
   // Демонстрационные отзывы, чтобы блок на сайте не был пустым
   const demo: Array<[string, number, string, number]> = [
@@ -136,6 +145,9 @@ export function createMemoryStore(): Store {
     async adminListLeads(f) {
       const list = leads.filter((l) => !f.status || l.status === f.status).sort((a, b) => b.id - a.id)
       return { items: list.slice((f.page - 1) * f.pageSize, f.page * f.pageSize), total: list.length, page: f.page, pageSize: f.pageSize }
+    },
+    async adminGetLead(id) {
+      return leads.find((x) => x.id === id) ?? null
     },
     async adminUpdateLead(id, patch) {
       const l = leads.find((x) => x.id === id)
@@ -196,6 +208,21 @@ export function createMemoryStore(): Store {
       if (i < 0) return false
       kbDocs.splice(i, 1)
       return true
+    },
+    async getBotUser(chatId) {
+      return botUsers.get(chatId) ?? null
+    },
+    async saveBotUser(u) {
+      const cur = botUsers.get(u.chat_id) ?? { chat_id: u.chat_id, lang: 'ru' as const, session_id: null, username: null }
+      const next = { ...cur, ...u }
+      botUsers.set(u.chat_id, next)
+      return next
+    },
+    async saveBotThread(groupMessageId, clientChatId) {
+      botThreads.set(groupMessageId, clientChatId)
+    },
+    async getBotThread(groupMessageId) {
+      return botThreads.get(groupMessageId) ?? null
     },
     async listTexts() {
       return { ru: { ...texts.ru }, uz: { ...texts.uz } }
