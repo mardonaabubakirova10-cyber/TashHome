@@ -148,7 +148,7 @@ export default function HouseCarousel({ items }: { items: Property[] }) {
                   }}
                   className="group relative block size-full overflow-hidden rounded-md bg-slate-100 text-left ring-1 ring-white/10"
                 >
-                  <img src={p.photo} alt="" draggable={false} className="size-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                  <img src={p.photo} alt="" loading="lazy" decoding="async" draggable={false} className="size-full object-cover transition-transform duration-500 group-hover:scale-105" />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-black/20" />
                   {est && (
                     <div className="absolute right-3 top-3">

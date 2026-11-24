@@ -23,8 +23,10 @@ const HouseBuild3D = lazy(() => import('../components/HouseBuild3D'))
 const FADE_Y = 'linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.06) 8%, rgba(0,0,0,0.22) 18%, rgba(0,0,0,0.55) 30%, rgba(0,0,0,0.85) 42%, black 54%)'
 const FADE_X = 'linear-gradient(to right, black, black)' // по бокам затухания нет
 
-const COLS = 34
-const ROWS = 18
+// на телефоне плиток меньше (размер плитки тот же): иначе страница долго отрисовывается
+const MOBILE = typeof window !== 'undefined' && window.innerWidth < 640
+const COLS = MOBILE ? 22 : 34
+const ROWS = MOBILE ? 12 : 18
 const floor = Array.from({ length: COLS * ROWS }, (_, i) => {
   const row = Math.floor(i / COLS)
   // для мозаики берём маленькие копии (public/houses/thumb): плитка на экране около 60 px, полный кадр не нужен
@@ -101,7 +103,7 @@ export default function Home() {
             {/* Пол наклонён назад, а плитки у краёв приподняты: получается чаша, как горизонт, уходящий вверх */}
             <div
               className="absolute bottom-[-30%] left-1/2 grid w-[250%] origin-bottom gap-[3px]"
-              style={{ gridTemplateColumns: `repeat(${COLS}, 1fr)`, transform: 'translateX(-50%) rotateX(68deg)', transformStyle: 'preserve-3d' }}
+              style={{ width: MOBILE ? `${Math.round((250 * COLS) / 34)}%` : undefined, gridTemplateColumns: `repeat(${COLS}, 1fr)`, transform: 'translateX(-50%) rotateX(68deg)', transformStyle: 'preserve-3d' }}
             >
               {floor.map((tile, i) => {
                 const dx = tile.col - (COLS - 1) / 2
@@ -317,7 +319,7 @@ export default function Home() {
             {steps.map((n) => {
               const active = stage === n - 1
               return (
-                <li key={n} className={`flex gap-4 transition-opacity duration-500 ${active ? 'opacity-100' : 'opacity-45'}`}>
+                <li key={n} className={`flex gap-4 transition-opacity duration-500 ${active ? 'opacity-100' : 'opacity-70'}`}>
                   <p className={`w-14 shrink-0 font-display text-6xl leading-none transition-colors duration-500 ${active ? 'text-white' : 'text-slate-400'}`}>{n}</p>
                   <div>
                     <h3 className="text-lg font-semibold">{t(`home.step${n}Title`)}</h3>
