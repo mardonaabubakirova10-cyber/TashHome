@@ -15,18 +15,6 @@
 
 Оплаты в проекте нет: вместо неё сделан вход через Google (по заданию оплата необязательна).
 
-## Скриншоты
-
-| Главная | Каталог |
-|---|---|
-| ![Главная](docs/screenshots/home.png) | ![Каталог](docs/screenshots/catalog.png) |
-| **Страница дома: оценка модели, ипотека** | **ИИ-ассистент** |
-| ![Дом](docs/screenshots/property.png) | ![Ассистент](docs/screenshots/assistant.png) |
-| **Оценка цены дома** | **Ипотечный калькулятор** |
-| ![Оценка](docs/screenshots/estimate.png) | ![Ипотека](docs/screenshots/mortgage.png) |
-| **Телефон: главная** | **Телефон: каталог** |
-| ![Главная на телефоне](docs/screenshots/home-mobile.png) | ![Каталог на телефоне](docs/screenshots/catalog-mobile.png) |
-
 ## Архитектура
 
 ```
