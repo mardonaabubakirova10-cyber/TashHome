@@ -11,6 +11,7 @@ export const config = {
   mlUrl: process.env.ML_SERVICE_URL ?? 'http://localhost:8001',
   geminiKey: process.env.GEMINI_API_KEY ?? '',
   geminiChatModel: process.env.GEMINI_CHAT_MODEL || 'gemini-3.1-flash-lite',
+  geminiFallbackModel: process.env.GEMINI_FALLBACK_MODEL || 'gemini-3.5-flash-lite',
   geminiEmbedModel: process.env.GEMINI_EMBED_MODEL || 'gemini-embedding-001',
   telegramToken: process.env.TELEGRAM_BOT_TOKEN ?? '',
   telegramWebhookUrl: process.env.TELEGRAM_WEBHOOK_URL ?? '',

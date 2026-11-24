@@ -31,7 +31,19 @@ export type GenerateResult = { text: string; functionCalls: Array<{ name: string
 const API = 'https://generativelanguage.googleapis.com/v1beta'
 const RETRY_STATUSES = new Set([429, 500, 502, 503, 504])
 
-type Options = { fetchImpl?: typeof fetch; timeoutMs?: number; retries?: number; baseDelayMs?: number; apiKey?: string }
+type Options = { fetchImpl?: typeof fetch; timeoutMs?: number; retries?: number; baseDelayMs?: number; apiKey?: string; model?: string; fallbackModel?: string | null }
+
+/** Основная модель перегружена (503, 429) или недоступна: пробуем запасную. Если и она не отвечает, ошибка уходит наверх. */
+async function withFallback<T>(o: Options, run: (model: string) => Promise<T>, started: () => boolean = () => false): Promise<T> {
+  const primary = o.model ?? config.geminiChatModel
+  const fallback = o.fallbackModel === undefined ? config.geminiFallbackModel : o.fallbackModel
+  try {
+    return await run(primary)
+  } catch (e) {
+    if (!(e instanceof AiUnavailableError) || !fallback || fallback === primary || started()) throw e
+    return run(fallback)
+  }
+}
 
 /** Вызов с таймаутом и повторами (экспоненциальная пауза). Возвращает разобранный JSON ответа. */
 async function call(path: string, body: unknown, o: Options = {}): Promise<any> {
@@ -61,6 +73,10 @@ async function call(path: string, body: unknown, o: Options = {}): Promise<any> 
 
 /** Один шаг генерации: текст и/или вызовы инструментов. */
 export async function generate(req: GenerateRequest, o: Options = {}): Promise<GenerateResult> {
+  return withFallback(o, (model) => generateWith(model, req, o))
+}
+
+async function generateWith(model: string, req: GenerateRequest, o: Options): Promise<GenerateResult> {
   const body: Record<string, unknown> = {
     contents: req.contents,
     generationConfig: {
@@ -72,7 +88,7 @@ export async function generate(req: GenerateRequest, o: Options = {}): Promise<G
   if (req.system) body.systemInstruction = { parts: [{ text: req.system }] }
   if (req.tools?.length) body.tools = [{ functionDeclarations: req.tools }]
 
-  const data = await call(`models/${config.geminiChatModel}:generateContent`, body, o)
+  const data = await call(`models/${model}:generateContent`, body, o)
   const content = (data?.candidates?.[0]?.content ?? null) as Content | null
   const parts = content?.parts ?? []
   return {
@@ -87,6 +103,11 @@ export async function generate(req: GenerateRequest, o: Options = {}): Promise<G
  * Повторы возможны только до начала потока; обрыв посреди ответа считается сбоем ИИ.
  */
 export async function generateStream(req: GenerateRequest, onText: (chunk: string) => void, o: Options = {}): Promise<GenerateResult> {
+  let emitted = false // после первого куска текста запасную модель не включаем: пользователь уже видит ответ
+  return withFallback(o, (model) => streamWith(model, req, (c) => ((emitted = true), onText(c)), o), () => emitted)
+}
+
+async function streamWith(model: string, req: GenerateRequest, onText: (chunk: string) => void, o: Options): Promise<GenerateResult> {
   const key = o.apiKey ?? config.geminiKey
   if (!key) throw new AiUnavailableError('Не задан GEMINI_API_KEY')
   const doFetch = o.fetchImpl ?? fetch
@@ -102,7 +123,7 @@ export async function generateStream(req: GenerateRequest, onText: (chunk: strin
   let lastStatus = 0
   for (let attempt = 0; attempt <= retries; attempt++) {
     try {
-      const r = await doFetch(`${API}/models/${config.geminiChatModel}:streamGenerateContent?alt=sse`, {
+      const r = await doFetch(`${API}/models/${model}:streamGenerateContent?alt=sse`, {
         method: 'POST',
         headers: { 'content-type': 'application/json', 'x-goog-api-key': key },
         body: JSON.stringify(body),

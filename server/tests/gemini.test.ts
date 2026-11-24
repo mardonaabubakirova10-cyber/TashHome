@@ -4,7 +4,7 @@ import { AiUnavailableError, chat, embed, generateJson, toGeminiSchema } from '.
 
 const ok = (body: unknown) => new Response(JSON.stringify(body), { status: 200 })
 const reply = (text: string) => ok({ candidates: [{ content: { role: 'model', parts: [{ text }] } }] })
-const fast = { apiKey: 'test-key', baseDelayMs: 1, retries: 2 }
+const fast = { apiKey: 'test-key', baseDelayMs: 1, retries: 2, fallbackModel: null as string | null } // запасная модель выключена, пока тест её не включает
 
 describe('gemini: повторы и ошибки', () => {
   it('на 503 повторяет и возвращает ответ', async () => {
@@ -71,5 +71,34 @@ describe('gemini: эмбеддинги', () => {
   it('неполный ответ → AiUnavailableError', async () => {
     const f = vi.fn().mockResolvedValue(ok({ embedding: { values: [] } }))
     await expect(embed(['a'], 'RETRIEVAL_QUERY', { ...fast, fetchImpl: f })).rejects.toBeInstanceOf(AiUnavailableError)
+  })
+})
+
+describe('gemini: запасная модель', () => {
+  const urls = (f: ReturnType<typeof vi.fn>) => f.mock.calls.map((c) => String(c[0]))
+
+  it('если основная модель перегружена (503), ответ даёт запасная', async () => {
+    const f = vi.fn().mockImplementation(async (url: string) => (String(url).includes('primary-m') ? new Response('', { status: 503 }) : reply('ответ запасной')))
+    const r = await chat('hi', undefined, { ...fast, fetchImpl: f, model: 'primary-m', fallbackModel: 'backup-m', retries: 1 })
+    expect(r).toBe('ответ запасной')
+    expect(urls(f).some((u) => u.includes('backup-m'))).toBe(true)
+  })
+
+  it('если основная работает, запасная не вызывается', async () => {
+    const f = vi.fn().mockResolvedValue(reply('ок'))
+    await chat('hi', undefined, { ...fast, fetchImpl: f, model: 'primary-m', fallbackModel: 'backup-m' })
+    expect(urls(f).every((u) => u.includes('primary-m'))).toBe(true)
+  })
+
+  it('обе модели недоступны → AiUnavailableError', async () => {
+    const f = vi.fn().mockResolvedValue(new Response('', { status: 503 }))
+    await expect(chat('hi', undefined, { ...fast, fetchImpl: f, model: 'primary-m', fallbackModel: 'backup-m', retries: 0 })).rejects.toBeInstanceOf(AiUnavailableError)
+    expect(f).toHaveBeenCalledTimes(2)
+  })
+
+  it('ошибка запроса (400) тоже пробует запасную модель один раз', async () => {
+    const f = vi.fn().mockResolvedValue(new Response('', { status: 400 }))
+    await expect(chat('hi', undefined, { ...fast, fetchImpl: f, model: 'primary-m', fallbackModel: 'backup-m' })).rejects.toBeInstanceOf(AiUnavailableError)
+    expect(f).toHaveBeenCalledTimes(2)
   })
 })
