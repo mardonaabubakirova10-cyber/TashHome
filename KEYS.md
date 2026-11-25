@@ -77,23 +77,6 @@ cp .env.example .env
 3. Откройте `http://localhost:5173/admin` и войдите этой почтой и паролем.
 
 
-## 6. Вход через Google (для клиентов сайта)
-
-Нужен для личного кабинета и избранного в аккаунте. Всё бесплатно. Секрет клиента Google вставляйте только в Supabase, в чат его не присылайте.
-
-**В Google Cloud (console.cloud.google.com):**
-1. Создайте проект (например, `TashHome`).
-2. Откройте **APIs & Services → OAuth consent screen** (в новом интерфейсе **Google Auth Platform**). Тип **External**, название приложения `TashHome`, ваша почта как контактная. На шаге «Test users» добавьте свою почту: пока приложение в режиме тестирования, входить смогут только перечисленные там адреса.
-3. **Credentials → Create credentials → OAuth client ID**, тип **Web application**. В поле **Authorized redirect URIs** добавьте адрес вашего Supabase: `<Project URL из .env>/auth/v1/callback`, например `https://xxxx.supabase.co/auth/v1/callback`. Нажмите **Create** и скопируйте **Client ID** и **Client secret**.
-
-**В Supabase:**
-4. **Authentication → Sign In / Providers → Google**: включите, вставьте Client ID и Client secret, **Save**.
-5. **Authentication → URL Configuration**: в **Site URL** `http://localhost:5173`, в **Redirect URLs** добавьте `http://localhost:5173/**`. Когда сайт будет опубликован, добавьте и его адрес.
-
-Проверка: откройте `http://localhost:5173/login` и нажмите «Войти через Google».
-
----
-
 ## Итоговый вид `.env`
 
 ```

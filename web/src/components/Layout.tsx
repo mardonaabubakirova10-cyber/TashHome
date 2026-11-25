@@ -1,7 +1,6 @@
 import { lazy, Suspense } from 'react'
-import { NavLink, Outlet } from 'react-router-dom'
+import { Link, NavLink, Outlet } from 'react-router-dom'
 import ChatWidget from './chat/ChatWidget'
-import { useAuth } from '../lib/auth'
 import { useTranslation } from 'react-i18next'
 import { useCollections } from '../lib/collections'
 import { useCurrency, type Currency } from '../lib/currency'
@@ -51,7 +50,6 @@ function Segmented<T extends string>({
 
 export default function Layout() {
   const { t, i18n } = useTranslation()
-  const { loggedIn, name, avatar } = useAuth()
   const { currency, setCurrency } = useCurrency()
   const { favorites, compare } = useCollections()
   const counts: Record<string, number> = { favorites: favorites.length, compare: compare.length }
@@ -69,8 +67,11 @@ export default function Layout() {
     <div className="flex min-h-screen flex-col overflow-x-clip">
       <header className="sticky top-0 z-10 border-b border-white/10 bg-ink/95 text-white backdrop-blur">
         <div className="mx-auto flex max-w-[1760px] flex-wrap items-center gap-x-6 gap-y-2 px-4 py-3 sm:px-8 lg:px-12">
-          <NavLink to="/" className="font-display text-2xl font-semibold tracking-tight">
-            TashHome
+          <NavLink to="/" className="flex items-center gap-2 font-display text-2xl font-light tracking-tight">
+            <img src="/logo.svg" alt="" width="28" height="40" className="h-10 w-7" />
+            <span>
+              Tash<b className="font-bold">Home</b>
+            </span>
           </NavLink>
           <nav className="order-3 flex w-full gap-1 overflow-x-auto text-sm sm:order-none sm:w-auto sm:flex-1">
             {links.map((l) => (
@@ -92,13 +93,6 @@ export default function Layout() {
             ))}
           </nav>
           <div className="ml-auto flex items-center gap-2 sm:ml-0">
-            <NavLink
-              to={loggedIn ? '/account' : '/login'}
-              className="flex items-center gap-2 rounded-lg border border-white/15 px-3 py-1.5 text-sm text-white/80 hover:bg-white/5 hover:text-white"
-            >
-              {loggedIn && avatar && <img src={avatar} alt="" referrerPolicy="no-referrer" className="size-5 rounded-full" />}
-              <span className="max-w-[7rem] truncate">{loggedIn ? (name?.split(' ')[0] ?? t('account.title')) : t('account.login')}</span>
-            </NavLink>
             <Segmented<'ru' | 'uz'>
               label="Language"
               value={i18n.language === 'uz' ? 'uz' : 'ru'}
@@ -119,6 +113,9 @@ export default function Layout() {
       </main>
       <footer className="bg-ink py-8 text-center text-sm text-white/60">
         <p className="font-display text-xl text-white">TashHome</p>
+        <Link to="/admin/login" className="mt-2 inline-block underline-offset-2 hover:text-white hover:underline">
+          {t('account.staffLink')}
+        </Link>
       </footer>
       <Suspense fallback={null}>
         <TvTower />

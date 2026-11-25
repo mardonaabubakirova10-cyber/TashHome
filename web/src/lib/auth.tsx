@@ -5,7 +5,7 @@ const SUPABASE_URL = (import.meta.env.VITE_SUPABASE_URL as string | undefined)?.
 const SUPABASE_KEY = (import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined) ?? ''
 const STORE_KEY = 'auth.v1'
 
-type Session = { access_token: string; refresh_token: string; expires_at: number; email: string; name?: string; avatar?: string }
+type Session = { access_token: string; refresh_token: string; expires_at: number; email: string }
 export type Role = 'client' | 'manager' | 'admin'
 
 const read = (): Session | null => {
@@ -43,14 +43,8 @@ async function gotrue(grant: 'password' | 'refresh_token', body: Record<string, 
 
 type Ctx = {
   email: string | null
-  name: string | null
-  avatar: string | null
   loggedIn: boolean
   login: (email: string, password: string) => Promise<void>
-  /** Переход на вход через Google (Supabase Auth) */
-  loginWithGoogle: () => void
-  /** Завершает вход через Google: разбирает адрес возврата и сохраняет сессию. false, если вход не удался. */
-  completeOAuth: (hash: string) => Promise<boolean>
   logout: () => void
   /** Запрос к служебному API с токеном; при просроченном токене обновляет его, при отказе выходит из аккаунта. */
   api: <T>(path: string, init?: RequestInit) => Promise<T>
@@ -82,46 +76,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   )
   const logout = useCallback(() => save(null), [save])
 
-  const loginWithGoogle = useCallback(() => {
-    if (!SUPABASE_URL || !SUPABASE_KEY) return
-    const back = encodeURIComponent(`${window.location.origin}/auth/callback`)
-    window.location.assign(`${SUPABASE_URL}/auth/v1/authorize?provider=google&redirect_to=${back}`)
-  }, [])
-
-  const completeOAuth = useCallback(
-    async (hash: string) => {
-      const p = new URLSearchParams(hash.replace(/^#/, ''))
-      const access = p.get('access_token')
-      const refresh = p.get('refresh_token')
-      if (!access || !refresh || !SUPABASE_URL) return false
-      try {
-        const res = await fetch(`${SUPABASE_URL}/auth/v1/user`, { headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${access}` } })
-        if (!res.ok) return false
-        const u = (await res.json()) as { email?: string; user_metadata?: { full_name?: string; name?: string; avatar_url?: string; picture?: string } }
-        const expiresIn = Number(p.get('expires_in') ?? 3600)
-        save({
-          access_token: access,
-          refresh_token: refresh,
-          expires_at: Number(p.get('expires_at')) || Math.floor(Date.now() / 1000) + expiresIn,
-          email: u.email ?? '',
-          name: u.user_metadata?.full_name ?? u.user_metadata?.name,
-          avatar: u.user_metadata?.avatar_url ?? u.user_metadata?.picture,
-        })
-        return true
-      } catch {
-        return false
-      }
-    },
-    [save],
-  )
-
   const api = useCallback(
     async <T,>(path: string, init: RequestInit = {}): Promise<T> => {
       let s = read()
       if (!s) throw new AdminApiError(401)
       if (s.expires_at - 30 < Date.now() / 1000) {
         try {
-          s = { ...(await gotrue('refresh_token', { refresh_token: s.refresh_token })), name: s.name, avatar: s.avatar } // имя и фото из Google сохраняем
+          s = await gotrue('refresh_token', { refresh_token: s.refresh_token })
           save(s)
         } catch {
           save(null)
@@ -137,8 +98,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   )
 
   const value = useMemo<Ctx>(
-    () => ({ email: session?.email ?? null, name: session?.name ?? null, avatar: session?.avatar ?? null, loggedIn: Boolean(session), login, loginWithGoogle, completeOAuth, logout, api }),
-    [session, login, loginWithGoogle, completeOAuth, logout, api],
+    () => ({ email: session?.email ?? null, loggedIn: Boolean(session), login, logout, api }),
+    [session, login, logout, api],
   )
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }

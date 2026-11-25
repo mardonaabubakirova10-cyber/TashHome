@@ -15,12 +15,8 @@ import AdminProperties from './pages/admin/AdminProperties'
 import AdminLogin from './pages/admin/AdminLogin'
 import AdminReviews from './pages/admin/AdminReviews'
 import AdminTexts from './pages/admin/AdminTexts'
-import Account from './pages/Account'
 import Assistant from './pages/Assistant'
-import AuthCallback from './pages/AuthCallback'
-import Login from './pages/Login'
 import Intro from './components/Intro'
-import FavoritesSync from './components/FavoritesSync'
 import Catalog from './pages/Catalog'
 import Estimate from './pages/Estimate'
 import Compare from './pages/Compare'
@@ -47,7 +43,6 @@ export default function App() {
         <BrowserRouter>
           <Intro />
           <TelegramBridge />
-          <FavoritesSync />
           <Routes>
             <Route path="admin/login" element={<AdminLogin />} />
             <Route path="admin" element={<AdminLayout />}>
@@ -68,9 +63,6 @@ export default function App() {
               <Route path="catalog/:id" element={<Suspense fallback={null}><Property /></Suspense>} />
               <Route path="ui" element={<UiDemo />} />
               <Route path="assistant" element={<Assistant />} />
-              <Route path="login" element={<Login />} />
-              <Route path="auth/callback" element={<AuthCallback />} />
-              <Route path="account" element={<Account />} />
               <Route path="*" element={<Placeholder titleKey="pages.notFound" />} />
             </Route>
           </Routes>

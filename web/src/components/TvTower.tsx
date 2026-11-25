@@ -155,7 +155,8 @@ export default function TvTower() {
 
     const draw = (t: number) => {
       const y = TOP + (BOTTOM - TOP) * shown
-      camera.position.set(0.6, y + 1.5, 34)
+      // на телефоне холст узкий: камера дальше, чтобы площадки помещались по ширине
+      camera.position.set(0.6, y + 1.5, window.innerWidth < 640 ? 46 : 34)
       camera.lookAt(0.6, y, 0)
       tower.rotation.y = t * 0.22 + shown * Math.PI * 1.5
       rings.forEach((ring, i) => {
@@ -223,7 +224,7 @@ export default function TvTower() {
     <div
       ref={host}
       aria-hidden
-      className="pointer-events-none fixed inset-y-0 left-0 z-[5] w-[17rem] -translate-x-[20%] opacity-[calc(var(--show,0)*0.75)] mix-blend-screen max-lg:opacity-[calc(var(--show,0)*0.45)] [mask-image:linear-gradient(to_right,black_70%,transparent)] max-sm:w-32 max-sm:-translate-x-[42%] max-sm:opacity-[calc(var(--show,0)*0.4)]"
+      className="pointer-events-none fixed inset-y-0 left-0 z-[5] w-[17rem] -translate-x-[20%] opacity-[calc(var(--show,0)*0.75)] mix-blend-screen max-lg:opacity-[calc(var(--show,0)*0.45)] [mask-image:linear-gradient(to_right,black_70%,transparent)] max-sm:w-40 max-sm:-translate-x-[32%] max-sm:opacity-[calc(var(--show,0)*0.65)]"
     />
   )
 }

@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
+  <defs>
+    <radialGradient id="bg-white" cx="0.5" cy="0.42" r="0.7">
+      <stop offset="0" stop-color="#262624"/><stop offset="1" stop-color="#111110"/>
+    </radialGradient>
+    <linearGradient id="lit-white" x1="0" y1="1" x2="0" y2="0">
+      <stop offset="0" stop-color="#8d8d89"/><stop offset="1" stop-color="#ffffff"/>
+    </linearGradient>
+    <linearGradient id="cyl-white" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#8a8a86"/><stop offset="0.38" stop-color="#ffffff"/><stop offset="1" stop-color="#6a6a66"/>
+    </linearGradient>
+    <linearGradient id="ring-white" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.1"/><stop offset="0.5" stop-color="#ffffff"/><stop offset="1" stop-color="#ffffff" stop-opacity="0.25"/>
+    </linearGradient>
+  </defs>
+  <rect width="640" height="640" fill="url(#bg-white)"/>
+  <ellipse cx="320" cy="548" rx="176" ry="20" fill="#ffffff" opacity="0.12"/>
+
+  <!-- раскосы -->
+  <path d="M268 418 392 492M372 418 248 492M266 420H374M244 494H396" stroke="#ffffff" stroke-opacity="0.55" stroke-width="5" fill="none"/>
+  <!-- опоры: освещённая и теневая грани -->
+  <path d="M168 548 292 330H310L196 548Z" fill="url(#lit-white)"/>
+  <path d="M196 548 310 330V356L214 548Z" fill="#4b4b48"/>
+  <path d="M472 548 348 330H330L444 548Z" fill="#4b4b48"/>
+  <path d="M444 548 330 330V356L426 548Z" fill="url(#lit-white)" opacity="0.55"/>
+  <!-- центральный ствол -->
+  <path d="M306 548 312 150H320V548Z" fill="url(#lit-white)"/>
+  <path d="M320 150H328L334 548H320Z" fill="#4b4b48"/>
+
+  <path d="M196 322A124 30 0 0 1 444 322" fill="none" stroke="#ffffff" stroke-opacity="0.28" stroke-width="6"/>
+  
+    <path d="M242 338L271.64 382A48.36 9.672 0 0 0 368.36 382L398 338Z" fill="url(#cyl-white)"/>
+    <path d="M248.24 316V338A71.76 14.352000000000002 0 0 0 391.76 338V316Z" fill="#ffb866"/>
+    <path d="M236.54 306.32V316A83.46000000000001 16.692000000000004 0 0 0 403.46000000000004 316V306.32Z" fill="url(#cyl-white)"/>
+    <ellipse cx="320" cy="306.32" rx="83.46000000000001" ry="16.692000000000004" fill="#ffffff"/>
+  <path d="M444 322A124 30 0 0 1 196 322" fill="none" stroke="url(#ring-white)" stroke-width="8" stroke-linecap="round"/>
+  
+    <path d="M274 228L291.48 258A28.52 5.704000000000001 0 0 0 348.52 258L366 228Z" fill="url(#cyl-white)"/>
+    <path d="M277.68 213V228A42.32 8.464000000000002 0 0 0 362.32 228V213Z" fill="#ffb866"/>
+    <path d="M270.78 206.4V213A49.220000000000006 9.844000000000001 0 0 0 369.22 213V206.4Z" fill="url(#cyl-white)"/>
+    <ellipse cx="320" cy="206.4" rx="49.220000000000006" ry="9.844000000000001" fill="#ffffff"/>
+
+  <!-- антенна и огонь -->
+  <path d="M316 190 318 78H322L324 190Z" fill="url(#cyl-white)"/>
+  <path d="M317 140H323M317.5 112H322.5" stroke="#ffb866" stroke-width="7"/>
+  <circle cx="320" cy="76" r="22" fill="#ffb866" opacity="0.22"/>
+  <circle cx="320" cy="76" r="9" fill="#ffb866"/><g transform="translate(322 84) scale(0.27)">
+  <path d="M0 0H500V80H0Z" fill="#0099b5"/><path d="M0 80H500V170H0Z" fill="#ce1126"/><path d="M0 85H500V165H0Z" fill="#fff"/><path d="M0 170H500V250H0Z" fill="#1eb53a"/>
+  <path d="M75 10.4A30 30 0 1 0 75 69.6A30 30 0 0 1 75 10.4Z" fill="#fff"/><path d="M0 -6 1.35 -1.85 5.7 -1.85 2.18 .7 3.53 4.85 0 2.3 -3.53 4.85 -2.18 .7 -5.7 -1.85 -1.35 -1.85Z" transform="translate(208 16)" fill="#fff"/><path d="M0 -6 1.35 -1.85 5.7 -1.85 2.18 .7 3.53 4.85 0 2.3 -3.53 4.85 -2.18 .7 -5.7 -1.85 -1.35 -1.85Z" transform="translate(184 16)" fill="#fff"/><path d="M0 -6 1.35 -1.85 5.7 -1.85 2.18 .7 3.53 4.85 0 2.3 -3.53 4.85 -2.18 .7 -5.7 -1.85 -1.35 -1.85Z" transform="translate(160 16)" fill="#fff"/><path d="M0 -6 1.35 -1.85 5.7 -1.85 2.18 .7 3.53 4.85 0 2.3 -3.53 4.85 -2.18 .7 -5.7 -1.85 -1.35 -1.85Z" transform="translate(208 40)" fill="#fff"/><path d="M0 -6 1.35 -1.85 5.7 -1.85 2.18 .7 3.53 4.85 0 2.3 -3.53 4.85 -2.18 .7 -5.7 -1.85 -1.35 -1.85Z" transform="translate(184 40)" fill="#fff"/><path d="M0 -6 1.35 -1.85 5.7 -1.85 2.18 .7 3.53 4.85 0 2.3 -3.53 4.85 -2.18 .7 -5.7 -1.85 -1.35 -1.85Z" transform="translate(160 40)" fill="#fff"/><path d="M0 -6 1.35 -1.85 5.7 -1.85 2.18 .7 3.53 4.85 0 2.3 -3.53 4.85 -2.18 .7 -5.7 -1.85 -1.35 -1.85Z" transform="translate(136 40)" fill="#fff"/><path d="M0 -6 1.35 -1.85 5.7 -1.85 2.18 .7 3.53 4.85 0 2.3 -3.53 4.85 -2.18 .7 -5.7 -1.85 -1.35 -1.85Z" transform="translate(208 64)" fill="#fff"/><path d="M0 -6 1.35 -1.85 5.7 -1.85 2.18 .7 3.53 4.85 0 2.3 -3.53 4.85 -2.18 .7 -5.7 -1.85 -1.35 -1.85Z" transform="translate(184 64)" fill="#fff"/><path d="M0 -6 1.35 -1.85 5.7 -1.85 2.18 .7 3.53 4.85 0 2.3 -3.53 4.85 -2.18 .7 -5.7 -1.85 -1.35 -1.85Z" transform="translate(160 64)" fill="#fff"/><path d="M0 -6 1.35 -1.85 5.7 -1.85 2.18 .7 3.53 4.85 0 2.3 -3.53 4.85 -2.18 .7 -5.7 -1.85 -1.35 -1.85Z" transform="translate(136 64)" fill="#fff"/><path d="M0 -6 1.35 -1.85 5.7 -1.85 2.18 .7 3.53 4.85 0 2.3 -3.53 4.85 -2.18 .7 -5.7 -1.85 -1.35 -1.85Z" transform="translate(112 64)" fill="#fff"/>
+</g></svg>
