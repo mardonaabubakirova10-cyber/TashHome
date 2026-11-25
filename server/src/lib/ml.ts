@@ -1,8 +1,9 @@
 import { config } from '../config.js'
 import { HttpError } from './errors.js'
 
-// Бесплатный ml-сервис засыпает: пока он просыпается, Render отвечает ошибкой сразу, поэтому пробуем ещё раз
-const WAKING = new Set([429, 502, 503, 504])
+// Бесплатный ml-сервис засыпает: пока он просыпается, Render отвечает ошибкой сразу, поэтому пробуем ещё раз.
+// Не повторяем только отказ принять сами данные: от повтора он не изменится
+const BAD_INPUT = new Set([400, 422])
 const WAIT_TOTAL = 70_000
 const PAUSE = 4_000
 
@@ -26,7 +27,8 @@ export async function predictPrice(params: unknown, o: Options = {}): Promise<Re
       /* нет связи или таймаут: попробуем ещё, пока есть время */
     }
     if (res?.ok) return res
-    if (res && !WAKING.has(res.status)) throw new HttpError(502, 'Сервис оценки вернул ошибку')
+    if (res) console.warn(`ml-сервис ответил ${res.status}`)
+    if (res && BAD_INPUT.has(res.status)) throw new HttpError(502, 'Сервис оценки вернул ошибку')
     if (Date.now() + pause >= deadline) {
       throw res ? new HttpError(502, 'Сервис оценки вернул ошибку') : new HttpError(503, 'Сервис оценки недоступен')
     }

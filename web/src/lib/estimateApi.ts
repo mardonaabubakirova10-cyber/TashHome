@@ -18,14 +18,21 @@ export type EstimateResult = {
 }
 
 import { API_URL } from './api'
+import { wakeMl } from './wakeMl'
 
 export async function estimate(input: EstimateInput, signal?: AbortSignal): Promise<EstimateResult> {
-  const res = await fetch(`${API_URL}/estimate`, {
-    method: 'POST',
-    headers: { 'content-type': 'application/json' },
-    body: JSON.stringify(input),
-    signal,
-  })
+  const send = () =>
+    fetch(`${API_URL}/estimate`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify(input),
+      signal,
+    })
+  let res = await send()
+  if (res.status === 502 || res.status === 503) {
+    await wakeMl() // сервис оценки спал: будим и пробуем ещё раз
+    res = await send()
+  }
   if (!res.ok) throw new Error(`estimate ${res.status}`)
   return res.json()
 }
