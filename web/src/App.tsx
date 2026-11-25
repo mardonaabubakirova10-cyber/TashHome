@@ -19,6 +19,7 @@ import Account from './pages/Account'
 import Assistant from './pages/Assistant'
 import AuthCallback from './pages/AuthCallback'
 import Login from './pages/Login'
+import Intro from './components/Intro'
 import FavoritesSync from './components/FavoritesSync'
 import Catalog from './pages/Catalog'
 import Estimate from './pages/Estimate'
@@ -44,6 +45,7 @@ export default function App() {
         <AuthProvider>
         <ChatProvider>
         <BrowserRouter>
+          <Intro />
           <TelegramBridge />
           <FavoritesSync />
           <Routes>

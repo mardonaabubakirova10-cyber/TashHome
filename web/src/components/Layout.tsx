@@ -1,9 +1,13 @@
+import { lazy, Suspense } from 'react'
 import { NavLink, Outlet } from 'react-router-dom'
 import ChatWidget from './chat/ChatWidget'
 import { useAuth } from '../lib/auth'
 import { useTranslation } from 'react-i18next'
 import { useCollections } from '../lib/collections'
 import { useCurrency, type Currency } from '../lib/currency'
+
+// 3D-башня тянет Three.js, поэтому грузится отдельным файлом
+const TvTower = lazy(() => import('./TvTower'))
 
 const links = [
   { to: '/', key: 'home' },
@@ -116,6 +120,9 @@ export default function Layout() {
       <footer className="bg-ink py-8 text-center text-sm text-white/60">
         <p className="font-display text-xl text-white">TashHome</p>
       </footer>
+      <Suspense fallback={null}>
+        <TvTower />
+      </Suspense>
       <ChatWidget />
     </div>
   )

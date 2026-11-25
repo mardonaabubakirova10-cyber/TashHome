@@ -147,3 +147,120 @@ div.leaflet-container {
     animation: none;
   }
 }
+
+/*
+  Вступление на главной (components/Intro.tsx): чертёж Ташкента с флагом и двориком рисуется линиями,
+  становится цветным, затем появляются три слова.
+*/
+.intro {
+  position: fixed;
+  inset: 0;
+  z-index: 2000; /* выше шапки, карты и чата */
+  overflow: hidden;
+  background: var(--color-ink);
+  color: #fff;
+}
+.intro-scene {
+  position: absolute;
+  left: 50%;
+  top: 47%;
+  width: min(75rem, 96%, calc((100vh - 12rem) * 1.667));
+  translate: -50% -50%;
+}
+.intro-logo {
+  position: absolute;
+  inset-inline: 0;
+  top: calc(1.5rem + env(safe-area-inset-top));
+  text-align: center;
+  opacity: 0;
+}
+.intro-words {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 5vh;
+  display: flex;
+  justify-content: center;
+  gap: clamp(1.25rem, 6vw, 5rem);
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: clamp(1.75rem, 4.5vw, 3rem);
+  text-shadow:
+    0 1px 14px #000,
+    0 0 4px #000;
+}
+.intro-words span {
+  opacity: 0;
+}
+.intro-skip {
+  position: absolute;
+  top: calc(1rem + env(safe-area-inset-top));
+  right: 1rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: rgba(0, 0, 0, 0.4);
+  color: #fff;
+  padding: 0.4rem 1rem;
+  font-size: 0.8rem;
+}
+
+.intro-play .intro-logo {
+  animation: intro-fade 0.8s ease both;
+}
+.tk-lines [pathLength] {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+}
+.tk-color {
+  opacity: 0;
+}
+.intro-play .tk-lines [pathLength] {
+  animation: tk-draw 1.7s 0.2s ease-in-out forwards;
+}
+.intro-play .tk-color {
+  animation: intro-fade 1.1s 1.9s ease forwards;
+}
+.tk-flag {
+  animation: tk-wave 2.4s ease-in-out infinite;
+}
+@keyframes tk-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes tk-wave {
+  50% {
+    transform: skewY(3deg);
+  }
+}
+.intro-play .intro-words span {
+  animation: intro-fade 0.6s ease both;
+}
+.intro-play {
+  animation: intro-exit 0.7s 4.6s ease forwards;
+}
+/* на узком экране: название ниже кнопки; картина шире экрана, края гор и купола уходят за кадр */
+@media (max-width: 639px) {
+  .intro-logo {
+    top: calc(4.5rem + env(safe-area-inset-top));
+  }
+  .intro-scene {
+    width: 136%;
+  }
+  .intro-words {
+    bottom: 16vh;
+  }
+}
+@keyframes intro-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes intro-exit {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}

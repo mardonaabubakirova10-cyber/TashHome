@@ -302,5 +302,11 @@
     "admin": "Xizmat bo‘limi",
     "roleAdmin": "Administrator",
     "roleManager": "Menejer"
+  },
+  "intro": {
+    "skip": "O‘tkazib yuborish",
+    "word1": "Uy",
+    "word2": "Shinamlik",
+    "word3": "Toshkent"
   }
 }

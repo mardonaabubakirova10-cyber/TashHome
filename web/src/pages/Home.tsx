@@ -5,6 +5,7 @@ import Reviews from '../components/Reviews'
 import BlueprintStreet from '../components/BlueprintStreet'
 import BlueprintHouse from '../components/BlueprintHouse'
 import { scrollProgress, stageOf } from '../lib/scrollProgress'
+import CarpetLines from '../components/CarpetLines'
 import HouseCarousel from '../components/HouseCarousel'
 import Button from '../components/ui/Button'
 import { Input, Select } from '../components/ui/Field'
@@ -14,26 +15,34 @@ import { useHomeHouses, useTotalHouses } from '../lib/queries'
 
 // «Пол» главного экрана: мелкие квадратные миниатюры домов. Уникальных адресов всего 36, остальное берётся из кеша браузера.
 // 3D-сцена тянет Three.js, поэтому грузится отдельным файлом
-const GlassCubes = lazy(() => import('../components/GlassCubes'))
+const ChorsuBazaar = lazy(() => import('../components/ChorsuBazaar'))
 
-const HouseBlueprint3D = lazy(() => import('../components/HouseBlueprint3D'))
+const GridFloor3D = lazy(() => import('../components/GridFloor3D'))
 const HouseBuild3D = lazy(() => import('../components/HouseBuild3D'))
 
 // Плавный переход мозаики в чёрный фон: сверху к горизонту, по краям — в стороны (ступени подобраны, чтобы не было видно границы)
-const FADE_Y = 'linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.06) 8%, rgba(0,0,0,0.22) 18%, rgba(0,0,0,0.55) 30%, rgba(0,0,0,0.85) 42%, black 54%)'
 const FADE_X = 'linear-gradient(to right, black, black)' // по бокам затухания нет
 
 // на телефоне плиток меньше (размер плитки тот же): иначе страница долго отрисовывается
 const MOBILE = typeof window !== 'undefined' && window.innerWidth < 640
+const FADE_Y = MOBILE
+  ? 'linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.7) 12%, black 28%)'
+  : 'linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.25) 12%, rgba(0,0,0,0.6) 28%, rgba(0,0,0,0.9) 45%, black 58%)'
 const COLS = MOBILE ? 22 : 34
-const ROWS = MOBILE ? 12 : 18
+const ROWS = MOBILE ? 20 : 18 // на телефоне рядов больше: ковёр лежит ровно и иначе виден узкой полоской
 const floor = Array.from({ length: COLS * ROWS }, (_, i) => {
   const row = Math.floor(i / COLS)
   // для мозаики берём маленькие копии (public/houses/thumb): плитка на экране около 60 px, полный кадр не нужен
-  // дальние ряды проявляются постепенно: край ковра уходит в темноту по глубине, в том числе у приподнятых боковин
-  const fade = Math.pow(Math.min(1, row / (ROWS * 0.5)), 1.4)
+  // дальние ряды проявляются постепенно: вдали вместо фото остаются только линии (CarpetLines)
+  const fade = Math.pow(Math.min(1, row / (ROWS * (MOBILE ? 0.3 : 0.7))), 1.2)
   return { src: HOUSE_PHOTOS[(i * 7 + row * 13) % HOUSE_PHOTOS.length].replace('/houses/', '/houses/thumb/'), col: i % COLS, fade }
 })
+// ширина ковра в долях ширины экрана
+const FLOOR_WIDTH = MOBILE ? Math.round((250 * COLS) / 34) / 100 : 2.5
+
+// лёгкий изгиб ковра: клетки к краям приподняты (px). За краем ковра (там идут только линии) подъём не растёт
+const BEND = 0.18
+const lift = (col: number) => Math.round(Math.min(Math.abs(col - (COLS - 1) / 2), COLS * 0.6) ** 2 * BEND)
 
 const linkBtn = 'inline-flex items-center justify-center rounded-lg px-6 py-3 text-base font-medium transition-colors'
 
@@ -96,28 +105,26 @@ export default function Home() {
       {/* Hero: заголовок и «пол» из наклонённых фотографий домов */}
       <div>
         <section className="relative isolate -mt-8 min-h-[36rem] w-screen max-w-none overflow-hidden bg-ink text-white sm:min-h-[44rem] lg:min-h-[calc(100svh-3.6rem)] [margin-inline:calc(50%-50vw)]">
+          {/* линии между фото продолжаются вдаль; лежат под ковром */}
+          <CarpetLines cols={COLS} rows={ROWS} widthRatio={FLOOR_WIDTH} lift={lift} />
           {/* Затухание делаем на внешних слоях: маска на элементе с perspective в 3D не срабатывает */}
           <div className="pointer-events-none absolute inset-x-0 bottom-0 z-0 h-[70%]" style={{ maskImage: FADE_Y, WebkitMaskImage: FADE_Y }} aria-hidden>
            <div className="h-full w-full" style={{ maskImage: FADE_X, WebkitMaskImage: FADE_X }}>
             <div className="h-full w-full overflow-hidden [perspective:700px]">
-            {/* Пол наклонён назад, а плитки у краёв приподняты: получается чаша, как горизонт, уходящий вверх */}
+            {/* Пол наклонён назад, края слегка приподняты; линии (CarpetLines) продолжают его вдаль */}
             <div
-              className="absolute bottom-[-30%] left-1/2 grid w-[250%] origin-bottom gap-[3px]"
-              style={{ width: MOBILE ? `${Math.round((250 * COLS) / 34)}%` : undefined, gridTemplateColumns: `repeat(${COLS}, 1fr)`, transform: 'translateX(-50%) rotateX(68deg)', transformStyle: 'preserve-3d' }}
+              className="absolute bottom-[-30%] left-1/2 grid w-[250%] origin-bottom gap-[4px]"
+              style={{ width: `${FLOOR_WIDTH * 100}%`, gridTemplateColumns: `repeat(${COLS}, 1fr)`, transform: 'translateX(-50%) rotateX(68deg)', transformStyle: 'preserve-3d' }}
             >
-              {floor.map((tile, i) => {
-                const dx = tile.col - (COLS - 1) / 2
-                return (
-                  <img
-                    key={i}
-                    src={tile.src}
-                    alt=""
-                    decoding="async"
-                    className="aspect-square w-full rounded-[3px] object-cover shadow-[0_3px_8px_rgba(0,0,0,0.75)]"
-                    style={{ transform: `translateZ(${Math.round(dx * dx * 0.55)}px)`, opacity: tile.fade }}
-                  />
-                )
-              })}
+              {floor.map((tile, i) => (
+                <div
+                  key={i}
+                  className="aspect-square w-full rounded-[3px] shadow-[0_0_0_0.5px_rgba(150,165,220,0.6),0_3px_8px_rgba(0,0,0,0.75)]"
+                  style={{ transform: `translateZ(${lift(tile.col)}px)`, opacity: tile.fade }}
+                >
+                  <img src={tile.src} alt="" decoding="async" className="size-full rounded-[3px] object-cover" />
+                </div>
+              ))}
             </div>
             </div>
            </div>
@@ -262,13 +269,13 @@ export default function Home() {
 
       {/* Ассистент */}
       <section className="relative isolate grid gap-8 overflow-hidden rounded-2xl bg-ink p-6 text-white sm:p-12 lg:min-h-[26rem] lg:grid-cols-2 lg:items-center">
-        {/* фон: 3D-облако стеклянных кубов с фото домов, грузится отдельным файлом */}
+        {/* фон: 3D-базар Чорсу, грузится отдельным файлом */}
         <div
-          className="pointer-events-none absolute inset-y-0 right-0 -z-10 w-full lg:w-[58%]"
+          className="pointer-events-none absolute inset-y-0 right-0 -z-10 w-full opacity-35 [mask-image:radial-gradient(ellipse_closest-side,black_82%,transparent)] lg:w-[68%] lg:opacity-90"
           style={{ backgroundImage: 'radial-gradient(60% 70% at 55% 50%, rgba(90,110,255,0.22), transparent 70%)' }}
         >
           <Suspense fallback={null}>
-            <GlassCubes className="size-full" />
+            <ChorsuBazaar className="size-full" />
           </Suspense>
         </div>
         <div>
@@ -352,7 +359,7 @@ export default function Home() {
 
       {/* Призыв */}
       <section className="relative isolate flex min-h-[22rem] flex-col items-center justify-center overflow-hidden rounded-2xl bg-ink px-6 py-14 text-center text-white ring-1 ring-white/10">
-        {/* неподвижный 3D-чертёж двух домов на сетке; края растворяются в чёрном */}
+        {/* неподвижный пол из сетки; края растворяются в чёрном */}
         <div
           className="pointer-events-none absolute inset-0 -z-10"
           style={{
@@ -365,10 +372,10 @@ export default function Home() {
             style={{ backgroundImage: 'radial-gradient(55% 60% at 50% 60%, rgba(110,130,255,0.16), transparent 70%)' }}
           />
           <Suspense fallback={null}>
-            <HouseBlueprint3D className="size-full opacity-45" />
+            <GridFloor3D className="size-full opacity-45" />
           </Suspense>
         </div>
-        {/* тёмное пятно за текстом: надпись и кнопка не сливаются с линиями чертежа */}
+        {/* тёмное пятно за текстом: надпись и кнопка не сливаются с линиями сетки */}
         <div
           className="pointer-events-none absolute inset-0 -z-10"
           style={{ backgroundImage: 'radial-gradient(ellipse 48% 62% at 50% 52%, rgba(0,0,0,0.88), rgba(0,0,0,0.55) 60%, transparent 100%)' }}
