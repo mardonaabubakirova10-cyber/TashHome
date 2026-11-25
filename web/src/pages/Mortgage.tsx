@@ -52,10 +52,10 @@ export default function Mortgage() {
   ]
 
   return (
-    <div className="grid gap-8">
+    <div className="grid grid-cols-1 gap-8">
       <h1 className="text-3xl sm:text-4xl">{t('pages.mortgage')}</h1>
 
-      <div className="grid gap-6 lg:grid-cols-[2fr_3fr]">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[2fr_3fr]">
         <Card className="grid content-start gap-4 p-5">
           <div>
             <p className="mb-2 text-sm font-medium text-slate-700">{t('mortgage.presets')}</p>
@@ -79,13 +79,13 @@ export default function Mortgage() {
         <div className="grid content-start gap-4">
           <div className="rounded-lg bg-white/10 p-6">
             <p className="text-sm text-slate-600">{t('property.mortgage.monthly')}</p>
-            <p className="font-display text-5xl font-semibold text-brand-100">{format(monthly)}</p>
+            <p className="font-display text-4xl font-semibold break-words text-brand-100 sm:text-5xl">{format(monthly)}</p>
           </div>
-          <dl className="grid grid-cols-2 gap-4">
+          <dl className="grid grid-cols-2 gap-3 sm:gap-4">
             {stats.map(([k, v]) => (
-              <Card key={k} className="p-4">
+              <Card key={k} className="min-w-0 p-3 sm:p-4">
                 <dt className="text-sm text-slate-500">{k}</dt>
-                <dd className="mt-1 text-xl font-semibold">{v}</dd>
+                <dd className="mt-1 text-base font-semibold break-words sm:text-xl">{v}</dd>
               </Card>
             ))}
           </dl>
@@ -95,24 +95,24 @@ export default function Mortgage() {
       <section>
         <h2 className="mb-4 text-2xl">{t('mortgage.schedule')}</h2>
         <Card className="overflow-x-auto">
-          <table className="w-full min-w-[32rem] text-sm">
+          <table className="w-full text-xs sm:text-sm">
             <thead>
               <tr className="border-b border-slate-200 text-left text-slate-500">
-                <th className="px-4 py-3 font-medium">{t('mortgage.month')}</th>
-                <th className="px-4 py-3 text-right font-medium">{t('mortgage.payment')}</th>
-                <th className="px-4 py-3 text-right font-medium">{t('mortgage.interest')}</th>
-                <th className="px-4 py-3 text-right font-medium">{t('mortgage.principal')}</th>
-                <th className="px-4 py-3 text-right font-medium">{t('mortgage.balance')}</th>
+                <th className="px-1.5 py-3 sm:px-4 font-medium">{t('mortgage.month')}</th>
+                <th className="px-1.5 py-3 sm:px-4 text-right font-medium">{t('mortgage.payment')}</th>
+                <th className="px-1.5 py-3 sm:px-4 text-right font-medium">{t('mortgage.interest')}</th>
+                <th className="px-1.5 py-3 sm:px-4 text-right font-medium">{t('mortgage.principal')}</th>
+                <th className="px-1.5 py-3 sm:px-4 text-right font-medium">{t('mortgage.balance')}</th>
               </tr>
             </thead>
             <tbody>
               {visible.map((row) => (
                 <tr key={row.month} className="border-b border-slate-200 last:border-0">
-                  <td className="px-4 py-2.5">{row.month}</td>
-                  <td className="px-4 py-2.5 text-right">{format(row.payment)}</td>
-                  <td className="px-4 py-2.5 text-right text-slate-600">{format(row.interest)}</td>
-                  <td className="px-4 py-2.5 text-right text-slate-600">{format(row.principal)}</td>
-                  <td className="px-4 py-2.5 text-right">{format(row.balance)}</td>
+                  <td className="px-1.5 py-2.5 sm:px-4">{row.month}</td>
+                  <td className="px-1.5 py-2.5 sm:px-4 text-right">{format(row.payment)}</td>
+                  <td className="px-1.5 py-2.5 sm:px-4 text-right text-slate-600">{format(row.interest)}</td>
+                  <td className="px-1.5 py-2.5 sm:px-4 text-right text-slate-600">{format(row.principal)}</td>
+                  <td className="px-1.5 py-2.5 sm:px-4 text-right">{format(row.balance)}</td>
                 </tr>
               ))}
             </tbody>

@@ -27,7 +27,7 @@ estimateRouter.post('/', async (req, res) => {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify(body),
-      signal: AbortSignal.timeout(5000),
+      signal: AbortSignal.timeout(70_000), // бесплатный сервис засыпает и просыпается до минуты
     })
   } catch {
     throw new HttpError(503, 'Сервис оценки недоступен')
