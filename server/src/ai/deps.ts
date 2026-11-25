@@ -1,5 +1,5 @@
 import { config } from '../config.js'
-import { HttpError } from '../lib/errors.js'
+import { predictPrice } from '../lib/ml.js'
 import type { Notifier } from '../lib/notifier.js'
 import type { Store } from '../lib/store.js'
 import type { AgentDeps } from './agent.js'
@@ -35,18 +35,7 @@ export function createAgentDeps(store: Store, notifier: Notifier): AgentDeps {
       return store.matchKnowledge(v, 5)
     },
     async estimate(params) {
-      let res: Response
-      try {
-        res = await fetch(`${config.mlUrl}/predict`, {
-          method: 'POST',
-          headers: { 'content-type': 'application/json' },
-          body: JSON.stringify(params),
-          signal: AbortSignal.timeout(70_000), // бесплатный сервис засыпает и просыпается до минуты
-        })
-      } catch {
-        throw new HttpError(503, 'Сервис оценки недоступен')
-      }
-      if (!res.ok) throw new HttpError(502, 'Сервис оценки вернул ошибку')
+      const res = await predictPrice(params)
       const r = (await res.json()) as { predicted_price: number; price_low: number; price_high: number }
       return { predicted_price_usd: r.predicted_price, price_low_usd: r.price_low, price_high_usd: r.price_high, note: 'Ориентировочная оценка модели' }
     },

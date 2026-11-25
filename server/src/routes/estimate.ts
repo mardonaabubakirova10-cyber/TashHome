@@ -1,7 +1,6 @@
 import { Router } from 'express'
 import { z } from 'zod'
-import { config } from '../config.js'
-import { HttpError } from '../lib/errors.js'
+import { predictPrice } from '../lib/ml.js'
 
 const DISTRICTS = ['yunusabad', 'mirzo-ulugbek', 'chilanzar', 'shaykhantakhur', 'yakkasaray', 'mirabad', 'sergeli', 'yashnabad', 'almazar', 'uchtepa', 'bektemir', 'yangihayot'] as const
 
@@ -21,17 +20,6 @@ export const estimateRouter = Router()
 /** Проверяет параметры и передаёт их в ml-сервис. */
 estimateRouter.post('/', async (req, res) => {
   const body = schema.parse(req.body)
-  let upstream: Response
-  try {
-    upstream = await fetch(`${config.mlUrl}/predict`, {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify(body),
-      signal: AbortSignal.timeout(70_000), // бесплатный сервис засыпает и просыпается до минуты
-    })
-  } catch {
-    throw new HttpError(503, 'Сервис оценки недоступен')
-  }
-  if (!upstream.ok) throw new HttpError(502, 'Сервис оценки вернул ошибку')
+  const upstream = await predictPrice(body)
   res.json(await upstream.json())
 })
