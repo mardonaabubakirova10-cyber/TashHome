@@ -65,6 +65,14 @@ export const PHOTO_TIERS = {
   extras: [2, 5, 6].map(photo), // детали: фасад, улица, бассейн; только как дополнительные снимки
 } as const
 
+/**
+ * Фото фасадов, добавленные автором проекта: номер дома → снимок. Это первые 13 домов каталога: их видно на главной и в начале списка.
+ * У такого дома одно фото (спереди): снимки из общего набора показывали бы другое здание.
+ */
+export const OWN_PHOTOS: Record<number, string> = Object.fromEntries(
+  Object.entries({ 1: 36, 2: 42, 3: 34, 4: 39, 5: 41, 6: 35, 7: 44, 8: 43, 9: 38, 10: 33, 11: 37, 12: 45, 13: 40 }).map(([id, n]) => [Number(id), photo(n)]),
+)
+
 type Tier = Exclude<keyof typeof PHOTO_TIERS, 'extras'>
 const NEIGHBOUR: Record<Tier, Tier[]> = { premium: ['classic'], classic: ['premium', 'mid2'], mid2: ['classic', 'mid1'], mid1: ['mid2', 'simple1'], simple1: ['mid1'] }
 
@@ -145,7 +153,7 @@ export function buildDemoProperties(count = 100): Property[] {
     used[lead] = (used[lead] ?? 0) + 1
     recent.push(lead)
     if (recent.length > 8) recent.shift()
-    const photos = photosFor({ id: i, rank, floors, renovation, areaM2 }, lead)
+    const photos = OWN_PHOTOS[i] ? [OWN_PHOTOS[i]] : photosFor({ id: i, rank, floors, renovation, areaM2 }, lead)
     const street = pick(STREETS)
     items.push({
       id: i,

@@ -33,3 +33,7 @@
 | house-30.jpg | Космос, дома на Желтоксане.jpg | Nikolai Bulykin | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:%D0%9A%D0%BE%D1%81%D0%BC%D0%BE%D1%81,_%D0%B4%D0%BE%D0%BC%D0%B0_%D0%BD%D0%B0_%D0%96%D0%B5%D0%BB%D1%82%D0%BE%D0%BA%D1%81%D0%B0%D0%BD%D0%B5.jpg |
 | house-31.jpg | Ташкент, Матонат 38.jpg | Nikolai Bulykin | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:%D0%A2%D0%B0%D1%88%D0%BA%D0%B5%D0%BD%D1%82,_%D0%9C%D0%B0%D1%82%D0%BE%D0%BD%D0%B0%D1%82_38.jpg |
 | house-32.jpg | Ташкент, Мироншах 92.jpg | Nikolai Bulykin | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:%D0%A2%D0%B0%D1%88%D0%BA%D0%B5%D0%BD%D1%82,_%D0%9C%D0%B8%D1%80%D0%BE%D0%BD%D1%88%D0%B0%D1%85_92.jpg |
+
+## Фото, добавленные автором проекта
+
+`house-33.jpg` … `house-45.jpg` передала автор проекта (2026-11-26). Источник и право на публикацию нужно подтвердить: если это снимки из чужих объявлений, их следует заменить или получить разрешение владельцев.

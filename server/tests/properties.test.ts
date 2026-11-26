@@ -1,7 +1,7 @@
 import request from 'supertest'
 import { describe, expect, it } from 'vitest'
 import { createApp } from '../src/app.js'
-import { buildDemoProperties, PHOTO_TIERS, photoTier } from '../src/lib/demoProperties.js'
+import { buildDemoProperties, OWN_PHOTOS, PHOTO_TIERS, photoTier } from '../src/lib/demoProperties.js'
 import { applyFilters, filtersSchema, toPostgrestParams } from '../src/lib/propertyFilters.js'
 
 const app = createApp()
@@ -9,10 +9,10 @@ const parse = (q: object) => filtersSchema.parse(q)
 const all = buildDemoProperties()
 
 describe('демо-набор', () => {
-  it('100 домов, у каждого 4 фото, цены и площади положительные', () => {
+  it('100 домов, у каждого есть фото, цены и площади положительные', () => {
     expect(all).toHaveLength(100)
     for (const p of all) {
-      expect(p.photos).toHaveLength(4)
+      expect(p.photos).toHaveLength(OWN_PHOTOS[p.id] ? 1 : 4)
       expect(p.priceUsd).toBeGreaterThan(0)
       expect(p.areaM2).toBeGreaterThan(0)
     }
@@ -88,13 +88,19 @@ describe('GET /api', () => {
 describe('фото соответствуют дому', () => {
   const tierOf = (url: string) => (Object.entries(PHOTO_TIERS).find(([, list]) => (list as readonly string[]).includes(url)) ?? ['?'])[0]
 
-  it('у каждого дома 4 разных фото', () => {
-    for (const p of all) expect(new Set(p.photos).size).toBe(4)
+  it('у домов из общего набора 4 разных фото', () => {
+    for (const p of all.filter((x) => !OWN_PHOTOS[x.id])) expect(new Set(p.photos).size).toBe(4)
+  })
+
+  it('свои фото фасадов стоят у первых 13 домов и не повторяются', () => {
+    const first = all.slice(0, 13)
+    expect(first.map((p) => p.photo)).toEqual(first.map((p) => OWN_PHOTOS[p.id]))
+    expect(new Set(Object.values(OWN_PHOTOS)).size).toBe(13)
   })
 
   it('главное фото из класса дома или соседнего класса', () => {
     const near: Record<string, string[]> = { premium: ['premium', 'classic'], classic: ['classic', 'premium', 'mid2'], mid2: ['mid2', 'classic', 'mid1'], mid1: ['mid1', 'mid2', 'simple1'], simple1: ['simple1', 'mid1'] }
-    for (const p of all) expect(near[photoTier({ floors: p.floors, renovation: p.renovation, areaM2: p.areaM2 })]).toContain(tierOf(p.photo))
+    for (const p of all.filter((x) => !OWN_PHOTOS[x.id])) expect(near[photoTier({ floors: p.floors, renovation: p.renovation, areaM2: p.areaM2 })]).toContain(tierOf(p.photo))
   })
 
   it('дизайнерский ремонт с 2+ этажами — премиум, одноэтажный без ремонта — простой класс', () => {
@@ -104,7 +110,7 @@ describe('фото соответствуют дому', () => {
   })
 
   it('особняки не достаются домам без ремонта и одноэтажным', () => {
-    for (const p of all) {
+    for (const p of all.filter((x) => !OWN_PHOTOS[x.id])) {
       if (p.floors === 1) expect(['premium', 'classic']).not.toContain(tierOf(p.photo))
       if (p.renovation === 'none') expect(tierOf(p.photo)).not.toBe('premium')
     }

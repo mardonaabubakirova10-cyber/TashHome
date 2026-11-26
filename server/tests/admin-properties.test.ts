@@ -1,3 +1,4 @@
+import { buildDemoProperties } from '../src/lib/demoProperties.js'
 import request from 'supertest'
 import { describe, expect, it, vi } from 'vitest'
 import type { AgentDeps } from '../src/ai/agent.js'
@@ -59,10 +60,11 @@ describe('правка не затирает остальные поля', () =>
 
   it('смена цены сохраняет статус и фото', async () => {
     const { app } = make()
+    const photos = buildDemoProperties()[3].photos
     await request(app).patch('/api/admin/properties/4').set(H).send({ status: 'sold' }).expect(200)
     const r = await request(app).patch('/api/admin/properties/4').set(H).send({ price_usd: 111000 }).expect(200)
     expect(r.body.status).toBe('sold')
-    expect(r.body.photos.length).toBe(4)
+    expect(r.body.photos).toEqual(photos)
   })
 })
 
