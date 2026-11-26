@@ -162,10 +162,9 @@ div.leaflet-container {
 }
 .intro-scene {
   position: absolute;
-  left: 50%;
-  top: 47%;
-  width: min(75rem, 96%, calc((100vh - 12rem) * 1.667));
-  translate: -50% -50%;
+  inset: 0 0 auto 0;
+  width: 100%;
+  height: calc(100% - 5.5rem); /* снизу место под три слова */
 }
 .intro-logo {
   position: absolute;
@@ -244,7 +243,10 @@ div.leaflet-container {
     top: calc(4.5rem + env(safe-area-inset-top));
   }
   .intro-scene {
+    inset: 47% auto auto 50%;
     width: 136%;
+    height: auto;
+    translate: -50% -50%;
   }
   .intro-words {
     bottom: 16vh;

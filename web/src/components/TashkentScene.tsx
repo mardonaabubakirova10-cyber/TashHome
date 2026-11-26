@@ -5,7 +5,8 @@
  * Анимации заданы в index.css; pathLength={1} нужен, чтобы все линии рисовались с одной скоростью.
  */
 
-const SKY = 'M0 372 90 300 160 345 270 240 380 340 450 300 540 360 660 262 760 345 850 285 960 350 1060 250 1200 360'
+// горы и земля уходят далеко за края рамки 0…1200: так картина занимает всю ширину любого экрана
+const SKY = 'M-900 340 -780 270 -660 355 -520 245 -390 345 -260 285 -130 350 0 372 90 300 160 345 270 240 380 340 450 300 540 360 660 262 760 345 850 285 960 350 1060 250 1200 360 1330 285 1450 350 1590 250 1720 345 1860 280 1980 355 2100 320'
 
 // звёзды флага: три ряда по 3, 4 и 5 штук, выровнены по правому краю
 const STARS = [3, 4, 5].flatMap((count, row) => Array.from({ length: count }, (_, i) => ({ x: 208 - i * 24, y: 16 + row * 24 })))
@@ -21,6 +22,13 @@ const POPLARS = [
   [372, 112],
   [850, 130],
   [884, 100],
+  // тополя по краям широкого экрана
+  [-190, 140],
+  [-155, 105],
+  [-420, 120],
+  [1290, 140],
+  [1325, 105],
+  [1560, 120],
 ]
 const poplar = (x: number, h: number) => `M${x} ${500 - h}C${x + 22} ${500 - h * 0.7} ${x + 20} ${500 - h * 0.2} ${x} 486C${x - 20} ${500 - h * 0.2} ${x - 22} ${500 - h * 0.7} ${x} ${500 - h}Z`
 
@@ -65,7 +73,7 @@ const bush = ([x, y, r]: number[]) => `M${x - r} ${y}A${r} ${r * 0.8} 0 1 1 ${x 
 
 export default function TashkentScene({ className }: { className?: string }) {
   return (
-    <svg viewBox="0 0 1200 720" fill="none" strokeLinejoin="round" strokeLinecap="round" aria-hidden className={className}>
+    <svg viewBox="0 0 1200 720" fill="none" strokeLinejoin="round" strokeLinecap="round" aria-hidden overflow="visible" className={className}>
       {/* цвет: проступает после того, как чертёж нарисован */}
       <g className="tk-color">
         <defs>
@@ -74,7 +82,7 @@ export default function TashkentScene({ className }: { className?: string }) {
             <stop offset="1" stopColor="#24563a" stopOpacity="0" />
           </linearGradient>
         </defs>
-        <path d="M0 500H1200V720H0Z" fill="url(#tk-ground)" />
+        <path d="M-900 500H2100V720H-900Z" fill="url(#tk-ground)" />
         <path d={PATH} fill="#d8bd93" />
         <path d={DIAMONDS} fill="#1f9fb2" />
         <path d={POOL} fill="#c9a57a" />
@@ -93,7 +101,7 @@ export default function TashkentScene({ className }: { className?: string }) {
             ))}
           </g>
         ))}
-        <path d={`${SKY} V500 H0Z`} fill="#1b2442" />
+        <path d={`${SKY} V500 H-900Z`} fill="#1b2442" />
         <path d={TOWER_LEGS} fill="#8f9bc4" />
         <path d="M290 292 294 112H306L310 292Z" fill="#aeb8dc" />
         <path d="M274 214H326L318 232H282ZM280 142H320L314 158H286Z" fill="#d3dbf5" />
@@ -115,7 +123,7 @@ export default function TashkentScene({ className }: { className?: string }) {
       {/* чертёж */}
       <g className="tk-lines" stroke="#eaf0ff" strokeWidth="1.4">
         <path pathLength={1} d={SKY} opacity="0.45" />
-        <path pathLength={1} d="M0 500H1200" />
+        <path pathLength={1} d="M-900 500H2100" />
         <path pathLength={1} d={TOWER_LEGS} />
         <path pathLength={1} d="M290 292 294 112H306L310 292M300 112V30M274 214H326L318 232H282ZM280 142H320L314 158H286ZM268 430 332 392M268 392 332 430M278 360H322" />
         <path pathLength={1} d={DOME} />
