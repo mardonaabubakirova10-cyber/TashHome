@@ -22,6 +22,8 @@ export default function ParallaxTicket({ image, label, front, back, actions }: P
   const stageRef = useRef<HTMLDivElement>(null)
   const ticketRef = useRef<HTMLDivElement>(null)
   const glareRef = useRef<HTMLDivElement>(null)
+  const frontRef = useRef<HTMLDivElement>(null)
+  const backRef = useRef<HTMLDivElement>(null)
   const sim = useRef<{ F: Spring; LIFT: Spring } | null>(null)
   const [flipped, setFlipped] = useState(false)
 
@@ -29,7 +31,9 @@ export default function ParallaxTicket({ image, label, front, back, actions }: P
     const stage = stageRef.current
     const ticket = ticketRef.current
     const glare = glareRef.current
-    if (!stage || !ticket || !glare) return
+    const frontSide = frontRef.current
+    const backSide = backRef.current
+    if (!stage || !ticket || !glare || !frontSide || !backSide) return
 
     const layers = [...ticket.querySelectorAll<HTMLElement>('[data-depth]')].map((el) => ({
       el,
@@ -90,6 +94,11 @@ export default function ParallaxTicket({ image, label, front, back, actions }: P
       },
       render() {
         ticket.style.transform = `rotateX(${RX.x}deg) rotateY(${RY.x + F.x}deg) scale(${LIFT.x})`
+        // Safari на iPhone не всегда прячет изнанку по backface-visibility и показывает лицо зеркально,
+        // поэтому после середины переворота нужную сторону включаем сами
+        const turned = F.x > 90
+        frontSide.style.visibility = turned ? 'hidden' : ''
+        backSide.style.visibility = turned ? '' : 'hidden'
         // параллакс: слои сдвигаются против наклона, каждый на свою глубину
         const ox = RY.x / TICKET.tilt
         const oy = -RX.x / TICKET.tilt
@@ -158,6 +167,7 @@ export default function ParallaxTicket({ image, label, front, back, actions }: P
     <div ref={stageRef} className="ticket-stage">
       <div ref={ticketRef} className="ticket">
         <div
+          ref={frontRef}
           className="ticket-side cursor-pointer outline-offset-2 focus-visible:outline-2 focus-visible:outline-white"
           role="button"
           tabIndex={0}
@@ -177,7 +187,7 @@ export default function ParallaxTicket({ image, label, front, back, actions }: P
           <div ref={glareRef} className="ticket-glare" />
         </div>
 
-        <div className="ticket-side ticket-back" inert={!flipped} onClick={onBackClick}>
+        <div ref={backRef} className="ticket-side ticket-back" inert={!flipped} onClick={onBackClick}>
           {back(flip)}
         </div>
       </div>
