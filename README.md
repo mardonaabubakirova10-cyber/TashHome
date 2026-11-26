@@ -76,4 +76,4 @@ cd ml; python -m venv .venv; .venv\Scripts\python -m pip install -r requirements
 
 ## Документация
 
-[PRD.md](PRD.md) (что и зачем), [SPEC.md](SPEC.md) (техническая спецификация), [TASKS.md](TASKS.md) (план работ), [docs/DIPLOMA.md](docs/DIPLOMA.md) (материалы для защиты).
+[PRD.md](PRD.md) (что и зачем), [SPEC.md](SPEC.md) (техническая спецификация), [TASKS.md](TASKS.md) (план работ), [docs/DIPLOMA.md](docs/DIPLOMA.md) (материалы для защиты), [docs/OPISANIE.md](docs/OPISANIE.md) (коротко о проекте).

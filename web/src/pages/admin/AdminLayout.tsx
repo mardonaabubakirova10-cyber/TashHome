@@ -14,7 +14,11 @@ export default function AdminLayout() {
   const me = useQuery({ queryKey: ['admin-me'], queryFn: () => api<Me>('/admin/me'), enabled: loggedIn, retry: false, staleTime: 5 * 60_000 })
 
   useEffect(() => {
+    const before = document.title
     document.title = 'TashHome — служебный раздел'
+    return () => {
+      document.title = before // при возврате на сайт вкладка получает прежнее название
+    }
   }, [])
 
   if (!loggedIn) return <Navigate to="/admin/login" replace />

@@ -27,7 +27,6 @@ import Favorites from './pages/Favorites'
 import Home from './pages/Home'
 import Mortgage from './pages/Mortgage'
 import Placeholder from './pages/Placeholder'
-import UiDemo from './pages/UiDemo'
 import { ToastProvider } from './components/ui/Toast'
 
 // Страница дома тянет карту (Leaflet), поэтому грузится отдельным файлом
@@ -65,7 +64,6 @@ export default function App() {
               <Route path="compare" element={<Compare />} />
               <Route path="catalog" element={<Catalog />} />
               <Route path="catalog/:id" element={<Suspense fallback={null}><Property /></Suspense>} />
-              <Route path="ui" element={<UiDemo />} />
               <Route path="assistant" element={<Assistant />} />
               <Route path="login" element={<Login />} />
               <Route path="account" element={<Account />} />

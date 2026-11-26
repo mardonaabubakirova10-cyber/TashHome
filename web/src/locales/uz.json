@@ -77,7 +77,9 @@
     "mortgage": "Ipoteka kalkulyatori",
     "favorites": "Sevimlilar",
     "assistant": "AI-yordamchi",
-    "notFound": "Sahifa topilmadi"
+    "notFound": "Sahifa topilmadi",
+    "notFoundText": "Havola eskirgan yoki manzilda xato bo‘lishi mumkin.",
+    "toHome": "Bosh sahifaga"
   },
   "deal": {
     "sale": "Sotuv",
@@ -242,7 +244,6 @@
     "emptyHint": "Uydagi o‘qlar belgisini bosing. {{max}} tagacha uyni taqqoslash mumkin.",
     "addMore": "Taqqoslash uchun yana kamida bitta uy qo‘shing."
   },
-  "soon": "Bo‘lim ishlab chiqilmoqda",
   "chat": {
     "title": "AI-yordamchi",
     "subtitle": "Uy tanlayman, bitim va ipoteka bo‘yicha javob beraman",
