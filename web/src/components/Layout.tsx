@@ -2,6 +2,7 @@ import { lazy, Suspense } from 'react'
 import { Link, NavLink, Outlet } from 'react-router-dom'
 import ChatWidget from './chat/ChatWidget'
 import { useTranslation } from 'react-i18next'
+import { useAuth } from '../lib/auth'
 import { useCollections } from '../lib/collections'
 import { useCurrency, type Currency } from '../lib/currency'
 
@@ -50,6 +51,7 @@ function Segmented<T extends string>({
 
 export default function Layout() {
   const { t, i18n } = useTranslation()
+  const { loggedIn, name } = useAuth()
   const { currency, setCurrency } = useCurrency()
   const { favorites, compare } = useCollections()
   const counts: Record<string, number> = { favorites: favorites.length, compare: compare.length }
@@ -93,6 +95,12 @@ export default function Layout() {
             ))}
           </nav>
           <div className="ml-auto flex items-center gap-2 sm:ml-0">
+            <NavLink
+              to={loggedIn ? '/account' : '/login'}
+              className="rounded-lg border border-white/15 px-3 py-1.5 text-sm text-white/80 hover:bg-white/5 hover:text-white"
+            >
+              <span className="block max-w-[7rem] truncate">{loggedIn ? (name?.split(' ')[0] ?? t('account.title')) : t('account.login')}</span>
+            </NavLink>
             <Segmented<'ru' | 'uz'>
               label="Language"
               value={i18n.language === 'uz' ? 'uz' : 'ru'}
