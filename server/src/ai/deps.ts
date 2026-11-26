@@ -17,7 +17,7 @@ export function createAgentDeps(store: Store, notifier: Notifier): AgentDeps {
       let vector: number[] | null = null
       if (query?.trim()) {
         try {
-          vector = (await embed([query], 'RETRIEVAL_QUERY'))[0]
+          vector = (await embed([query], 'RETRIEVAL_QUERY', { timeoutMs: 6_000, retries: 0 }))[0]
         } catch {
           vector = null
         }
@@ -31,7 +31,7 @@ export function createAgentDeps(store: Store, notifier: Notifier): AgentDeps {
     embedDocument: async (text) => (await embed([text], 'RETRIEVAL_DOCUMENT'))[0],
     describeProperty: describeProperty,
     async searchKnowledge(question) {
-      const [v] = await embed([question], 'RETRIEVAL_QUERY')
+      const [v] = await embed([question], 'RETRIEVAL_QUERY', { timeoutMs: 10_000, retries: 1 })
       return store.matchKnowledge(v, 5)
     },
     async estimate(params) {

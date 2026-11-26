@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest'
 import { z } from 'zod'
-import { AiUnavailableError, chat, embed, generateJson, toGeminiSchema } from '../src/ai/gemini.js'
+import { AiUnavailableError, chat, embed, generateJson, generateStream, toGeminiSchema } from '../src/ai/gemini.js'
 
 const ok = (body: unknown) => new Response(JSON.stringify(body), { status: 200 })
 const reply = (text: string) => ok({ candidates: [{ content: { role: 'model', parts: [{ text }] } }] })
@@ -99,6 +99,30 @@ describe('gemini: запасная модель', () => {
   it('ошибка запроса (400) тоже пробует запасную модель один раз', async () => {
     const f = vi.fn().mockResolvedValue(new Response('', { status: 400 }))
     await expect(chat('hi', undefined, { ...fast, fetchImpl: f, model: 'primary-m', fallbackModel: 'backup-m' })).rejects.toBeInstanceOf(AiUnavailableError)
+    expect(f).toHaveBeenCalledTimes(2)
+  })
+})
+
+describe('gemini: молчащая модель в потоке', () => {
+  const sse = (text: string) => new Response(`data: ${JSON.stringify({ candidates: [{ content: { parts: [{ text }] } }] })}
+
+`, { status: 200 })
+  // модель, которая не отвечает, пока запрос не отменят
+  const silent = (init: RequestInit) => new Promise<Response>((_, reject) => init.signal!.addEventListener('abort', () => reject(new Error('aborted'))))
+  const req = { contents: [{ role: 'user' as const, parts: [{ text: 'привет' }] }] }
+
+  it('основная молчит: один раз ждём и переходим на запасную', async () => {
+    const f = vi.fn().mockImplementation((url: string, init: RequestInit) => (String(url).includes('primary-m') ? silent(init) : Promise.resolve(sse('ответ запасной'))))
+    const chunks: string[] = []
+    const r = await generateStream(req, (c) => chunks.push(c), { ...fast, fetchImpl: f, model: 'primary-m', fallbackModel: 'backup-m', timeoutMs: 20 })
+    expect(r.text).toBe('ответ запасной')
+    expect(chunks).toEqual(['ответ запасной'])
+    expect(f).toHaveBeenCalledTimes(2)
+  })
+
+  it('молчат обе → AiUnavailableError', async () => {
+    const f = vi.fn().mockImplementation((_: string, init: RequestInit) => silent(init))
+    await expect(generateStream(req, () => {}, { ...fast, fetchImpl: f, model: 'primary-m', fallbackModel: 'backup-m', timeoutMs: 20 })).rejects.toBeInstanceOf(AiUnavailableError)
     expect(f).toHaveBeenCalledTimes(2)
   })
 })
