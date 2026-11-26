@@ -19,7 +19,7 @@
 | house-15.jpg | Vila Na Loužku.jpg | Henryk Josef Tietjen | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:Vila_Na_Lou%C5%BEku.jpg |
 | house-16.jpg | Exterior-Design-Classic-Blue-Palace dieb studio.jpg | IYAD AJAMI | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:Exterior-Design-Classic-Blue-Palace_dieb_studio.jpg |
 | house-18.jpg | 7talal modern-style-for-LuxuryVilla-dieb-stydio.jpg | IYAD AJAMI | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:7talal_modern-style-for-LuxuryVilla-dieb-stydio.jpg |
-| house-19.jpg | قصر النخيل.jpg | IYAD AJAMI | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:%D9%82%D8%B5%D8%B1_%D8%A7%D9%84%D9%86%D8%AE%D9%8A%D9%84.jpg |
+| house-19.jpg | заменён 2026-11-26 на фото, переданное автором проекта (см. ниже) | — | не подтверждена | — |
 | house-20.jpg | Architectural Design by Mario Kleff in 2007 Villa 01.jpg | Designer Mario Kleff | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:Architectural_Design_by_Mario_Kleff_in_2007_Villa_01.jpg |
 | house-21.jpg | Architectural Design by Mario Kleff in 2007 Villa 03.jpg | Designer Mario Kleff | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:Architectural_Design_by_Mario_Kleff_in_2007_Villa_03.jpg |
 | house-22.jpg | Hoa Co Villa.jpg | Lê Huỳnh Bộ | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:Hoa_Co_Villa.jpg |
@@ -37,3 +37,5 @@
 ## Фото, добавленные автором проекта
 
 `house-33.jpg` … `house-45.jpg` передала автор проекта (2026-11-26, в тот же день заменены на более крупные). На house-41 исходно стоял значок нейросети Gemini: снимок может быть создан или обработан ИИ. Источник и право на публикацию нужно подтвердить: если это снимки из чужих объявлений, их следует заменить или получить разрешение владельцев.
+
+`house-19.jpg` (бывшая визуализация дворца) — другой кадр снимка, из которого сделан `house-40.jpg`.

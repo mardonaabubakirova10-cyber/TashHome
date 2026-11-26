@@ -38,10 +38,9 @@ export default function HouseTicket({ item }: { item: Property }) {
       label={`${title}. ${t('ticket.flip')}`}
       front={
         <>
-          <div className="absolute left-5 top-5">
+          {/* метки столбиком слева: справа сверху стоят кнопки избранного и сравнения */}
+          <div className="absolute left-5 top-5 flex flex-col items-start gap-2">
             <Badge tone={item.dealType === 'sale' ? 'brand' : 'warning'}>{t(`deal.${item.dealType}`)}</Badge>
-          </div>
-          <div className="absolute right-5 top-5">
             <PriceLabelBadge item={item} />
           </div>
           <div className="absolute inset-x-5 bottom-5 text-white">
